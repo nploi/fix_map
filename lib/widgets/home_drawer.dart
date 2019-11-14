@@ -17,7 +17,9 @@ class HomeDrawer extends StatelessWidget {
     return Drawer(
       child: Column(
         children: <Widget>[
-          DrawerHeader(),
+          DrawerHeader(
+            child: Center(child: Text(S.of(context).appName)),
+          ),
           MediaQuery.removePadding(
             context: context,
             // DrawerHeader consumes top MediaQuery padding.

@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 import 'blocs/blocs.dart';
-import 'fix_map.dart';
+import 'fix_map_app.dart';
 
 Future main() async {
   BlocSupervisor.delegate = FixMapBlocDelegate();
@@ -13,6 +13,6 @@ Future main() async {
   await settingsBloc.boot();
 
   runApp(
-    FixMap(settingsBloc: settingsBloc),
+    FixMapApp(settingsBloc: settingsBloc),
   );
 }
