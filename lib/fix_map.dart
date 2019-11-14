@@ -48,6 +48,9 @@ class FixMap extends StatelessWidget {
             SettingsScreen.routeName: (context) => SettingsScreen(
                   settingsBloc: settingsBloc,
                 ),
+            ShopDetailScreen.routeName: (context) => ShopDetailScreen(
+                  settingsBloc: settingsBloc,
+                ),
           },
         );
       },

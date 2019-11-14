@@ -17,7 +17,7 @@ class HomeDrawer extends StatelessWidget {
     return Drawer(
       child: Column(
         children: <Widget>[
-          DrawerHeader(),
+          Center(child: DrawerHeader(child: Text("Maps"))),
           MediaQuery.removePadding(
             context: context,
             // DrawerHeader consumes top MediaQuery padding.
@@ -32,6 +32,14 @@ class HomeDrawer extends StatelessWidget {
                     title: Text(S.of(context).settingsTitle),
                     onTap: () {
                       Navigator.of(context).pushNamed(SettingsScreen.routeName);
+                    },
+                  ),
+                  ListTile(
+                    leading: Icon(Icons.settings),
+                    title: Text(S.of(context).shopDetailTitle),
+                    onTap: () {
+                      Navigator.of(context)
+                          .pushNamed(ShopDetailScreen.routeName);
                     },
                   )
                 ],

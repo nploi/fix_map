@@ -25,6 +25,7 @@ class S implements WidgetsLocalizations {
   String get darkModeToggleTitle => "Dark mode";
   String get languagePickerTitle => "Languages";
   String get settingsTitle => "Settings";
+  String get shopDetailTitle => "Shop Detail";
 }
 
 class $vi extends S {
@@ -39,6 +40,8 @@ class $vi extends S {
   String get appName => "Fix Map";
   @override
   String get settingsTitle => "Cài đặt";
+  @override
+  String get shopDetailTitle => "Chi tiết cửa hàng";
   @override
   String get languagePickerTitle => "Ngôn ngữ";
 }
