@@ -23,7 +23,7 @@ class S implements WidgetsLocalizations {
 
   String get appName => "Fix Map";
   String get darkModeToggleTitle => "Dark mode";
-  String get languagePickerTitle => "Language";
+  String get languagePickerTitle => "Languages";
   String get settingsTitle => "Settings";
 }
 
