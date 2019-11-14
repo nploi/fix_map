@@ -46,6 +46,10 @@ android {
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
 
+    defaultConfig {
+        manifestPlaceholders = [mapsApiKey: "$System.env.MAPS_API_KEY"]
+    }
+
     buildTypes {
         release {
             // TODO: Add your own signing config for the release build.
