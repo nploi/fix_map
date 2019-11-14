@@ -28,10 +28,14 @@ class _HomeScreenState extends State<HomeScreen> {
       drawer: HomeDrawer(
         settingsBloc: BlocProvider.of<SettingsBloc>(context),
       ),
-      body: GoogleMap(
-        initialCameraPosition: _cameraPosition,
-        onMapCreated: (GoogleMapController controller) {
-          _controller.complete(controller);
+      body: BlocBuilder<MapBloc, MapState>(
+        builder: (context, state) {
+          return GoogleMap(
+            initialCameraPosition: _cameraPosition,
+            onMapCreated: (GoogleMapController controller) {
+              _controller.complete(controller);
+            },
+          );
         },
       ),
     );

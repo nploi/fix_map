@@ -11,10 +11,6 @@ Future main() async {
   await SystemChrome.setEnabledSystemUIOverlays([]);
   await settingsBloc.boot();
   runApp(
-    Container(
-      child: FixMap(
-        settingsBloc: settingsBloc
-      ),
-    ),
+    FixMap(settingsBloc: settingsBloc),
   );
 }

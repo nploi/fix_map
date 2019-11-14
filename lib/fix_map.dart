@@ -8,8 +8,9 @@ import 'utils/utils.dart';
 
 class FixMap extends StatelessWidget {
   final SettingsBloc settingsBloc;
-
-  const FixMap({Key key, this.settingsBloc}) : super(key: key);
+  final MapBloc mapBloc = MapBloc();
+  final HomeBloc homeBloc = HomeBloc();
+  FixMap({Key key, this.settingsBloc}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -38,11 +39,21 @@ class FixMap extends StatelessWidget {
                     BlocProvider<SettingsBloc>(
                       builder: (context) => settingsBloc,
                     ),
+                    BlocProvider<HomeBloc>(
+                      builder: (context) => homeBloc,
+                    ),
+                    BlocProvider<MapBloc>(
+                      builder: (context) => mapBloc,
+                    ),
                   ],
                   child: HomeScreen(),
                 ),
-            SettingsScreen.routeName: (context) => SettingsScreen(
-                  settingsBloc: settingsBloc,
+            SettingsScreen.routeName: (context) =>
+                BlocListener<SettingsBloc, SettingsState>(
+                  listener: (context, state) {},
+                  child: SettingsScreen(
+                    settingsBloc: settingsBloc,
+                  ),
                 ),
           },
         );
