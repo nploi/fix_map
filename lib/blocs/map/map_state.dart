@@ -22,6 +22,15 @@ class MapCurrentLocationUpdatedState extends MapState {
       'MapCurrentLocationUpdatedState {position: ${position.toJson()}';
 }
 
+class MapDataUpdatedState extends MapState {
+  MapDataUpdatedState();
+
+  List<Object> get props => [];
+
+  @override
+  String toString() => 'MapDataUpdatedState {}';
+}
+
 class MapErrorState extends MapState {
   final String message;
 

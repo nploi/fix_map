@@ -1,6 +1,7 @@
 {
     "appName": "Fix Map",
     "allowLabelButton": "Allow",
+    "availableStatusTitle": "Available",
     "backAgainToLeaveMessage": "Tap back again to leave",
     "c": "",
     "darkModeToggleTitle": "Dark theme",

@@ -23,6 +23,7 @@ class S implements WidgetsLocalizations {
 
   String get allowLabelButton => "Allow";
   String get appName => "Fix Map";
+  String get availableStatusTitle => "Available";
   String get backAgainToLeaveMessage => "Tap back again to leave";
   String get c => "";
   String get darkModeToggleTitle => "Dark theme";

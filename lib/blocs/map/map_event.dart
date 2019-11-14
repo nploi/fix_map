@@ -17,3 +17,13 @@ class MapCurrentLocationGetEvent extends MapEvent {
   @override
   String toString() => 'MapCurrentLocationUpdateEvent {}';
 }
+
+
+class MapFetchShopsEvent extends MapEvent {
+  MapFetchShopsEvent();
+
+  List<Object> get props => [];
+
+  @override
+  String toString() => 'MapFetchShopsEvent {}';
+}

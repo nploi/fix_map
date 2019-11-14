@@ -1,7 +1,9 @@
 import 'dart:async';
 import 'package:fix_map/blocs/blocs.dart';
 import 'package:fix_map/generated/i18n.dart';
+import 'package:fix_map/models/models.dart';
 import 'package:fix_map/utils/utils.dart';
+import 'package:fix_map/widgets/shop_card.dart';
 import 'package:fix_map/widgets/widgets.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -19,11 +21,13 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   DateTime currentBackPressTime;
+  ScrollController _scrollController;
   Completer<GoogleMapController> _controller = Completer();
   // ignore: close_sinks
   SettingsBloc settingsBloc;
   // ignore: close_sinks
   MapBloc mapBloc;
+  final Set<Marker> _marker = {};
 
   static final CameraPosition _cameraPosition = CameraPosition(
     target: LatLng(10.755639, 106.134703),
@@ -34,6 +38,7 @@ class _HomeScreenState extends State<HomeScreen> {
   void initState() {
     settingsBloc = BlocProvider.of<SettingsBloc>(context);
     mapBloc = BlocProvider.of<MapBloc>(context);
+    _scrollController = ScrollController();
     settingsBloc.add(SettingsRequestPermissionEvent());
     super.initState();
   }
@@ -76,6 +81,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 await _controller.future.then((controller) =>
                     controller.animateCamera(CameraUpdate.newLatLng(LatLng(
                         state.position.latitude, state.position.longitude))));
+                mapBloc.add(MapFetchShopsEvent());
               }
             },
             child: BlocBuilder<MapBloc, MapState>(
@@ -85,16 +91,60 @@ class _HomeScreenState extends State<HomeScreen> {
                 if (settingsBloc.settings.darkMode) {
                   style = mapStyleDark;
                 }
-                return GoogleMap(
-                  initialCameraPosition: _cameraPosition,
-                  myLocationEnabled: true,
-                  compassEnabled: true,
-                  mapType: MapType.normal,
-                  onMapCreated: (GoogleMapController controller) {
-                    _controller.complete(controller);
-                    _controller.future
-                        .then((controller) => controller.setMapStyle(style));
-                  },
+                List<Shop> shops = [];
+                if (state is MapDataUpdatedState) {
+                  shops = mapBloc.shops;
+                  shops.forEach((shop) {
+                    if (shop.longitude != null && shop.longitude != null) {
+                      _marker.add(Marker(
+                        markerId: MarkerId(shop.phoneNumber + shop.address),
+                        position: LatLng(shop.latitude, shop.longitude),
+                      ));
+                    }
+                  });
+                }
+                return Stack(
+                  children: <Widget>[
+                    GoogleMap(
+                      initialCameraPosition: _cameraPosition,
+                      myLocationEnabled: true,
+                      compassEnabled: true,
+                      mapType: MapType.normal,
+                      markers: _marker,
+                      onMapCreated: (GoogleMapController controller) {
+                        _controller.complete(controller);
+                        _controller.future.then(
+                            (controller) => controller.setMapStyle(style));
+                      },
+                    ),
+                    shops.isNotEmpty
+                        ? Align(
+                            alignment: Alignment.bottomCenter,
+                            child: Container(
+                              height: MediaQuery.of(context).size.height * 0.3,
+                              child: ListView.builder(
+                                controller: _scrollController,
+                                scrollDirection: Axis.horizontal,
+                                itemCount: shops.length,
+                                itemBuilder: (context, index) {
+                                  return ShopCard(
+                                    shop: shops[index],
+                                    onPressed: () async {
+                                      await _controller.future.then(
+                                          (controller) =>
+                                              controller.animateCamera(
+                                                  CameraUpdate.newLatLng(LatLng(
+                                                      shops[index].latitude,
+                                                      shops[index]
+                                                          .longitude))));
+                                    },
+                                  );
+                                },
+                              ),
+                            ),
+                          )
+                        : SizedBox(),
+                  ],
                 );
               },
             ),
