@@ -1,28 +1,39 @@
 import 'dart:async';
 import 'package:bloc/bloc.dart';
 import 'package:fix_map/blocs/map/bloc.dart';
-import 'package:fix_map/utils/utils.dart';
+import 'package:fix_map/repositories/repostiories.dart';
+import 'package:geolocator/geolocator.dart';
 import 'map_event.dart';
+import 'dart:developer' as developer;
 
 class MapBloc extends Bloc<MapEvent, MapState> {
-  String _style = mapStyleLight;
+  final MapRepository _mapRepository = MapRepository();
+  bool _isLoading = false;
+  Position _currentLocation = Position();
 
-  String get style => _style;
+  Future<Position> get lastKnownLocation async =>
+      await _mapRepository.getLastKnownLocation();
+  bool get isLoading => _isLoading;
 
   @override
   MapState get initialState => InitialMapState();
 
   @override
   Stream<MapState> mapEventToState(MapEvent event) async* {
-    if (event is MapStyleUpdateEvent) {
-      yield* _handleMapStyleUpdateEvent(event);
-      return;
+    try {
+      if (event is MapCurrentLocationGetEvent) {
+        yield* _handleMapCurrentLocationGetEvent(event);
+        return;
+      }
+    } catch (_, stackTrace) {
+      developer.log('$_', name: 'MapBloc', error: _, stackTrace: stackTrace);
+      yield state;
     }
   }
 
-  Stream<MapState> _handleMapStyleUpdateEvent(
-      MapStyleUpdateEvent event) async* {
-    _style = event.style;
-    yield MapStyleUpdatedState(event.style);
+  Stream<MapState> _handleMapCurrentLocationGetEvent(
+      MapCurrentLocationGetEvent event) async* {
+    _currentLocation = await _mapRepository.getCurrentLocation();
+    yield MapCurrentLocationUpdatedState(_currentLocation);
   }
 }

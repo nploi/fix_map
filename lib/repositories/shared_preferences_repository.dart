@@ -2,6 +2,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 abstract class SharedPreferencesRepository {
   static const String SETTINGS = 'settings';
+  static const String LAST_LOCATION = 'last location';
 
   SharedPreferences _prefs;
 

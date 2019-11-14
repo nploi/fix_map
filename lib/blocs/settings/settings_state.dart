@@ -1,4 +1,3 @@
-
 import 'package:equatable/equatable.dart';
 import 'package:fix_map/models/models.dart';
 import 'package:flutter/foundation.dart';
@@ -20,5 +19,24 @@ class SettingsUpdatedSettingsState extends SettingsState {
   List<Object> get props => [settings];
 
   @override
-  String toString() => 'SettingsUpdatedSettingsState {settings: ${settings.toJson()}';
+  String toString() =>
+      'SettingsUpdatedSettingsState {settings: ${settings.toJson()}';
+}
+
+class SettingsGrantedPermissionState extends SettingsState {
+  SettingsGrantedPermissionState();
+
+  List<Object> get props => [];
+
+  @override
+  String toString() => 'SettingsGrantedPermissionState {}';
+}
+
+class SettingsNotGrantedPermissionState extends SettingsState {
+  SettingsNotGrantedPermissionState();
+
+  List<Object> get props => [];
+
+  @override
+  String toString() => 'SettingsNotGrantedPermissionState {}';
 }
