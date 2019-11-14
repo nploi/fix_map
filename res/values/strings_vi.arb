@@ -1,3 +1,7 @@
 {
-  "appName": "Fix Map"
+  "appName": "Fix Map",
+  "darkModeToggleTitle": "Giao diện tối",
+  "settingsTitle": "Cài đặt",
+  "languagePickerTitle": "Ngôn ngữ"
+
 }

@@ -13,7 +13,7 @@ Future main() async {
   runApp(
     Container(
       child: FixMap(
-        bloc: settingsBloc
+        settingsBloc: settingsBloc
       ),
     ),
   );

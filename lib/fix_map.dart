@@ -7,16 +7,16 @@ import 'screens/screens.dart';
 import 'utils/utils.dart';
 
 class FixMap extends StatelessWidget {
-  final SettingsBloc bloc;
+  final SettingsBloc settingsBloc;
 
-  const FixMap({Key key, this.bloc}) : super(key: key);
+  const FixMap({Key key, this.settingsBloc}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<SettingsBloc, SettingsState>(
-      bloc: bloc,
+      bloc: settingsBloc,
       builder: (context, state) {
-        var settings = bloc.settings;
+        var settings = settingsBloc.settings;
         return MaterialApp(
           onGenerateTitle: (BuildContext context) => S.of(context).appName,
           debugShowCheckedModeBanner: false,
@@ -25,11 +25,26 @@ class FixMap extends StatelessWidget {
             GlobalMaterialLocalizations.delegate,
             GlobalWidgetsLocalizations.delegate,
           ],
+          locale: Locale(settings.languageCode, ''),
           supportedLocales: S.delegate.supportedLocales,
           theme: themeLight,
           darkTheme: themeDark,
           themeMode: settings.darkMode ? ThemeMode.dark : ThemeMode.light,
           home: HomeScreen(),
+          initialRoute: HomeScreen.routeName,
+          routes: {
+            HomeScreen.routeName: (context) => MultiBlocProvider(
+                  providers: [
+                    BlocProvider<SettingsBloc>(
+                      builder: (context) => settingsBloc,
+                    ),
+                  ],
+                  child: HomeScreen(),
+                ),
+            SettingsScreen.routeName: (context) => SettingsScreen(
+                  settingsBloc: settingsBloc,
+                ),
+          },
         );
       },
     );

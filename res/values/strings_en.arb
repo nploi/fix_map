@@ -1,3 +1,6 @@
 {
-  "appName": "Fix Map"
+  "appName": "Fix Map",
+  "darkModeToggleTitle": "Dark mode",
+  "settingsTitle": "Settings",
+  "languagePickerTitle": "Language"
 }
