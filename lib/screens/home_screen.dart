@@ -68,9 +68,8 @@ class _HomeScreenState extends State<HomeScreen> {
           }
         },
         child: Scaffold(
-          appBar: AppBar(
-            bottomOpacity: 0.1,
-          ),
+          resizeToAvoidBottomInset: false,
+          appBar: AppBar(),
           drawer: HomeDrawer(
             settingsBloc: settingsBloc,
           ),
@@ -107,15 +106,38 @@ class _HomeScreenState extends State<HomeScreen> {
                   children: <Widget>[
                     GoogleMap(
                       initialCameraPosition: _cameraPosition,
-                      myLocationEnabled: true,
-                      compassEnabled: true,
                       mapType: MapType.normal,
                       markers: _marker,
+                      compassEnabled: false,
                       onMapCreated: (GoogleMapController controller) {
                         _controller.complete(controller);
                         _controller.future.then(
                             (controller) => controller.setMapStyle(style));
                       },
+                    ),
+                    Align(
+                      alignment: Alignment.topCenter,
+                      child: Container(
+                        padding: EdgeInsets.only(top: 5),
+                        height: MediaQuery.of(context).size.height * 0.085,
+                        width: MediaQuery.of(context).size.width * 0.9,
+                        child: Card(
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10.0),
+                          ),
+                          elevation: 15,
+                          child: Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: TextField(
+                              decoration: InputDecoration(
+                                icon: Icon(Icons.search),
+                                border: InputBorder.none,
+                                hintText: S.of(context).searchHintText
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
                     ),
                     shops.isNotEmpty
                         ? Align(
