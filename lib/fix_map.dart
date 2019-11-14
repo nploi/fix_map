@@ -8,8 +8,6 @@ import 'utils/utils.dart';
 
 class FixMap extends StatelessWidget {
   final SettingsBloc settingsBloc;
-  final MapBloc mapBloc = MapBloc();
-  final HomeBloc homeBloc = HomeBloc();
   FixMap({Key key, this.settingsBloc}) : super(key: key);
 
   @override
@@ -31,7 +29,6 @@ class FixMap extends StatelessWidget {
           theme: themeLight,
           darkTheme: themeDark,
           themeMode: settings.darkMode ? ThemeMode.dark : ThemeMode.light,
-          home: HomeScreen(),
           initialRoute: HomeScreen.routeName,
           routes: {
             HomeScreen.routeName: (context) => MultiBlocProvider(
@@ -40,20 +37,16 @@ class FixMap extends StatelessWidget {
                       builder: (context) => settingsBloc,
                     ),
                     BlocProvider<HomeBloc>(
-                      builder: (context) => homeBloc,
+                      builder: (context) => HomeBloc(),
                     ),
                     BlocProvider<MapBloc>(
-                      builder: (context) => mapBloc,
+                      builder: (context) => MapBloc(),
                     ),
                   ],
                   child: HomeScreen(),
                 ),
-            SettingsScreen.routeName: (context) =>
-                BlocListener<SettingsBloc, SettingsState>(
-                  listener: (context, state) {},
-                  child: SettingsScreen(
-                    settingsBloc: settingsBloc,
-                  ),
+            SettingsScreen.routeName: (context) => SettingsScreen(
+                  settingsBloc: settingsBloc,
                 ),
           },
         );

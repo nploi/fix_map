@@ -34,7 +34,7 @@ class SettingsBloc extends Bloc<SettingsEvent, SettingsState> {
   Stream<SettingsState> _handleUpdateSettingsSettingsEvent(
       SettingsUpdateSettingsEvent event) async* {
     if (!event.settings.isEqual(settings)) {
-      await this._repository.setSettings(event.settings);
+      this._repository.setSettings(event.settings);
       yield SettingsUpdatedSettingsState(settings.copyWith());
     }
   }

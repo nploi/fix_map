@@ -8,6 +8,7 @@ class Settings {
     String languageCode,
   }) {
     Settings settings = Settings();
+    settings.darkMode = darkMode != null ? darkMode : this.darkMode;
     settings.languageCode =
         languageCode != null ? languageCode : this.languageCode;
     return settings;
