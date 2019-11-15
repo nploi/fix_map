@@ -93,14 +93,23 @@ class _HomeScreenState extends State<HomeScreen> {
                 List<Shop> shops = [];
                 if (state is MapDataUpdatedState) {
                   shops = mapBloc.shops;
-                  shops.forEach((shop) {
+                  for (int index = 0; index < shops.length; index++) {
+                    var shop = shops[index];
                     if (shop.longitude != null && shop.longitude != null) {
                       _marker.add(Marker(
-                        markerId: MarkerId(shop.phoneNumber + shop.address),
-                        position: LatLng(shop.latitude, shop.longitude),
-                      ));
+                          markerId: MarkerId(shop.phoneNumber + shop.address),
+                          position: LatLng(shop.latitude, shop.longitude),
+                          onTap: () {
+                            _scrollController.animateTo(
+                                (_scrollController.position.maxScrollExtent /
+                                        shops.length) *
+                                    index,
+                                duration: Duration(seconds: 1),
+                                curve: Curves.easeOut);
+                          },
+                          infoWindow: InfoWindow(title: shop.name)));
                     }
-                  });
+                  }
                 }
                 return Stack(
                   children: <Widget>[
@@ -130,10 +139,9 @@ class _HomeScreenState extends State<HomeScreen> {
                             padding: const EdgeInsets.all(8.0),
                             child: TextField(
                               decoration: InputDecoration(
-                                icon: Icon(Icons.search),
-                                border: InputBorder.none,
-                                hintText: S.of(context).searchHintText
-                              ),
+                                  icon: Icon(Icons.search),
+                                  border: InputBorder.none,
+                                  hintText: S.of(context).searchHintText),
                             ),
                           ),
                         ),

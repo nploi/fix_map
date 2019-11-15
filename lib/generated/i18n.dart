@@ -83,7 +83,7 @@ class $vi extends S {
   @override
   String get h => "";
   @override
-  String get settingsTitle => "Settings";
+  String get settingsTitle => "Cài đặt";
   @override
   String get i => "";
   @override
