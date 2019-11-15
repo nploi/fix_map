@@ -117,9 +117,11 @@ class _HomeScreenState extends State<HomeScreen> {
                       initialCameraPosition: _cameraPosition,
                       mapType: MapType.normal,
                       markers: _marker,
-                      compassEnabled: false,
                       myLocationEnabled: true,
-                      myLocationButtonEnabled: false,
+                      padding: EdgeInsets.only(
+                        top: MediaQuery.of(context).size.height * 0.085,
+                        bottom: MediaQuery.of(context).size.height * 0.3,
+                      ),
                       onMapCreated: (GoogleMapController controller) {
                         _controller.complete(controller);
                         _controller.future.then(
@@ -131,12 +133,12 @@ class _HomeScreenState extends State<HomeScreen> {
                       child: Container(
                         padding: EdgeInsets.only(top: 5),
                         height: MediaQuery.of(context).size.height * 0.085,
-                        width: MediaQuery.of(context).size.width * 0.9,
+                        width: MediaQuery.of(context).size.width * 0.95,
                         child: Card(
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(10.0),
                           ),
-                          elevation: 15,
+                          elevation: 10,
                           child: Padding(
                             padding: const EdgeInsets.all(8.0),
                             child: TextField(
@@ -176,20 +178,6 @@ class _HomeScreenState extends State<HomeScreen> {
                             ),
                           )
                         : SizedBox(),
-                    Positioned(
-                      bottom: MediaQuery.of(context).size.height * 0.3 + 10,
-                      right: 10,
-                      child: FloatingActionButton(
-                        onPressed: () async {
-                          var position = await mapBloc.currentLocation;
-                          await _controller.future.then((controller) =>
-                              controller.animateCamera(CameraUpdate.newLatLng(
-                                  LatLng(
-                                      position.latitude, position.longitude))));
-                        },
-                        child: Icon(Icons.my_location),
-                      ),
-                    )
                   ],
                 );
               },
