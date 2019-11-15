@@ -1,9 +1,4 @@
-import 'dart:convert';
-
-import 'package:fix_map/models/models.dart';
 import 'package:geolocator/geolocator.dart';
-
-import 'shared_preferences_repository.dart';
 
 class MapRepository {
   Geolocator geoLocator = Geolocator();

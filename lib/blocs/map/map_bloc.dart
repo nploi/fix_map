@@ -4,7 +4,6 @@ import 'package:fix_map/blocs/map/bloc.dart';
 import 'package:fix_map/models/shop.dart';
 import 'package:fix_map/repositories/repostiories.dart';
 import 'package:geolocator/geolocator.dart';
-import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'map_event.dart';
 import 'dart:developer' as developer;
 

@@ -27,7 +27,7 @@ class _HomeScreenState extends State<HomeScreen> {
   SettingsBloc settingsBloc;
   // ignore: close_sinks
   MapBloc mapBloc;
-  final Set<Marker> _marker = {};
+  Set<Marker> _marker = {};
 
   static final CameraPosition _cameraPosition = CameraPosition(
     target: LatLng(10.755639, 106.134703),
