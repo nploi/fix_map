@@ -16,6 +16,8 @@ class MapBloc extends Bloc<MapEvent, MapState> {
 
   Future<Position> get lastKnownLocation async =>
       await _mapRepository.getLastKnownLocation();
+  Future<Position> get currentLocation async =>
+      await _mapRepository.getCurrentLocation();
   bool get isLoading => _isLoading;
 
   List<Shop> _shops = [];

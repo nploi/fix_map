@@ -103,7 +103,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             _scrollController.animateTo(
                                 (_scrollController.position.maxScrollExtent /
                                         shops.length) *
-                                    index,
+                                    (index + 1),
                                 duration: Duration(seconds: 1),
                                 curve: Curves.easeOut);
                           },
@@ -119,6 +119,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       markers: _marker,
                       compassEnabled: false,
                       myLocationEnabled: true,
+                      myLocationButtonEnabled: false,
                       onMapCreated: (GoogleMapController controller) {
                         _controller.complete(controller);
                         _controller.future.then(
@@ -175,6 +176,20 @@ class _HomeScreenState extends State<HomeScreen> {
                             ),
                           )
                         : SizedBox(),
+                    Positioned(
+                      bottom: MediaQuery.of(context).size.height * 0.3 + 10,
+                      right: 10,
+                      child: FloatingActionButton(
+                        onPressed: () async {
+                          var position = await mapBloc.currentLocation;
+                          await _controller.future.then((controller) =>
+                              controller.animateCamera(CameraUpdate.newLatLng(
+                                  LatLng(
+                                      position.latitude, position.longitude))));
+                        },
+                        child: Icon(Icons.my_location),
+                      ),
+                    )
                   ],
                 );
               },
