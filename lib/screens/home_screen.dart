@@ -118,6 +118,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       mapType: MapType.normal,
                       markers: _marker,
                       compassEnabled: false,
+                      myLocationEnabled: true,
                       onMapCreated: (GoogleMapController controller) {
                         _controller.complete(controller);
                         _controller.future.then(
