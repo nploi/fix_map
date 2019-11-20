@@ -6,9 +6,9 @@ import 'generated/i18n.dart';
 import 'screens/screens.dart';
 import 'utils/utils.dart';
 
-class FixMap extends StatelessWidget {
+class FixMapApp extends StatelessWidget {
   final SettingsBloc settingsBloc;
-  FixMap({Key key, this.settingsBloc}) : super(key: key);
+  FixMapApp({Key key, this.settingsBloc}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

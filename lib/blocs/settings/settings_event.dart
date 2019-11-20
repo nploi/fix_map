@@ -19,3 +19,12 @@ class SettingsUpdateSettingsEvent extends SettingsEvent {
   String toString() =>
       'SettingsUpdateSettingsEvent {settings: ${settings.toJson()}';
 }
+
+class SettingsRequestPermissionEvent extends SettingsEvent {
+  SettingsRequestPermissionEvent();
+
+  List<Object> get props => [];
+
+  @override
+  String toString() => 'SettingsRequestPermissionEvent {}';
+}

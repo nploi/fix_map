@@ -1,5 +1,6 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter/foundation.dart';
+import 'package:geolocator/geolocator.dart';
 
 @immutable
 abstract class MapState extends Equatable {
@@ -10,12 +11,33 @@ abstract class MapState extends Equatable {
 
 class InitialMapState extends MapState {}
 
-class MapStyleUpdatedState extends MapState {
-  final String style;
-  MapStyleUpdatedState(this.style);
+class MapCurrentLocationUpdatedState extends MapState {
+  final Position position;
+  MapCurrentLocationUpdatedState(this.position);
 
-  List<Object> get props => [style];
+  List<Object> get props => [position];
 
   @override
-  String toString() => 'MapStyleUpdatedState {style: $style}';
+  String toString() =>
+      'MapCurrentLocationUpdatedState {position: ${position.toJson()}';
+}
+
+class MapDataUpdatedState extends MapState {
+  MapDataUpdatedState();
+
+  List<Object> get props => [];
+
+  @override
+  String toString() => 'MapDataUpdatedState {}';
+}
+
+class MapErrorState extends MapState {
+  final String message;
+
+  MapErrorState(this.message);
+
+  List<Object> get props => [message];
+
+  @override
+  String toString() => 'MapNotGrantedPermissionState {message: $message}';
 }
