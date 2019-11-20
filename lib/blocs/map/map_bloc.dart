@@ -1,7 +1,8 @@
 import 'dart:async';
 import 'package:bloc/bloc.dart';
+import 'package:fix_map/blocs/blocs.dart';
 import 'package:fix_map/blocs/map/bloc.dart';
-import 'package:fix_map/models/shop.dart';
+import 'package:fix_map/blocs/shops/bloc.dart';
 import 'package:fix_map/repositories/repostiories.dart';
 import 'package:geolocator/geolocator.dart';
 import 'map_event.dart';
@@ -9,19 +10,19 @@ import 'dart:developer' as developer;
 
 class MapBloc extends Bloc<MapEvent, MapState> {
   final MapRepository _mapRepository = MapRepository();
-  final ShopRepository _shopRepository = ShopRepository();
-  bool _isLoading = false;
-  Position _currentLocation = Position();
+  StreamSubscription _settingsSubscription;
+  final SettingsBloc settingsBloc;
 
-  Future<Position> get lastKnownLocation async =>
-      await _mapRepository.getLastKnownLocation();
+  MapBloc({this.settingsBloc}) : assert(settingsBloc != null) {
+    _settingsSubscription = settingsBloc.listen((state) {
+      if (state is SettingsGrantedPermissionState) {
+        this.add(MapGetCurrentLocationEvent());
+      }
+    });
+  }
+
   Future<Position> get currentLocation async =>
       await _mapRepository.getCurrentLocation();
-  bool get isLoading => _isLoading;
-
-  List<Shop> _shops = [];
-
-  List<Shop> get shops => _shops;
 
   @override
   MapState get initialState => InitialMapState();
@@ -29,13 +30,8 @@ class MapBloc extends Bloc<MapEvent, MapState> {
   @override
   Stream<MapState> mapEventToState(MapEvent event) async* {
     try {
-      if (event is MapCurrentLocationGetEvent) {
+      if (event is MapGetCurrentLocationEvent) {
         yield* _handleMapCurrentLocationGetEvent(event);
-        return;
-      }
-
-      if (event is MapFetchShopsEvent) {
-        yield* _handleMapFetchShopsEvent(event);
         return;
       }
     } catch (_, stackTrace) {
@@ -45,14 +41,14 @@ class MapBloc extends Bloc<MapEvent, MapState> {
   }
 
   Stream<MapState> _handleMapCurrentLocationGetEvent(
-      MapCurrentLocationGetEvent event) async* {
-    _currentLocation = await _mapRepository.getCurrentLocation();
-    yield MapCurrentLocationUpdatedState(_currentLocation);
+      MapGetCurrentLocationEvent event) async* {
+    var currentLocation = await _mapRepository.getCurrentLocation();
+    yield MapCurrentLocationUpdatedState(currentLocation);
   }
 
-  Stream<MapState> _handleMapFetchShopsEvent(MapFetchShopsEvent event) async* {
-    this._shops = _shopRepository.getShops(mock: true);
-    print(this.shops);
-    yield MapDataUpdatedState();
+  @override
+  Future<void> close() {
+    _settingsSubscription.cancel();
+    return super.close();
   }
 }

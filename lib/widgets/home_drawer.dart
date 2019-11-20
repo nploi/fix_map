@@ -6,11 +6,7 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 
 class HomeDrawer extends StatelessWidget {
-  final SettingsBloc settingsBloc;
-
-  HomeDrawer({Key key, this.settingsBloc})
-      : assert(settingsBloc != null),
-        super(key: key);
+  HomeDrawer({Key key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

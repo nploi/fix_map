@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:fix_map/blocs/blocs.dart';
+import 'package:fix_map/blocs/shops/bloc.dart';
 import 'package:fix_map/generated/i18n.dart';
 import 'package:fix_map/models/models.dart';
 import 'package:fix_map/utils/utils.dart';
@@ -23,23 +24,21 @@ class _HomeScreenState extends State<HomeScreen> {
   DateTime currentBackPressTime;
   ScrollController _scrollController;
   Completer<GoogleMapController> _controller = Completer();
-  // ignore: close_sinks
-  SettingsBloc settingsBloc;
-  // ignore: close_sinks
-  MapBloc mapBloc;
-  Set<Marker> _marker = {};
+  Set<Marker> _markers = {};
+//  Map<String, Marker> _markers
 
   static final CameraPosition _cameraPosition = CameraPosition(
     target: LatLng(10.755639, 106.134703),
-    zoom: 14.4746,
+    zoom: 16,
   );
 
   @override
   void initState() {
-    settingsBloc = BlocProvider.of<SettingsBloc>(context);
-    mapBloc = BlocProvider.of<MapBloc>(context);
     _scrollController = ScrollController();
-    settingsBloc.add(SettingsRequestPermissionEvent());
+    BlocProvider.of<SettingsBloc>(context)
+        .add(SettingsRequestPermissionEvent());
+    _controller.future.then((controller) => controller.getVisibleRegion());
+    MarkerUtils.initIcons();
     super.initState();
   }
 
@@ -48,19 +47,16 @@ class _HomeScreenState extends State<HomeScreen> {
     return WillPopScope(
       onWillPop: _onWillPop,
       child: BlocListener<SettingsBloc, SettingsState>(
-        bloc: settingsBloc,
         listener: (context, state) async {
-          var mapStyle = mapStyleLight;
           if (state is SettingsUpdatedSettingsState) {
+            var mapStyle = mapStyleLight;
+
             if (state.settings.darkMode) {
               mapStyle = mapStyleDark;
             }
+
             await _controller.future
                 .then((controller) => controller.setMapStyle(mapStyle));
-          }
-
-          if (state is SettingsGrantedPermissionState) {
-            mapBloc.add(MapCurrentLocationGetEvent());
           }
 
           if (state is SettingsNotGrantedPermissionState) {
@@ -69,87 +65,71 @@ class _HomeScreenState extends State<HomeScreen> {
         },
         child: Scaffold(
           resizeToAvoidBottomInset: false,
-          appBar: AppBar(),
-          drawer: HomeDrawer(
-            settingsBloc: settingsBloc,
-          ),
+          drawer: HomeDrawer(),
           body: BlocListener<MapBloc, MapState>(
-            bloc: mapBloc,
             listener: (context, state) async {
               if (state is MapCurrentLocationUpdatedState) {
                 await _controller.future.then((controller) =>
                     controller.animateCamera(CameraUpdate.newLatLng(LatLng(
                         state.position.latitude, state.position.longitude))));
-                mapBloc.add(MapFetchShopsEvent());
               }
             },
-            child: BlocBuilder<MapBloc, MapState>(
-              bloc: mapBloc,
+            child: BlocBuilder<ShopsBloc, ShopsState>(
               builder: (context, state) {
-                var style = mapStyleLight;
-                if (settingsBloc.settings.darkMode) {
-                  style = mapStyleDark;
-                }
                 List<Shop> shops = [];
-                if (state is MapDataUpdatedState) {
-                  shops = mapBloc.shops;
+                bool loading = false;
+                _markers.clear();
+                if (state is ShopsLoadingState) {
+                  loading = true;
+                }
+                if (state is ShopsLoadedState) {
+                  shops = state.shops;
                   for (int index = 0; index < shops.length; index++) {
                     var shop = shops[index];
-                    if (shop.longitude != null && shop.longitude != null) {
-                      _marker.add(Marker(
-                          markerId: MarkerId(shop.phoneNumber + shop.address),
-                          position: LatLng(shop.latitude, shop.longitude),
-                          onTap: () {
-                            _scrollController.animateTo(
-                                (_scrollController.position.maxScrollExtent /
-                                        shops.length) *
-                                    (index + 1),
-                                duration: Duration(seconds: 1),
-                                curve: Curves.easeOut);
-                          },
-                          infoWindow: InfoWindow(title: shop.name)));
-                    }
+                    _markers.add(Marker(
+                        markerId: MarkerId(shop.hash),
+                        position: LatLng(shop.latitude, shop.longitude),
+                        icon: shop.address.isEmpty
+                            ? BitmapDescriptor.fromBytes(MarkerUtils.circle)
+                            : null,
+                        onTap: () {
+                          _scrollController.animateTo(
+                              (_scrollController.position.maxScrollExtent /
+                                      shops.length) *
+                                  (index + 1),
+                              duration: Duration(seconds: 1),
+                              curve: Curves.easeOut);
+                        },
+                        infoWindow: InfoWindow(title: shop.name)));
                   }
+                }
+                double mapPaddingBottom = 0.0;
+                if (shops.isNotEmpty) {
+                  mapPaddingBottom = MediaQuery.of(context).size.height * 0.3;
                 }
                 return Stack(
                   children: <Widget>[
                     GoogleMap(
                       initialCameraPosition: _cameraPosition,
-                      mapType: MapType.normal,
-                      markers: _marker,
+                      markers: _markers,
                       myLocationEnabled: true,
-                      padding: EdgeInsets.only(
-                        top: MediaQuery.of(context).size.height * 0.085,
-                        bottom: MediaQuery.of(context).size.height * 0.3,
-                      ),
-                      onMapCreated: (GoogleMapController controller) {
-                        _controller.complete(controller);
-                        _controller.future.then(
-                            (controller) => controller.setMapStyle(style));
+                      myLocationButtonEnabled: false,
+                      compassEnabled: true,
+                      onCameraIdle: () {
+                        BlocProvider.of<ShopsBloc>(context)
+                            .add(ShopsLoadingEvent());
+                        _controller.future.then((controller) {
+                          controller.getVisibleRegion().then((bounds) {
+                            BlocProvider.of<ShopsBloc>(context)
+                                .add(ShopsSearchEvent(bounds));
+                          });
+                        });
                       },
-                    ),
-                    Align(
-                      alignment: Alignment.topCenter,
-                      child: Container(
-                        padding: EdgeInsets.only(top: 5),
-                        height: MediaQuery.of(context).size.height * 0.085,
-                        width: MediaQuery.of(context).size.width * 0.95,
-                        child: Card(
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(10.0),
-                          ),
-                          elevation: 10,
-                          child: Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: TextField(
-                              decoration: InputDecoration(
-                                  icon: Icon(Icons.search),
-                                  border: InputBorder.none,
-                                  hintText: S.of(context).searchHintText),
-                            ),
-                          ),
-                        ),
+                      padding: EdgeInsets.only(
+                        top: MediaQuery.of(context).size.height * 0.08,
+                        bottom: mapPaddingBottom,
                       ),
+                      onMapCreated: _onMapCreated,
                     ),
                     shops.isNotEmpty
                         ? Align(
@@ -161,6 +141,9 @@ class _HomeScreenState extends State<HomeScreen> {
                                 scrollDirection: Axis.horizontal,
                                 itemCount: shops.length,
                                 itemBuilder: (context, index) {
+                                  if (shops[index].name.isEmpty) {
+                                    return Container();
+                                  }
                                   return ShopCard(
                                     shop: shops[index],
                                     onPressed: () async {
@@ -178,6 +161,24 @@ class _HomeScreenState extends State<HomeScreen> {
                             ),
                           )
                         : SizedBox(),
+                    loading
+                        ? Container(
+                            child: Center(
+                              child: CircularProgressIndicator(),
+                            ),
+                            color: Colors.white.withOpacity(0.8),
+                          )
+                        : SizedBox(),
+                    Positioned(
+                      top: MediaQuery.of(context).padding.top + 5,
+                      left: 5,
+                      child: _buildMenuButton(),
+                    ),
+                    Positioned(
+                      top: MediaQuery.of(context).padding.top + 5,
+                      right: 5,
+                      child: _buildAction(),
+                    ),
                   ],
                 );
               },
@@ -186,6 +187,27 @@ class _HomeScreenState extends State<HomeScreen> {
         ),
       ),
     );
+  }
+
+  Widget _buildMenuButton() {
+    return Builder(builder: (context) {
+      return IconButton(
+        icon: const Icon(Icons.menu),
+        onPressed: () {
+          Scaffold.of(context).openDrawer();
+        },
+        tooltip: MaterialLocalizations.of(context).openAppDrawerTooltip,
+      );
+    });
+  }
+
+  Widget _buildAction() {
+    return Builder(builder: (context) {
+      return IconButton(
+        icon: const Icon(Icons.search),
+        onPressed: () {},
+      );
+    });
   }
 
   void _showRequestPermissionDialog() {
@@ -203,12 +225,22 @@ class _HomeScreenState extends State<HomeScreen> {
           CupertinoDialogAction(
             child: Text(S.of(context).allowLabelButton),
             onPressed: () {
-              settingsBloc.add(SettingsRequestPermissionEvent());
+              BlocProvider.of<SettingsBloc>(context)
+                  .add(SettingsRequestPermissionEvent());
             },
           ),
         ],
       ),
     );
+  }
+
+  void _onMapCreated(GoogleMapController controller) {
+    _controller.complete(controller);
+    var style = mapStyleLight;
+    if (BlocProvider.of<SettingsBloc>(context).settings.darkMode) {
+      style = mapStyleDark;
+    }
+    _controller.future.then((controller) => controller.setMapStyle(style));
   }
 
   Future<bool> _onWillPop() async {

@@ -1,6 +1,7 @@
 import 'coccoc.dart';
 
 class Shop {
+  String hash;
   String name;
   String phoneNumber;
   String address;
@@ -25,13 +26,12 @@ class Shop {
       this.imageBig});
 
   Shop.fromPoi(Poi poi) {
-//    name = String.fromCharCodes(Runes(poi.title));
     name = poi.title != null
         ? poi.title.replaceAll("<b>", '').replaceAll("</b>", '')
         : "";
+    hash = poi.hash;
     latitude = poi.gps.latitude;
     longitude = poi.gps.longitude;
-//    address = String.fromCharCodes(Runes(poi.address));
     address = poi.address != null
         ? poi.address.replaceAll("<b>", '').replaceAll("</b>", '')
         : "";
