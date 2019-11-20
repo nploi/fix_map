@@ -45,6 +45,7 @@ class S implements WidgetsLocalizations {
   String get requestPermissionDialogTitle => "Allow \"Maps\" to access your location while you are using the app?";
   String get searchHintText => "Searching ...";
   String get settingsTitle => "Settings";
+  String get shopDetailTitle => "Shop Detail";
   String get t => "";
   String get u => "";
   String get v => "";
@@ -116,6 +117,8 @@ class $vi extends S {
   String get x => "";
   @override
   String get y => "";
+  @override
+  String get shopDetailTitle => "Chi tiết cửa hàng";
   @override
   String get z => "";
   @override

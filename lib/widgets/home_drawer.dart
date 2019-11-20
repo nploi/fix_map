@@ -35,6 +35,14 @@ class HomeDrawer extends StatelessWidget {
                     onTap: () {
                       Navigator.of(context).pushNamed(SettingsScreen.routeName);
                     },
+                  ),
+                  ListTile(
+                    leading: Icon(Icons.settings),
+                    title: Text(S.of(context).shopDetailTitle),
+                    onTap: () {
+                      Navigator.of(context)
+                          .pushNamed(ShopDetailScreen.routeName);
+                    },
                   )
                 ],
               ),
