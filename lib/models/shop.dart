@@ -1,6 +1,7 @@
 import 'coccoc.dart';
 
 class Shop {
+  String hash;
   String name;
   String phoneNumber;
   String address;
@@ -29,6 +30,7 @@ class Shop {
     name = poi.title != null
         ? poi.title.replaceAll("<b>", '').replaceAll("</b>", '')
         : "";
+    hash = poi.hash;
     latitude = poi.gps.latitude;
     longitude = poi.gps.longitude;
 //    address = String.fromCharCodes(Runes(poi.address));

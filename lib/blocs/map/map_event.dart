@@ -8,21 +8,11 @@ abstract class MapEvent extends Equatable {
   List<Object> get props => [];
 }
 
-class MapCurrentLocationGetEvent extends MapEvent {
-  MapCurrentLocationGetEvent();
+class MapGetCurrentLocationEvent extends MapEvent {
+  MapGetCurrentLocationEvent();
 
   List<Object> get props => [];
 
   @override
-  String toString() => 'MapCurrentLocationUpdateEvent {}';
-}
-
-
-class MapFetchShopsEvent extends MapEvent {
-  MapFetchShopsEvent();
-
-  List<Object> get props => [];
-
-  @override
-  String toString() => 'MapFetchShopsEvent {}';
+  String toString() => 'MapGetCurrentLocationEvent {}';
 }

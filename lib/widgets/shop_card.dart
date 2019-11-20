@@ -38,12 +38,10 @@ class ShopCard extends StatelessWidget {
                         fit: BoxFit.fill,
                       ),
                     ),
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: <Widget>[
-                        Text(shop.name),
-                      ],
-                    )
+                    SizedBox(
+                      width: 5,
+                    ),
+                    Expanded(child: AutoSizeText(shop.name)),
                   ],
                 ),
                 SizedBox(

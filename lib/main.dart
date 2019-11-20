@@ -9,7 +9,6 @@ Future main() async {
   BlocSupervisor.delegate = FixMapBlocDelegate();
   // ignore: close_sinks
   final SettingsBloc settingsBloc = SettingsBloc();
-  await SystemChrome.setEnabledSystemUIOverlays([]);
   await settingsBloc.boot();
 
   runApp(

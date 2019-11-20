@@ -1,4 +1,5 @@
 import 'package:fix_map/blocs/blocs.dart';
+import 'package:fix_map/blocs/shops/bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
@@ -36,11 +37,11 @@ class FixMapApp extends StatelessWidget {
                     BlocProvider<SettingsBloc>(
                       builder: (context) => settingsBloc,
                     ),
-                    BlocProvider<HomeBloc>(
-                      builder: (context) => HomeBloc(),
-                    ),
                     BlocProvider<MapBloc>(
-                      builder: (context) => MapBloc(),
+                      builder: (context) => MapBloc(settingsBloc: settingsBloc),
+                    ),
+                    BlocProvider<ShopsBloc>(
+                      builder: (context) => ShopsBloc(),
                     ),
                   ],
                   child: HomeScreen(),
