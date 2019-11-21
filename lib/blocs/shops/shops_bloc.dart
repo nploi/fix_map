@@ -36,7 +36,7 @@ class ShopsBloc extends Bloc<ShopsEvent, ShopsState> {
 
   Stream<ShopsState> _handleMapFetchShopsEvent(ShopsSearchEvent event) async* {
 //    this._shops = ;
-    var shops = await _shopRepository.getShops(event.bounds, mock: false);
-    yield ShopsLoadedState(shops);
+    this._shops = await _shopRepository.getShops(event.bounds, mock: false);
+    yield ShopsLoadedState(this.shops.length);
   }
 }
