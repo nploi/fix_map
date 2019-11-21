@@ -25,6 +25,7 @@ class _HomeScreenState extends State<HomeScreen> {
   ScrollController _scrollController;
   Completer<GoogleMapController> _controller = Completer();
   Set<Marker> _markers = {};
+  Set<Circle> _circles = {};
   final GlobalKey<RefreshIndicatorState> _refreshIndicatorKey =
       GlobalKey<RefreshIndicatorState>();
   static final CameraPosition _cameraPosition = CameraPosition(
@@ -85,55 +86,70 @@ class _HomeScreenState extends State<HomeScreen> {
                 },
               ),
             ],
-            child: BlocBuilder<ShopsBloc, ShopsState>(
-              builder: (context, state) {
-                List<Shop> shops = [];
-                shops = BlocProvider.of<ShopsBloc>(context).shops;
-                if (state is ShopsLoadedState) {
-                  _markers.clear();
-                  for (int index = 0; index < shops.length; index++) {
-                    var shop = shops[index];
-                    _markers.add(Marker(
-                        markerId: MarkerId(shop.hash),
-                        position: LatLng(shop.latitude, shop.longitude),
-                        icon: shop.address.isEmpty
-                            ? BitmapDescriptor.fromBytes(MarkerUtils.circle)
-                            : null,
-                        onTap: () {
-                          _scrollController.animateTo(
-                              (_scrollController.position.maxScrollExtent /
-                                      shops.length) *
-                                  (index + 1),
-                              duration: Duration(seconds: 1),
-                              curve: Curves.easeOut);
-                        },
-                        infoWindow: InfoWindow(title: shop.name)));
+            child: RefreshIndicator(
+              key: _refreshIndicatorKey,
+              onRefresh: () async {
+                var controller = await _controller.future;
+                var bounds = await controller.getVisibleRegion();
+                BlocProvider.of<ShopsBloc>(context)
+                    .add(ShopsSearchEvent(bounds));
+                Future.delayed(Duration(seconds: 1));
+              },
+              child: BlocBuilder<ShopsBloc, ShopsState>(
+                builder: (context, state) {
+                  List<Shop> shops = [];
+                  if (state is ShopsLoadedState) {
+                    shops = state.shops;
+                    _markers.clear();
+                    _circles.clear();
+                    for (int index = 0; index < shops.length; index++) {
+                      var shop = shops[index];
+                      if (shop.name.isEmpty) {
+                        _circles.add(Circle(
+                          circleId: CircleId(shop.hash),
+                          center: LatLng(shop.latitude, shop.longitude),
+                          radius: 20,
+                          strokeWidth: 5,
+                          fillColor: Theme.of(context).accentColor,
+                        ));
+                      } else {
+                        _markers.add(Marker(
+                            markerId: MarkerId(shop.hash),
+                            position: LatLng(shop.latitude, shop.longitude),
+                            icon: shop.address.isEmpty
+                                ? BitmapDescriptor.fromBytes(MarkerUtils.circle)
+                                : null,
+                            onTap: () {
+                              _scrollController.animateTo(
+                                  (_scrollController.position.maxScrollExtent /
+                                          shops.length) *
+                                      (index + 1),
+                                  duration: Duration(seconds: 1),
+                                  curve: Curves.easeOut);
+                            },
+                            infoWindow: InfoWindow(title: shop.name)));
+                      }
+                    }
                   }
-                }
-                double mapPaddingBottom = 0.0;
-                if (shops.isNotEmpty) {
-                  mapPaddingBottom = MediaQuery.of(context).size.height * 0.3;
-                }
-                return RefreshIndicator(
-                  key: _refreshIndicatorKey,
-                  onRefresh: () async {
-                    var controller = await _controller.future;
-                    var bounds = await controller.getVisibleRegion();
-                    BlocProvider.of<ShopsBloc>(context)
-                        .add(ShopsSearchEvent(bounds));
-                    await Future.delayed(Duration(seconds: 1));
-                  },
-                  child: Stack(
+                  double mapPaddingBottom = 0.0;
+                  if (shops.isNotEmpty) {
+                    mapPaddingBottom = MediaQuery.of(context).size.height * 0.3;
+                  }
+                  return Stack(
                     children: <Widget>[
                       GoogleMap(
                         initialCameraPosition: _cameraPosition,
                         markers: _markers,
+                        circles: _circles,
                         myLocationEnabled: true,
                         myLocationButtonEnabled: false,
                         compassEnabled: true,
-                        onCameraIdle: () {
-                          BlocProvider.of<ShopsBloc>(context)
-                              .add(ShopsLoadingEvent());
+                        onCameraIdle: () async {
+                          if (!(BlocProvider.of<ShopsBloc>(context).state
+                              is ShopsLoadingState)) {
+                            BlocProvider.of<ShopsBloc>(context)
+                                .add(ShopsLoadingEvent());
+                          }
                         },
                         padding: EdgeInsets.only(
                           top: MediaQuery.of(context).size.height * 0.08,
@@ -185,9 +201,9 @@ class _HomeScreenState extends State<HomeScreen> {
                         child: _buildAction(),
                       ),
                     ],
-                  ),
-                );
-              },
+                  );
+                },
+              ),
             ),
           ),
         ),
@@ -241,7 +257,6 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   void _onMapCreated(GoogleMapController controller) {
-    print('_onMapCreated');
     if (!_controller.isCompleted) {
       _controller.complete(controller);
       var style = mapStyleLight;
@@ -261,5 +276,10 @@ class _HomeScreenState extends State<HomeScreen> {
       return Future.value(false);
     }
     return Future.value(true);
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
   }
 }
