@@ -33,7 +33,7 @@ class _HomeScreenState extends State<HomeScreen> {
   );
 
   LatLng center;
-
+  double zoom = 16;
   @override
   void initState() {
     _scrollController = ScrollController();
@@ -92,11 +92,11 @@ class _HomeScreenState extends State<HomeScreen> {
                   _circles.clear();
                   for (int index = 0; index < shops.length; index++) {
                     var shop = shops[index];
-                    if (shop.name.isEmpty) {
+                    if (shop.name.isEmpty || zoom < 16) {
                       _circles.add(Circle(
                         circleId: CircleId(shop.hash),
                         center: LatLng(shop.latitude, shop.longitude),
-                        radius: 10,
+                        radius: zoom < 16 ? 20 : 10,
                         strokeWidth: 5,
                         fillColor: Theme.of(context).accentColor,
                       ));
@@ -150,6 +150,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         }
                       },
                       onCameraMove: (CameraPosition camera) {
+                        zoom = camera.zoom;
                         if (camera.zoom < 16) {
                           center = camera.target;
                         } else {
