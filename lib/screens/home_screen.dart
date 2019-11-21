@@ -25,8 +25,8 @@ class _HomeScreenState extends State<HomeScreen> {
   ScrollController _scrollController;
   Completer<GoogleMapController> _controller = Completer();
   Set<Marker> _markers = {};
-//  Map<String, Marker> _markers
-
+  final GlobalKey<RefreshIndicatorState> _refreshIndicatorKey =
+      GlobalKey<RefreshIndicatorState>();
   static final CameraPosition _cameraPosition = CameraPosition(
     target: LatLng(10.755639, 106.134703),
     zoom: 16,
@@ -37,7 +37,6 @@ class _HomeScreenState extends State<HomeScreen> {
     _scrollController = ScrollController();
     BlocProvider.of<SettingsBloc>(context)
         .add(SettingsRequestPermissionEvent());
-    _controller.future.then((controller) => controller.getVisibleRegion());
     MarkerUtils.initIcons();
     super.initState();
   }
@@ -66,24 +65,32 @@ class _HomeScreenState extends State<HomeScreen> {
         child: Scaffold(
           resizeToAvoidBottomInset: false,
           drawer: HomeDrawer(),
-          body: BlocListener<MapBloc, MapState>(
-            listener: (context, state) async {
-              if (state is MapCurrentLocationUpdatedState) {
-                await _controller.future.then((controller) =>
-                    controller.animateCamera(CameraUpdate.newLatLng(LatLng(
-                        state.position.latitude, state.position.longitude))));
-              }
-            },
+          body: MultiBlocListener(
+            listeners: [
+              BlocListener<MapBloc, MapState>(
+                listener: (context, state) async {
+                  if (state is MapCurrentLocationUpdatedState) {
+                    await _controller.future.then((controller) =>
+                        controller.animateCamera(CameraUpdate.newLatLng(LatLng(
+                            state.position.latitude,
+                            state.position.longitude))));
+                  }
+                },
+              ),
+              BlocListener<ShopsBloc, ShopsState>(
+                listener: (context, state) async {
+                  if (state is ShopsLoadingState) {
+                    _refreshIndicatorKey.currentState.show();
+                  }
+                },
+              ),
+            ],
             child: BlocBuilder<ShopsBloc, ShopsState>(
               builder: (context, state) {
                 List<Shop> shops = [];
-                bool loading = false;
-                _markers.clear();
-                if (state is ShopsLoadingState) {
-                  loading = true;
-                }
+                shops = BlocProvider.of<ShopsBloc>(context).shops;
                 if (state is ShopsLoadedState) {
-                  shops = state.shops;
+                  _markers.clear();
                   for (int index = 0; index < shops.length; index++) {
                     var shop = shops[index];
                     _markers.add(Marker(
@@ -107,79 +114,78 @@ class _HomeScreenState extends State<HomeScreen> {
                 if (shops.isNotEmpty) {
                   mapPaddingBottom = MediaQuery.of(context).size.height * 0.3;
                 }
-                return Stack(
-                  children: <Widget>[
-                    GoogleMap(
-                      initialCameraPosition: _cameraPosition,
-                      markers: _markers,
-                      myLocationEnabled: true,
-                      myLocationButtonEnabled: false,
-                      compassEnabled: true,
-                      onCameraIdle: () {
-                        BlocProvider.of<ShopsBloc>(context)
-                            .add(ShopsLoadingEvent());
-                        _controller.future.then((controller) {
-                          controller.getVisibleRegion().then((bounds) {
-                            BlocProvider.of<ShopsBloc>(context)
-                                .add(ShopsSearchEvent(bounds));
-                          });
-                        });
-                      },
-                      padding: EdgeInsets.only(
-                        top: MediaQuery.of(context).size.height * 0.08,
-                        bottom: mapPaddingBottom,
+                return RefreshIndicator(
+                  key: _refreshIndicatorKey,
+                  onRefresh: () async {
+                    var controller = await _controller.future;
+                    var bounds = await controller.getVisibleRegion();
+                    BlocProvider.of<ShopsBloc>(context)
+                        .add(ShopsSearchEvent(bounds));
+                    await Future.delayed(Duration(seconds: 1));
+                  },
+                  child: Stack(
+                    children: <Widget>[
+                      GoogleMap(
+                        initialCameraPosition: _cameraPosition,
+                        markers: _markers,
+                        myLocationEnabled: true,
+                        myLocationButtonEnabled: false,
+                        compassEnabled: true,
+                        onCameraIdle: () {
+                          BlocProvider.of<ShopsBloc>(context)
+                              .add(ShopsLoadingEvent());
+                        },
+                        padding: EdgeInsets.only(
+                          top: MediaQuery.of(context).size.height * 0.08,
+                          bottom: mapPaddingBottom,
+                        ),
+                        onMapCreated: _onMapCreated,
                       ),
-                      onMapCreated: _onMapCreated,
-                    ),
-                    shops.isNotEmpty
-                        ? Align(
-                            alignment: Alignment.bottomCenter,
-                            child: Container(
-                              height: MediaQuery.of(context).size.height * 0.3,
-                              child: ListView.builder(
-                                controller: _scrollController,
-                                scrollDirection: Axis.horizontal,
-                                itemCount: shops.length,
-                                itemBuilder: (context, index) {
-                                  if (shops[index].name.isEmpty) {
-                                    return Container();
-                                  }
-                                  return ShopCard(
-                                    shop: shops[index],
-                                    onPressed: () async {
-                                      await _controller.future.then(
-                                          (controller) =>
-                                              controller.animateCamera(
-                                                  CameraUpdate.newLatLng(LatLng(
-                                                      shops[index].latitude,
-                                                      shops[index]
-                                                          .longitude))));
-                                    },
-                                  );
-                                },
+                      shops.isNotEmpty
+                          ? Align(
+                              alignment: Alignment.bottomCenter,
+                              child: Container(
+                                height:
+                                    MediaQuery.of(context).size.height * 0.3,
+                                child: ListView.builder(
+                                  controller: _scrollController,
+                                  scrollDirection: Axis.horizontal,
+                                  itemCount: shops.length,
+                                  itemBuilder: (context, index) {
+                                    if (shops[index].name.isEmpty) {
+                                      return Container();
+                                    }
+                                    return ShopCard(
+                                      shop: shops[index],
+                                      onPressed: () async {
+                                        await _controller.future.then(
+                                            (controller) => controller
+                                                .animateCamera(
+                                                    CameraUpdate.newLatLng(
+                                                        LatLng(
+                                                            shops[index]
+                                                                .latitude,
+                                                            shops[index]
+                                                                .longitude))));
+                                      },
+                                    );
+                                  },
+                                ),
                               ),
-                            ),
-                          )
-                        : SizedBox(),
-                    loading
-                        ? Container(
-                            child: Center(
-                              child: CircularProgressIndicator(),
-                            ),
-                            color: Colors.white.withOpacity(0.8),
-                          )
-                        : SizedBox(),
-                    Positioned(
-                      top: MediaQuery.of(context).padding.top + 5,
-                      left: 5,
-                      child: _buildMenuButton(),
-                    ),
-                    Positioned(
-                      top: MediaQuery.of(context).padding.top + 5,
-                      right: 5,
-                      child: _buildAction(),
-                    ),
-                  ],
+                            )
+                          : SizedBox(),
+                      Positioned(
+                        top: MediaQuery.of(context).padding.top + 5,
+                        left: 5,
+                        child: _buildMenuButton(),
+                      ),
+                      Positioned(
+                        top: MediaQuery.of(context).padding.top + 5,
+                        right: 5,
+                        child: _buildAction(),
+                      ),
+                    ],
+                  ),
                 );
               },
             ),
