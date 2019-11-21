@@ -235,12 +235,15 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   void _onMapCreated(GoogleMapController controller) {
-    _controller.complete(controller);
-    var style = mapStyleLight;
-    if (BlocProvider.of<SettingsBloc>(context).settings.darkMode) {
-      style = mapStyleDark;
+    print('_onMapCreated');
+    if (!_controller.isCompleted) {
+      _controller.complete(controller);
+      var style = mapStyleLight;
+      if (BlocProvider.of<SettingsBloc>(context).settings.darkMode) {
+        style = mapStyleDark;
+      }
+      _controller.future.then((controller) => controller.setMapStyle(style));
     }
-    _controller.future.then((controller) => controller.setMapStyle(style));
   }
 
   Future<bool> _onWillPop() async {
