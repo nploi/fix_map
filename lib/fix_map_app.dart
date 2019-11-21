@@ -49,7 +49,16 @@ class FixMapApp extends StatelessWidget {
             SettingsScreen.routeName: (context) => SettingsScreen(
                   settingsBloc: settingsBloc,
                 ),
-            ShopDetailScreen.routeName: (context) => ShopDetailScreen(),
+          },
+          // ignore: missing_return
+          onGenerateRoute: (routeSettings) {
+            if (routeSettings.name == ShopDetailScreen.routeName) {
+              var shop = routeSettings.arguments;
+              return MaterialPageRoute(
+                  builder: (context) => ShopDetailScreen(
+                        shop: shop,
+                      ));
+            }
           },
         );
       },

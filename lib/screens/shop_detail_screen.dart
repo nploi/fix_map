@@ -1,5 +1,6 @@
 import 'package:fix_map/blocs/blocs.dart';
 import 'package:fix_map/generated/i18n.dart';
+import 'package:fix_map/models/models.dart';
 import 'package:fix_map/widgets/widgets.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -7,9 +8,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 class ShopDetailScreen extends StatefulWidget {
   static final String routeName = "/shop_detail";
-  final String image = "assets/shop_1.jpg";
+  final Shop shop;
 
-  ShopDetailScreen();
+  const ShopDetailScreen({Key key, this.shop}) : super(key: key);
 
   @override
   _ShopDetailScreenState createState() => _ShopDetailScreenState();
@@ -32,7 +33,7 @@ class _ShopDetailScreenState extends State<ShopDetailScreen> {
             Container(
                 foregroundDecoration: BoxDecoration(color: Colors.black26),
                 height: 400,
-                child: Image.asset(widget.image, fit: BoxFit.cover)),
+                child: Image.network(widget.shop.imageBig, fit: BoxFit.cover)),
             SingleChildScrollView(
               padding: const EdgeInsets.only(top: 16.0, bottom: 20.0),
               child: Column(
@@ -42,7 +43,7 @@ class _ShopDetailScreenState extends State<ShopDetailScreen> {
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 16.0),
                     child: Text(
-                      "Sửa xe Tấn Thành",
+                      widget.shop.name,
                       style: TextStyle(
                           color: Colors.white,
                           fontSize: 28.0,
@@ -185,23 +186,6 @@ class _ShopDetailScreenState extends State<ShopDetailScreen> {
                 ],
               ),
             ),
-            Align(
-              alignment: Alignment.bottomLeft,
-              child: BottomNavigationBar(
-                backgroundColor: Colors.white54,
-                elevation: 0,
-                selectedItemColor: Colors.black,
-                items: [
-                  BottomNavigationBarItem(
-                      icon: Icon(Icons.search), title: Text("Search")),
-                  BottomNavigationBarItem(
-                      icon: Icon(Icons.favorite_border),
-                      title: Text("Favorites")),
-                  BottomNavigationBarItem(
-                      icon: Icon(Icons.settings), title: Text("Settings")),
-                ],
-              ),
-            )
           ],
         ));
   }

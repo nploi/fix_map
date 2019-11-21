@@ -3,6 +3,7 @@ import 'package:fix_map/blocs/blocs.dart';
 import 'package:fix_map/blocs/shops/bloc.dart';
 import 'package:fix_map/generated/i18n.dart';
 import 'package:fix_map/models/models.dart';
+import 'package:fix_map/screens/screens.dart';
 import 'package:fix_map/utils/utils.dart';
 import 'package:fix_map/widgets/shop_card.dart';
 import 'package:fix_map/widgets/widgets.dart';
@@ -95,7 +96,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       _circles.add(Circle(
                         circleId: CircleId(shop.hash),
                         center: LatLng(shop.latitude, shop.longitude),
-                        radius: 20,
+                        radius: 10,
                         strokeWidth: 5,
                         fillColor: Theme.of(context).accentColor,
                       ));
@@ -167,14 +168,10 @@ class _HomeScreenState extends State<HomeScreen> {
                                   }
                                   return ShopCard(
                                     shop: shops[index],
-                                    onPressed: () async {
-                                      await _controller.future.then(
-                                          (controller) =>
-                                              controller.animateCamera(
-                                                  CameraUpdate.newLatLng(LatLng(
-                                                      shops[index].latitude,
-                                                      shops[index]
-                                                          .longitude))));
+                                    onPressed: () {
+                                      Navigator.pushNamed(this.context,
+                                          ShopDetailScreen.routeName,
+                                          arguments: shops[index]);
                                     },
                                   );
                                 },
@@ -195,8 +192,9 @@ class _HomeScreenState extends State<HomeScreen> {
                     isLoading
                         ? Align(
                             alignment: Alignment.topCenter,
-                            child: Padding(
-                              padding: EdgeInsets.only(
+                            child: Container(
+                              height: 3,
+                              margin: EdgeInsets.only(
                                   top: MediaQuery.of(context).padding.top),
                               child: LinearProgressIndicator(),
                             ),
