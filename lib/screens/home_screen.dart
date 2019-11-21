@@ -137,15 +137,24 @@ class _HomeScreenState extends State<HomeScreen> {
                             is ShopsLoadingState)) {
                           BlocProvider.of<ShopsBloc>(context)
                               .add(ShopsLoadingEvent());
+                          LatLngBounds bounds;
                           if (center != null) {
-                            var bounds = MapUtils.toBounds(center, 200.0);
-                            BlocProvider.of<ShopsBloc>(context)
-                                .add(ShopsSearchEvent(bounds));
+                            bounds = MapUtils.toBounds(center, 300.0);
+                          } else {
+                            var controller = await _controller.future;
+                            bounds = await controller.getVisibleRegion();
                           }
+
+                          BlocProvider.of<ShopsBloc>(context)
+                              .add(ShopsSearchEvent(bounds));
                         }
                       },
                       onCameraMove: (CameraPosition camera) {
-                        center = camera.target;
+                        if (camera.zoom < 16) {
+                          center = camera.target;
+                        } else {
+                          center = null;
+                        }
                       },
                       padding: EdgeInsets.only(
                         top: MediaQuery.of(context).size.height * 0.08,
