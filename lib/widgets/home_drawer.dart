@@ -1,4 +1,3 @@
-import 'package:fix_map/blocs/blocs.dart';
 import 'package:fix_map/generated/i18n.dart';
 import 'package:fix_map/screens/screens.dart';
 import 'package:flutter/cupertino.dart';

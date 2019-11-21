@@ -26,12 +26,12 @@ class _HomeScreenState extends State<HomeScreen> {
   Completer<GoogleMapController> _controller = Completer();
   Set<Marker> _markers = {};
   Set<Circle> _circles = {};
-  final GlobalKey<RefreshIndicatorState> _refreshIndicatorKey =
-      GlobalKey<RefreshIndicatorState>();
   static final CameraPosition _cameraPosition = CameraPosition(
     target: LatLng(10.755639, 106.134703),
     zoom: 16,
   );
+
+  LatLng center;
 
   @override
   void initState() {
@@ -78,132 +78,133 @@ class _HomeScreenState extends State<HomeScreen> {
                   }
                 },
               ),
-              BlocListener<ShopsBloc, ShopsState>(
-                listener: (context, state) async {
-                  if (state is ShopsLoadingState) {
-                    _refreshIndicatorKey.currentState.show();
-                  }
-                },
-              ),
             ],
-            child: RefreshIndicator(
-              key: _refreshIndicatorKey,
-              onRefresh: () async {
-                var controller = await _controller.future;
-                var bounds = await controller.getVisibleRegion();
-                BlocProvider.of<ShopsBloc>(context)
-                    .add(ShopsSearchEvent(bounds));
-                Future.delayed(Duration(seconds: 1));
-              },
-              child: BlocBuilder<ShopsBloc, ShopsState>(
-                builder: (context, state) {
-                  List<Shop> shops = [];
-                  if (state is ShopsLoadedState) {
-                    shops = state.shops;
-                    _markers.clear();
-                    _circles.clear();
-                    for (int index = 0; index < shops.length; index++) {
-                      var shop = shops[index];
-                      if (shop.name.isEmpty) {
-                        _circles.add(Circle(
-                          circleId: CircleId(shop.hash),
-                          center: LatLng(shop.latitude, shop.longitude),
-                          radius: 20,
-                          strokeWidth: 5,
-                          fillColor: Theme.of(context).accentColor,
-                        ));
-                      } else {
-                        _markers.add(Marker(
-                            markerId: MarkerId(shop.hash),
-                            position: LatLng(shop.latitude, shop.longitude),
-                            icon: shop.address.isEmpty
-                                ? BitmapDescriptor.fromBytes(MarkerUtils.circle)
-                                : null,
-                            onTap: () {
-                              _scrollController.animateTo(
-                                  (_scrollController.position.maxScrollExtent /
-                                          shops.length) *
-                                      (index + 1),
-                                  duration: Duration(seconds: 1),
-                                  curve: Curves.easeOut);
-                            },
-                            infoWindow: InfoWindow(title: shop.name)));
-                      }
+            child: BlocBuilder<ShopsBloc, ShopsState>(
+              builder: (context, state) {
+                bool isLoading = false;
+                if (state is ShopsLoadingState) {
+                  isLoading = true;
+                }
+                List<Shop> shops = BlocProvider.of<ShopsBloc>(context).shops;
+                if (state is ShopsLoadedState) {
+                  _markers.clear();
+                  _circles.clear();
+                  for (int index = 0; index < shops.length; index++) {
+                    var shop = shops[index];
+                    if (shop.name.isEmpty) {
+                      _circles.add(Circle(
+                        circleId: CircleId(shop.hash),
+                        center: LatLng(shop.latitude, shop.longitude),
+                        radius: 20,
+                        strokeWidth: 5,
+                        fillColor: Theme.of(context).accentColor,
+                      ));
+                    } else {
+                      _markers.add(Marker(
+                          markerId: MarkerId(shop.hash),
+                          position: LatLng(shop.latitude, shop.longitude),
+                          icon: shop.address.isEmpty
+                              ? BitmapDescriptor.fromBytes(MarkerUtils.circle)
+                              : null,
+                          onTap: () {
+                            _scrollController.animateTo(
+                                (_scrollController.position.maxScrollExtent /
+                                        shops.length) *
+                                    (index + 1),
+                                duration: Duration(seconds: 1),
+                                curve: Curves.easeOut);
+                          },
+                          infoWindow: InfoWindow(title: shop.name)));
                     }
                   }
-                  double mapPaddingBottom = 0.0;
-                  if (shops.isNotEmpty) {
-                    mapPaddingBottom = MediaQuery.of(context).size.height * 0.3;
-                  }
-                  return Stack(
-                    children: <Widget>[
-                      GoogleMap(
-                        initialCameraPosition: _cameraPosition,
-                        markers: _markers,
-                        circles: _circles,
-                        myLocationEnabled: true,
-                        myLocationButtonEnabled: false,
-                        compassEnabled: true,
-                        onCameraIdle: () async {
-                          if (!(BlocProvider.of<ShopsBloc>(context).state
-                              is ShopsLoadingState)) {
+                }
+                double mapPaddingBottom = 0.0;
+                if (shops.isNotEmpty) {
+                  mapPaddingBottom = MediaQuery.of(context).size.height * 0.3;
+                }
+                return Stack(
+                  children: <Widget>[
+                    GoogleMap(
+                      initialCameraPosition: _cameraPosition,
+                      markers: _markers,
+                      circles: _circles,
+                      myLocationEnabled: true,
+                      myLocationButtonEnabled: false,
+                      compassEnabled: true,
+                      onCameraIdle: () async {
+                        if (!(BlocProvider.of<ShopsBloc>(context).state
+                            is ShopsLoadingState)) {
+                          BlocProvider.of<ShopsBloc>(context)
+                              .add(ShopsLoadingEvent());
+                          if (center != null) {
+                            var bounds = MapUtils.toBounds(center, 200.0);
                             BlocProvider.of<ShopsBloc>(context)
-                                .add(ShopsLoadingEvent());
+                                .add(ShopsSearchEvent(bounds));
                           }
-                        },
-                        padding: EdgeInsets.only(
-                          top: MediaQuery.of(context).size.height * 0.08,
-                          bottom: mapPaddingBottom,
-                        ),
-                        onMapCreated: _onMapCreated,
+                        }
+                      },
+                      onCameraMove: (CameraPosition camera) {
+                        center = camera.target;
+                      },
+                      padding: EdgeInsets.only(
+                        top: MediaQuery.of(context).size.height * 0.08,
+                        bottom: mapPaddingBottom,
                       ),
-                      shops.isNotEmpty
-                          ? Align(
-                              alignment: Alignment.bottomCenter,
-                              child: Container(
-                                height:
-                                    MediaQuery.of(context).size.height * 0.3,
-                                child: ListView.builder(
-                                  controller: _scrollController,
-                                  scrollDirection: Axis.horizontal,
-                                  itemCount: shops.length,
-                                  itemBuilder: (context, index) {
-                                    if (shops[index].name.isEmpty) {
-                                      return Container();
-                                    }
-                                    return ShopCard(
-                                      shop: shops[index],
-                                      onPressed: () async {
-                                        await _controller.future.then(
-                                            (controller) => controller
-                                                .animateCamera(
-                                                    CameraUpdate.newLatLng(
-                                                        LatLng(
-                                                            shops[index]
-                                                                .latitude,
-                                                            shops[index]
-                                                                .longitude))));
-                                      },
-                                    );
-                                  },
-                                ),
+                      onMapCreated: _onMapCreated,
+                    ),
+                    shops.isNotEmpty
+                        ? Align(
+                            alignment: Alignment.bottomCenter,
+                            child: Container(
+                              height: MediaQuery.of(context).size.height * 0.3,
+                              child: ListView.builder(
+                                controller: _scrollController,
+                                scrollDirection: Axis.horizontal,
+                                itemCount: shops.length,
+                                itemBuilder: (context, index) {
+                                  if (shops[index].name.isEmpty) {
+                                    return Container();
+                                  }
+                                  return ShopCard(
+                                    shop: shops[index],
+                                    onPressed: () async {
+                                      await _controller.future.then(
+                                          (controller) =>
+                                              controller.animateCamera(
+                                                  CameraUpdate.newLatLng(LatLng(
+                                                      shops[index].latitude,
+                                                      shops[index]
+                                                          .longitude))));
+                                    },
+                                  );
+                                },
                               ),
-                            )
-                          : SizedBox(),
-                      Positioned(
-                        top: MediaQuery.of(context).padding.top + 5,
-                        left: 5,
-                        child: _buildMenuButton(),
-                      ),
-                      Positioned(
-                        top: MediaQuery.of(context).padding.top + 5,
-                        right: 5,
-                        child: _buildAction(),
-                      ),
-                    ],
-                  );
-                },
-              ),
+                            ),
+                          )
+                        : SizedBox(),
+                    Positioned(
+                      top: MediaQuery.of(context).padding.top + 5,
+                      left: 5,
+                      child: _buildMenuButton(),
+                    ),
+                    Positioned(
+                      top: MediaQuery.of(context).padding.top + 5,
+                      right: 5,
+                      child: _buildAction(),
+                    ),
+                    isLoading
+                        ? Align(
+                            alignment: Alignment.topCenter,
+                            child: Padding(
+                              padding: EdgeInsets.only(
+                                  top: MediaQuery.of(context).padding.top),
+                              child: LinearProgressIndicator(),
+                            ),
+                          )
+                        : SizedBox()
+                  ],
+                );
+              },
             ),
           ),
         ),

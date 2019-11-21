@@ -2,7 +2,6 @@ import 'dart:async';
 import 'package:bloc/bloc.dart';
 import 'package:fix_map/blocs/blocs.dart';
 import 'package:fix_map/blocs/map/bloc.dart';
-import 'package:fix_map/blocs/shops/bloc.dart';
 import 'package:fix_map/repositories/repostiories.dart';
 import 'package:geolocator/geolocator.dart';
 import 'map_event.dart';

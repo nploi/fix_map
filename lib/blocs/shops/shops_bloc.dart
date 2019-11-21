@@ -9,7 +9,8 @@ import 'dart:developer' as developer;
 class ShopsBloc extends Bloc<ShopsEvent, ShopsState> {
   final ShopRepository _shopRepository = ShopRepository();
   bool loading = false;
-
+  List<Shop> _shops = [];
+  List<Shop> get shops => this._shops;
   @override
   ShopsState get initialState => InitialShopsState();
 
@@ -32,7 +33,7 @@ class ShopsBloc extends Bloc<ShopsEvent, ShopsState> {
   }
 
   Stream<ShopsState> _handleMapFetchShopsEvent(ShopsSearchEvent event) async* {
-    var shops = await _shopRepository.getShops(event.bounds, mock: false);
-    yield ShopsLoadedState(shops);
+    _shops = await _shopRepository.getShops(event.bounds, mock: false);
+    yield ShopsLoadedState(_shops.length);
   }
 }
