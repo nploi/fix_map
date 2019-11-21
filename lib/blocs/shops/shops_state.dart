@@ -14,12 +14,12 @@ class InitialShopsState extends ShopsState {}
 class ShopsLoadingState extends ShopsState {}
 
 class ShopsLoadedState extends ShopsState {
-  final List<Shop> shops;
+  final int size;
 
-  ShopsLoadedState(this.shops);
+  ShopsLoadedState(this.size);
 
-  List<Object> get props => [this.shops];
+  List<Object> get props => [this.size];
 
   @override
-  String toString() => 'ShopsLoadedState {size: ${shops.length}';
+  String toString() => 'ShopsLoadedState {size: $size';
 }
