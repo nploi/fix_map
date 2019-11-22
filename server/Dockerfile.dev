@@ -1,0 +1,17 @@
+# base image
+FROM node:10.16.3-alpine
+
+# set working directory
+WORKDIR /usr/src/app
+
+# Install yarn and other dependencies via apk
+RUN apk update && apk add git yarn python g++ make && rm -rf /var/cache/apk/*
+
+# install and cache app dependencies
+COPY package*.json ./
+
+RUN npm install
+
+COPY . .
+
+EXPOSE 5000

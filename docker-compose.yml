@@ -1,0 +1,30 @@
+version: '3.7'
+
+services:
+  server:
+    container_name: fixmap_server
+    volumes:
+      - ./server/:/usr/src/app
+      - /usr/src/app/node_modules
+    depends_on:
+      - postgres
+    networks:
+      - fixmap
+  postgres:
+    container_name: fixmap_db_dev
+    image: postgres:11.2-alpine
+    volumes:
+      - pgdb_fixmap:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=!!!abc789
+      - POSTGRES_DB=fixmap
+    ports:
+      - 5436:5432
+    networks:
+      - fixmap
+
+networks:
+  fixmap:
+volumes:
+  pgdb_fixmap:
