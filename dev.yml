@@ -1,14 +1,14 @@
 version: '3.7'
 
 services:
-  server:
+  fixmap_server:
     command: npm start
     build:
       context: ./server/
       dockerfile: Dockerfile.dev
     ports:
-      - 5000:5000
+      - 5005:5000
     environment:
       - NODE_ENV=development
       - CHOKIDAR_USEPOLLING=true
-      - DATABASE_URL=postgres://postgres:!!!abc789@postgres:5432/fixmap
+      - DATABASE_URL=postgres://postgres:!!!abc789@postgres:5432/fixmap_db
