@@ -12,6 +12,33 @@ class InitialShopsState extends ShopsState {}
 
 class ShopsLoadingState extends ShopsState {}
 
+class ShopsDownloadedState extends ShopsState {
+  ShopsDownloadedState();
+
+  List<Object> get props => [];
+
+  @override
+  String toString() => 'ShopsDownloadedState {}';
+}
+
+class ShopsDataNotFoundState extends ShopsState {
+  ShopsDataNotFoundState();
+
+  List<Object> get props => [];
+
+  @override
+  String toString() => 'ShopsDataNotFoundState {}';
+}
+
+class ShopsDownloadingState extends ShopsState {
+  ShopsDownloadingState();
+
+  List<Object> get props => [];
+
+  @override
+  String toString() => 'ShopsDownloadingState {}';
+}
+
 class ShopsLoadedState extends ShopsState {
   final int counter;
   ShopsLoadedState(this.counter);
