@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:fix_map/blocs/blocs.dart';
 import 'package:fix_map/generated/i18n.dart';
 import 'package:fix_map/models/models.dart';
@@ -33,7 +34,10 @@ class _ShopDetailScreenState extends State<ShopDetailScreen> {
             Container(
                 foregroundDecoration: BoxDecoration(color: Colors.black26),
                 height: 400,
-                child: Image.network(widget.shop.imageBig, fit: BoxFit.cover)),
+                child: CachedNetworkImage(
+                  imageUrl: widget.shop.imageBig,
+                  fit: BoxFit.cover,
+                )),
             SingleChildScrollView(
               padding: const EdgeInsets.only(top: 16.0, bottom: 20.0),
               child: Column(

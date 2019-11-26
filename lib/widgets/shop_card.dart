@@ -1,4 +1,5 @@
 import 'package:auto_size_text/auto_size_text.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:fix_map/models/models.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -33,9 +34,9 @@ class ShopCard extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: <Widget>[
                     CircleAvatar(
-                      child: Image.network(
-                        shop.image,
-                        fit: BoxFit.fill,
+                      child: CachedNetworkImage(
+                        imageUrl: shop.image,
+                        fit: BoxFit.contain,
                       ),
                     ),
                     SizedBox(

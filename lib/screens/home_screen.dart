@@ -55,9 +55,13 @@ class _HomeScreenState extends State<HomeScreen> {
             BlocListener<MapBloc, MapState>(
               listener: (context, state) async {
                 if (state is MapCurrentLocationUpdatedState) {
-                  await _controller.future.then((controller) =>
-                      controller.animateCamera(CameraUpdate.newLatLng(LatLng(
-                          state.position.latitude, state.position.longitude))));
+                  await _controller.future.then(
+                    (controller) => controller.animateCamera(
+                        CameraUpdate.newLatLngZoom(
+                            LatLng(state.position.latitude,
+                                state.position.longitude),
+                            16)),
+                  );
                 }
               },
             ),
@@ -172,7 +176,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       }
                     },
                     padding: EdgeInsets.only(
-                      top: MediaQuery.of(context).size.height * 0.08,
+                      top: MediaQuery.of(context).size.height * 0.1,
                       bottom: mapPaddingBottom,
                     ),
                     onMapCreated: _onMapCreated,
@@ -223,7 +227,22 @@ class _HomeScreenState extends State<HomeScreen> {
                             child: LinearProgressIndicator(),
                           ),
                         )
-                      : SizedBox()
+                      : SizedBox(),
+                  Positioned(
+                    bottom: mapPaddingBottom + 5,
+                    right: 10,
+                    child: SizedBox(
+                      height: Theme.of(context).iconTheme.size * 1.5,
+                      width: Theme.of(context).iconTheme.size * 1.5,
+                      child: FloatingActionButton(
+                        onPressed: () {
+                          BlocProvider.of<MapBloc>(context)
+                              .add(MapGetCurrentLocationEvent());
+                        },
+                        child: Icon(Icons.my_location),
+                      ),
+                    ),
+                  ),
                 ],
               );
             },
