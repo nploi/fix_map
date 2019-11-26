@@ -4,9 +4,10 @@ import 'package:fix_map/generated/i18n.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:percent_indicator/percent_indicator.dart';
 
 showDownloadDialog(BuildContext context, ShopsBloc bloc) {
-  showDialog(
+  showCupertinoDialog(
       context: context,
       builder: (context) => WillPopScope(
             onWillPop: () async {
@@ -19,21 +20,29 @@ showDownloadDialog(BuildContext context, ShopsBloc bloc) {
                   Navigator.of(context).pop();
                 }
               },
-              child: SimpleDialog(
-                title: Text("Downloading ..."),
-                children: <Widget>[
-                  Container(
-//                    height: MediaQuery.of(context).size.height / 2,
-//                    width: MediaQuery.of(context).size.width / 1.5,
-                    child: Column(
-                      children: <Widget>[
-                        CupertinoActivityIndicator(),
-                        Text("Downloading ...")
-                      ],
-                    ),
-                  ),
-                ],
-              ),
+              child: StreamBuilder<double>(
+                  stream: bloc.downloadListener,
+                  initialData: 0,
+                  builder: (context, snapshot) {
+                    return CupertinoAlertDialog(
+                      title: Text(snapshot.data <= 0.0
+                          ? S.of(context).downloadingDataDialogTitle
+                          : S.of(context).initializingDataDialogTitle),
+                      content: Padding(
+                        padding: const EdgeInsets.only(top: 20),
+                        child: LinearPercentIndicator(
+                          lineHeight: 15.0,
+                          percent: snapshot.data / 100.0,
+                          leading: CupertinoActivityIndicator(),
+                          center: Text(
+                            "${snapshot.data.toStringAsFixed(2)}%",
+                          ),
+                          linearStrokeCap: LinearStrokeCap.roundAll,
+                          progressColor: Theme.of(context).accentColor,
+                        ),
+                      ),
+                    );
+                  }),
             ),
           ));
 }

@@ -28,11 +28,12 @@ class S implements WidgetsLocalizations {
   String get c => "";
   String get darkModeToggleTitle => "Dark theme";
   String get doNotAllowLabelButton => "Don't Allow";
+  String get downloadingDataDialogTitle => "Downloading data";
   String get e => "";
   String get f => "";
   String get g => "";
   String get h => "";
-  String get i => "";
+  String get initializingDataDialogTitle => "Initializing data";
   String get j => "";
   String get k => "";
   String get languagePickerTitle => "Languages";
@@ -72,9 +73,13 @@ class $vi extends S {
   @override
   String get requestPermissionDialogContent => "Your current location will be displayed on the map and used\nfor directions, nearby search results, and estimated travel times.";
   @override
+  String get downloadingDataDialogTitle => "Đang tải dự liệu";
+  @override
   String get c => "";
   @override
   String get e => "";
+  @override
+  String get initializingDataDialogTitle => "Đang khởi tạo dữ liệu";
   @override
   String get appName => "Fix Map";
   @override
@@ -85,8 +90,6 @@ class $vi extends S {
   String get h => "";
   @override
   String get settingsTitle => "Cài đặt";
-  @override
-  String get i => "";
   @override
   String get j => "";
   @override

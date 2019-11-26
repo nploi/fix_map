@@ -2,15 +2,20 @@ import 'dart:async';
 import 'package:bloc/bloc.dart';
 import 'package:fix_map/models/models.dart';
 import 'package:fix_map/repositories/repostiories.dart';
+import 'package:rxdart/rxdart.dart';
 
 import 'bloc.dart';
 import 'dart:developer' as developer;
 
 class ShopsBloc extends Bloc<ShopsEvent, ShopsState> {
   final ShopRepository _shopRepository = ShopRepository();
+  // ignore: close_sinks
+  final _downloadListener = BehaviorSubject<double>();
+
   bool loading = false;
   List<Shop> _shops = [];
   List<Shop> get shops => this._shops;
+  BehaviorSubject<double> get downloadListener => this._downloadListener;
   @override
   ShopsState get initialState => InitialShopsState();
 
@@ -49,7 +54,9 @@ class ShopsBloc extends Bloc<ShopsEvent, ShopsState> {
 
   Stream<ShopsState> _handleShopsDownLoadEvent(
       ShopsDownLoadEvent event) async* {
-    await _shopRepository.downloadShops();
+    await _shopRepository.downloadShops((percent) {
+      downloadListener.add(percent);
+    });
     yield ShopsDownloadedState();
   }
 
@@ -61,5 +68,11 @@ class ShopsBloc extends Bloc<ShopsEvent, ShopsState> {
       return;
     }
     yield ShopsDataNotFoundState();
+  }
+
+  @override
+  Future<void> close() {
+    downloadListener.close();
+    return super.close();
   }
 }

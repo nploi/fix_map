@@ -12,7 +12,7 @@ class ShopRepository {
     return await shopDao.searchShops(bounds: bounds);
   }
 
-  Future<List<Shop>> downloadShops() async {
+  Future<List<Shop>> downloadShops(Function(double) callback) async {
     Response response =
         await Dio().get("http://fixmap.documents.asia:5005/shop/list-all");
 
@@ -25,8 +25,8 @@ class ShopRepository {
 
     for (int index = 0; index < fixMapResponse.shops.length; index++) {
       var shop = fixMapResponse.shops[index];
-      var id = await insertShop(shop);
-      print(id);
+      await insertShop(shop);
+      callback((((index + 1) / fixMapResponse.count) * 100).toDouble());
     }
 
     return fixMapResponse.shops;
