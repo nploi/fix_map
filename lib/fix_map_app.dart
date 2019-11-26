@@ -30,8 +30,13 @@ class FixMapApp extends StatelessWidget {
           theme: themeLight,
           darkTheme: themeDark,
           themeMode: settings.darkMode ? ThemeMode.dark : ThemeMode.light,
-          initialRoute: HomeScreen.routeName,
+          initialRoute: this.settingsBloc.settings.isLoadFirstScreen
+              ? HomeScreen.routeName
+              : IntroThreePage.routeName,
           routes: {
+            IntroThreePage.routeName: (context) => IntroThreePage(
+                  settingsBloc: settingsBloc,
+                ),
             HomeScreen.routeName: (context) => MultiBlocProvider(
                   providers: [
                     BlocProvider<SettingsBloc>(
