@@ -1,32 +1,48 @@
 import 'dart:convert';
 
 import 'package:dio/dio.dart';
-import 'package:fix_map/models/coccoc.dart';
+import 'package:fix_map/dao/dao.dart';
 import 'package:fix_map/models/models.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 class ShopRepository {
-  Future<List<Shop>> getShops(LatLngBounds bounds, {bool mock = false}) async {
-    if (mock) {
-      return _shopsMock();
+  final shopDao = ShopDao();
+
+  Future<List<Shop>> getShops(LatLngBounds bounds) async {
+    return await shopDao.searchShops(bounds: bounds);
+  }
+
+  Future<List<Shop>> downloadShops() async {
+    Response response =
+        await Dio().get("http://fixmap.documents.asia:5005/shop/list-all");
+
+    FixMapResponse fixMapResponse =
+        FixMapResponse.fromJson(jsonDecode(response.toString()));
+
+    if (fixMapResponse.responseText != "Successfully") {
+      throw Exception("Opps, has error!");
     }
-    return await fetchFixShops(bounds);
+
+    for (int index = 0; index < fixMapResponse.shops.length; index++) {
+      var shop = fixMapResponse.shops[index];
+      var id = await insertShop(shop);
+      print(id);
+    }
+
+    return fixMapResponse.shops;
   }
 
-  List<Shop> _shopsMock() {
-    CocCoc cocCoc = CocCoc.fromJson(mockCocCoc);
-    List<Shop> shops = [];
-    cocCoc.result.poi.forEach((poi) => shops.add(Shop.fromPoi(poi)));
-    return shops;
+  Future<List<Shop>> getAllRecord() async {
+    var shops = await shopDao.getAllShop();
+    if (shops.isNotEmpty) {
+      return shops;
+    }
+    return [];
   }
 
-  Future<List<Shop>> fetchFixShops(LatLngBounds bounds) async {
-    Response response = await Dio().get(
-        "https://map.coccoc.com/en/map/search.json?query=s%E1%BB%ADa+xe&borders=${bounds.southwest.latitude}%2C${bounds.southwest.longitude}%2C${bounds.northeast.latitude}%2C${bounds.northeast.longitude}");
+  Future getAllShops({String query}) => shopDao.getShops(query: query);
 
-    CocCoc cocCoc = CocCoc.fromJson(jsonDecode(response.toString()));
-    List<Shop> shops = [];
-    cocCoc.result.poi.forEach((poi) => shops.add(Shop.fromPoi(poi)));
-    return shops;
-  }
+  Future<int> insertShop(Shop shop) => shopDao.createShop(shop);
+
+  Future updateShop(Shop shop) => shopDao.updateShop(shop);
 }

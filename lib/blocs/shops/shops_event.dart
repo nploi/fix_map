@@ -9,7 +9,32 @@ abstract class ShopsEvent extends Equatable {
   List<Object> get props => [];
 }
 
-class ShopsLoadingEvent extends ShopsEvent {}
+class ShopsLoadingEvent extends ShopsEvent {
+  ShopsLoadingEvent();
+
+  List<Object> get props => [];
+
+  @override
+  String toString() => 'ShopsLoadingEvent {}';
+}
+
+class ShopsCheckDataEvent extends ShopsEvent {
+  ShopsCheckDataEvent();
+
+  List<Object> get props => [];
+
+  @override
+  String toString() => 'ShopsCheckDataEvent {}';
+}
+
+class ShopsDownLoadEvent extends ShopsEvent {
+  ShopsDownLoadEvent();
+
+  List<Object> get props => [];
+
+  @override
+  String toString() => 'ShopsDownLoadEvent {}';
+}
 
 class ShopsSearchEvent extends ShopsEvent {
   final LatLngBounds bounds;

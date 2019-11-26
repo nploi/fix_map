@@ -26,6 +26,16 @@ class ShopsBloc extends Bloc<ShopsEvent, ShopsState> {
         yield ShopsLoadingState();
         return;
       }
+
+      if (event is ShopsDownLoadEvent) {
+        yield* _handleShopsDownLoadEvent(event);
+        return;
+      }
+
+      if (event is ShopsCheckDataEvent) {
+        yield* _handleShopsCheckDataEvent(event);
+        return;
+      }
     } catch (_, stackTrace) {
       developer.log('$_', name: 'ShopsBloc', error: _, stackTrace: stackTrace);
       yield state;
@@ -33,7 +43,23 @@ class ShopsBloc extends Bloc<ShopsEvent, ShopsState> {
   }
 
   Stream<ShopsState> _handleMapFetchShopsEvent(ShopsSearchEvent event) async* {
-    _shops = await _shopRepository.getShops(event.bounds, mock: false);
+    _shops = await _shopRepository.getShops(event.bounds);
     yield ShopsLoadedState(_shops.length);
+  }
+
+  Stream<ShopsState> _handleShopsDownLoadEvent(
+      ShopsDownLoadEvent event) async* {
+    await _shopRepository.downloadShops();
+    yield ShopsDownloadedState();
+  }
+
+  Stream<ShopsState> _handleShopsCheckDataEvent(
+      ShopsCheckDataEvent event) async* {
+    var shops = await _shopRepository.getAllRecord();
+    if (shops.isNotEmpty) {
+      yield ShopsDownloadedState();
+      return;
+    }
+    yield ShopsDataNotFoundState();
   }
 }

@@ -13,7 +13,7 @@ dependencies:
     sdk: flutter
   cupertino_icons: ^0.1.2
   flutter_cupertino_localizations: ^1.0.1
-  equatable: ^1.0.0
+  equatable: ^1.0.1
   bloc: ^2.0.0
   flutter_bloc: ^2.0.1
   intl: ^0.15.8
@@ -24,8 +24,9 @@ dependencies:
   font_awesome_flutter: ^8.5.0
   google_maps_flutter: ^0.5.21+12
   geolocator: ^5.1.5
-  dio: ^3.0.5
-
+  dio: ^3.0.7
+  sqflite: ^1.1.7+3
+  path_provider: ^1.4.5
 dev_dependencies:
   flutter_test:
     sdk: flutter
