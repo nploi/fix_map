@@ -87,6 +87,10 @@ class _HomeScreenState extends State<HomeScreen> {
                   await _controller.future
                       .then((controller) => controller.setMapStyle(mapStyle));
                 }
+
+                if (state is SettingsNotGrantedPermissionState) {
+                  showRequestPermissionDialog(this.context);
+                }
               },
             ),
           ],
@@ -248,30 +252,6 @@ class _HomeScreenState extends State<HomeScreen> {
         onPressed: () {},
       );
     });
-  }
-
-  void _showRequestPermissionDialog() {
-    showCupertinoDialog<String>(
-      context: context,
-      builder: (BuildContext context) => CupertinoAlertDialog(
-        title: Text(S.of(context).requestPermissionDialogTitle),
-        content: Text(S.of(context).requestPermissionDialogContent),
-        actions: <Widget>[
-          CupertinoDialogAction(
-            child: Text(S.of(context).doNotAllowLabelButton),
-            onPressed: () =>
-                Navigator.pop(context, S.of(context).doNotAllowLabelButton),
-          ),
-          CupertinoDialogAction(
-            child: Text(S.of(context).allowLabelButton),
-            onPressed: () {
-              BlocProvider.of<SettingsBloc>(context)
-                  .add(SettingsRequestPermissionEvent());
-            },
-          ),
-        ],
-      ),
-    );
   }
 
   void _onMapCreated(GoogleMapController controller) {

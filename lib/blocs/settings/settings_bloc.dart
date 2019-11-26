@@ -58,7 +58,7 @@ class SettingsBloc extends Bloc<SettingsEvent, SettingsState> {
           PermissionGroup.location,
         ]);
 
-        if (permissions[PermissionGroup.location] != PermissionStatus.denied) {
+        if (permissions[PermissionGroup.location] != PermissionStatus.granted) {
           yield SettingsNotGrantedPermissionState();
         } else {
           yield SettingsGrantedPermissionState();
