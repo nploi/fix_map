@@ -30,16 +30,17 @@ showDownloadDialog(BuildContext context, ShopsBloc bloc) {
                           : S.of(context).initializingDataDialogTitle),
                       content: Padding(
                         padding: const EdgeInsets.only(top: 20),
-                        child: LinearPercentIndicator(
-                          lineHeight: 15.0,
-                          percent: snapshot.data / 100.0,
-                          leading: CupertinoActivityIndicator(),
-                          center: Text(
-                            "${snapshot.data.toStringAsFixed(2)}%",
-                          ),
-                          linearStrokeCap: LinearStrokeCap.roundAll,
-                          progressColor: Theme.of(context).accentColor,
-                        ),
+                        child: snapshot.data <= 0.0
+                            ? CupertinoActivityIndicator()
+                            : LinearPercentIndicator(
+                                lineHeight: 15.0,
+                                percent: snapshot.data / 100.0,
+                                center: Text(
+                                  "${snapshot.data.toStringAsFixed(2)}%",
+                                ),
+                                linearStrokeCap: LinearStrokeCap.roundAll,
+                                progressColor: Theme.of(context).accentColor,
+                              ),
                       ),
                     );
                   }),
