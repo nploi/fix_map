@@ -32,6 +32,20 @@ class HomeDrawer extends StatelessWidget {
                       Navigator.of(context).pushNamed(SettingsScreen.routeName);
                     },
                   ),
+                  ListTile(
+                    leading: Icon(Icons.account_circle),
+                    title: Text("Đăng nhập"),
+                    onTap: () {
+                      Navigator.of(context).pushNamed(SignInScreen.routeName);
+                    },
+                  ),
+                  ListTile(
+                    leading: Icon(Icons.account_circle),
+                    title: Text("Đăng ký"),
+                    onTap: () {
+                      Navigator.of(context).pushNamed(SignUpScreen.routeName);
+                    },
+                  ),
                 ],
               ),
             ),
