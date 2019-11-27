@@ -26,8 +26,7 @@ class _HomeScreenState extends State<HomeScreen> {
   DateTime currentBackPressTime;
   ScrollController _scrollController;
   Completer<GoogleMapController> _controller = Completer();
-  Set<Marker> _markers = {};
-  Set<Circle> _circles = {};
+  Map<String, Marker> _markers = {};
   static final CameraPosition _cameraPosition = CameraPosition(
     target: LatLng(10.755639, 106.134703),
     zoom: 16,
@@ -107,34 +106,24 @@ class _HomeScreenState extends State<HomeScreen> {
               List<Shop> shops = BlocProvider.of<ShopsBloc>(context).shops;
               if (state is ShopsLoadedState) {
                 _markers.clear();
-                _circles.clear();
                 for (int index = 0; index < shops.length; index++) {
                   var shop = shops[index];
-                  if (shop.name.isEmpty || zoom < 16) {
-                    _circles.add(Circle(
-                      circleId: CircleId(shop.hash),
-                      center: LatLng(shop.latitude, shop.longitude),
-                      radius: zoom < 16 ? 20 : 10,
-                      strokeWidth: 5,
-                      fillColor: Theme.of(context).accentColor,
-                    ));
-                  } else {
-                    _markers.add(Marker(
-                        markerId: MarkerId(shop.hash),
-                        position: LatLng(shop.latitude, shop.longitude),
-                        icon: shop.address.isEmpty
-                            ? BitmapDescriptor.fromBytes(MarkerUtils.circle)
-                            : null,
-                        onTap: () {
-                          _scrollController.animateTo(
-                              (_scrollController.position.maxScrollExtent /
-                                      shops.length) *
-                                  (index + 1),
-                              duration: Duration(seconds: 1),
-                              curve: Curves.easeOut);
-                        },
-                        infoWindow: InfoWindow(title: shop.name)));
-                  }
+                  _markers[shop.hash] = Marker(
+                      markerId: MarkerId(shop.hash),
+                      position: LatLng(shop.latitude, shop.longitude),
+                      icon: BitmapDescriptor.fromBytes(
+                          MarkerUtils.settingsCircle),
+                      onTap: () {
+                        BlocProvider.of<MapBloc>(context)
+                            .add(MapMarkerPressedEvent(shop.hash));
+//                        _scrollController.animateTo(
+//                            (_scrollController.position.maxScrollExtent /
+//                                    shops.length) *
+//                                (index + 1),
+//                            duration: Duration(seconds: 1),
+//                            curve: Curves.easeOut);
+                      },
+                      infoWindow: InfoWindow(title: shop.name));
                 }
               }
               double mapPaddingBottom = 0.0;
@@ -143,43 +132,53 @@ class _HomeScreenState extends State<HomeScreen> {
               }
               return Stack(
                 children: <Widget>[
-                  GoogleMap(
-                    initialCameraPosition: _cameraPosition,
-                    markers: _markers,
-                    circles: _circles,
-                    myLocationEnabled: true,
-                    myLocationButtonEnabled: false,
-                    compassEnabled: true,
-                    onCameraIdle: () async {
-                      if (!(BlocProvider.of<ShopsBloc>(context).state
-                          is ShopsLoadingState)) {
-                        BlocProvider.of<ShopsBloc>(context)
-                            .add(ShopsLoadingEvent());
-                        LatLngBounds bounds;
-                        if (center != null) {
-                          bounds = MapUtils.toBounds(center, 300.0);
-                        } else {
-                          var controller = await _controller.future;
-                          bounds = await controller.getVisibleRegion();
-                        }
+                  BlocBuilder<MapBloc, MapState>(
+                    builder: (context, mapState) {
+                      if (mapState is MapMarkerPressedState) {
+                        _markers[mapState.markerId] =
+                            _markers[mapState.markerId].copyWith(
+                          iconParam: BitmapDescriptor.fromBytes(
+                              MarkerUtils.settingsLocation),
+                        );
+                      }
+                      return GoogleMap(
+                        initialCameraPosition: _cameraPosition,
+                        markers: Set<Marker>.from(_markers.values),
+                        myLocationEnabled: true,
+                        myLocationButtonEnabled: false,
+                        compassEnabled: true,
+                        onCameraIdle: () async {
+                          if (!(BlocProvider.of<ShopsBloc>(context).state
+                              is ShopsLoadingState)) {
+                            BlocProvider.of<ShopsBloc>(context)
+                                .add(ShopsLoadingEvent());
+                            LatLngBounds bounds;
+                            if (center != null) {
+                              bounds = MapUtils.toBounds(center, 300.0);
+                            } else {
+                              var controller = await _controller.future;
+                              bounds = await controller.getVisibleRegion();
+                            }
 
-                        BlocProvider.of<ShopsBloc>(context)
-                            .add(ShopsSearchEvent(bounds));
-                      }
+                            BlocProvider.of<ShopsBloc>(context)
+                                .add(ShopsSearchEvent(bounds));
+                          }
+                        },
+                        onCameraMove: (CameraPosition camera) {
+                          zoom = camera.zoom;
+                          if (camera.zoom < 16) {
+                            center = camera.target;
+                          } else {
+                            center = null;
+                          }
+                        },
+                        padding: EdgeInsets.only(
+                          top: MediaQuery.of(context).size.height * 0.1,
+                          bottom: mapPaddingBottom,
+                        ),
+                        onMapCreated: _onMapCreated,
+                      );
                     },
-                    onCameraMove: (CameraPosition camera) {
-                      zoom = camera.zoom;
-                      if (camera.zoom < 16) {
-                        center = camera.target;
-                      } else {
-                        center = null;
-                      }
-                    },
-                    padding: EdgeInsets.only(
-                      top: MediaQuery.of(context).size.height * 0.1,
-                      bottom: mapPaddingBottom,
-                    ),
-                    onMapCreated: _onMapCreated,
                   ),
                   shops.isNotEmpty
                       ? Align(
