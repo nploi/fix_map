@@ -4,9 +4,12 @@ import 'dart:ui' as ui;
 import 'package:flutter/services.dart';
 
 class MarkerUtils {
-  static Uint8List circle;
+  static Uint8List settingsCircle;
+  static Uint8List settingsLocation;
+
   static Future initIcons() async {
-    circle = await getBytesFromAsset("assets/map/circle.png", 30);
+    settingsCircle = await getBytesFromAsset("assets/map/circle.png", 50);
+    settingsLocation = await getBytesFromAsset("assets/map/marker.png", 100);
   }
 
   static Future<Uint8List> getBytesFromAsset(String path, int width) async {

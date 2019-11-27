@@ -16,3 +16,13 @@ class MapGetCurrentLocationEvent extends MapEvent {
   @override
   String toString() => 'MapGetCurrentLocationEvent {}';
 }
+
+class MapMarkerPressedEvent extends MapEvent {
+  final String markerId;
+  MapMarkerPressedEvent(this.markerId);
+
+  List<Object> get props => [markerId];
+
+  @override
+  String toString() => 'MapMarkerPressedEvent {markerId: $markerId}';
+}

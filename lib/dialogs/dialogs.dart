@@ -65,6 +65,7 @@ void showRequestPermissionDialog(BuildContext context) {
           onPressed: () {
             BlocProvider.of<SettingsBloc>(context)
                 .add(SettingsRequestPermissionEvent());
+            Navigator.pop(context, S.of(context).doNotAllowLabelButton);
           },
         ),
       ],

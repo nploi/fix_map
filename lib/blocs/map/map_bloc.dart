@@ -33,6 +33,10 @@ class MapBloc extends Bloc<MapEvent, MapState> {
         yield* _handleMapCurrentLocationGetEvent(event);
         return;
       }
+      if (event is MapMarkerPressedEvent) {
+        yield* _handleMapMarkerPressedEvent(event);
+        return;
+      }
     } catch (_, stackTrace) {
       developer.log('$_', name: 'MapBloc', error: _, stackTrace: stackTrace);
       yield state;
@@ -43,6 +47,11 @@ class MapBloc extends Bloc<MapEvent, MapState> {
       MapGetCurrentLocationEvent event) async* {
     var currentLocation = await _mapRepository.getCurrentLocation();
     yield MapCurrentLocationUpdatedState(currentLocation);
+  }
+
+  Stream<MapState> _handleMapMarkerPressedEvent(
+      MapMarkerPressedEvent event) async* {
+    yield MapMarkerPressedState(event.markerId);
   }
 
   @override

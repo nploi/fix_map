@@ -41,3 +41,13 @@ class MapErrorState extends MapState {
   @override
   String toString() => 'MapNotGrantedPermissionState {message: $message}';
 }
+
+class MapMarkerPressedState extends MapState {
+  final String markerId;
+  MapMarkerPressedState(this.markerId);
+
+  List<Object> get props => [markerId];
+
+  @override
+  String toString() => 'MapMarkerPressedState {markerId: $markerId}';
+}
