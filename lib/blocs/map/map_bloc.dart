@@ -11,6 +11,8 @@ class MapBloc extends Bloc<MapEvent, MapState> {
   final MapRepository _mapRepository = MapRepository();
   StreamSubscription _settingsSubscription;
   final SettingsBloc settingsBloc;
+  String _currentMarkerId = "";
+  String get currentMarkerId => _currentMarkerId;
 
   MapBloc({this.settingsBloc}) : assert(settingsBloc != null) {
     _settingsSubscription = settingsBloc.listen((state) {
@@ -51,6 +53,7 @@ class MapBloc extends Bloc<MapEvent, MapState> {
 
   Stream<MapState> _handleMapMarkerPressedEvent(
       MapMarkerPressedEvent event) async* {
+    _currentMarkerId = event.markerId;
     yield MapMarkerPressedState(event.markerId);
   }
 

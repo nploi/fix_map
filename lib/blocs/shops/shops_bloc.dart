@@ -41,6 +41,11 @@ class ShopsBloc extends Bloc<ShopsEvent, ShopsState> {
         yield* _handleShopsCheckDataEvent(event);
         return;
       }
+
+      if (event is ShopsCanRefreshEvent) {
+        yield* _handleShopsCanRefreshEvent(event);
+        return;
+      }
     } catch (_, stackTrace) {
       developer.log('$_', name: 'ShopsBloc', error: _, stackTrace: stackTrace);
       yield state;
@@ -68,6 +73,11 @@ class ShopsBloc extends Bloc<ShopsEvent, ShopsState> {
       return;
     }
     yield ShopsDataNotFoundState();
+  }
+
+  Stream<ShopsState> _handleShopsCanRefreshEvent(
+      ShopsCanRefreshEvent event) async* {
+    yield ShopsCanRefreshState();
   }
 
   @override

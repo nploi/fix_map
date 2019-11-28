@@ -25,11 +25,11 @@ class S implements WidgetsLocalizations {
   String get appName => "Fix Map";
   String get availableStatusTitle => "Available";
   String get backAgainToLeaveMessage => "Tap back again to leave";
-  String get c => "";
+  String get confirmPassword => "Confirm Password";
   String get darkModeToggleTitle => "Dark theme";
   String get doNotAllowLabelButton => "Don't Allow";
   String get downloadingDataDialogTitle => "Downloading data";
-  String get e => "";
+  String get email => "Email";
   String get f => "";
   String get g => "";
   String get h => "";
@@ -40,13 +40,15 @@ class S implements WidgetsLocalizations {
   String get moreButtonLabel => "More";
   String get n => "";
   String get o => "";
-  String get p => "";
+  String get password => "Password";
   String get q => "";
   String get requestPermissionDialogContent => "Your current location will be displayed on the map and used\nfor directions, nearby search results, and estimated travel times.";
   String get requestPermissionDialogTitle => "Allow \"Maps\" to access your location while you are using the app?";
   String get searchHintText => "Searching ...";
   String get settingsTitle => "Settings";
   String get shopDetailTitle => "Shop Detail";
+  String get signinTitle => "SignIn";
+  String get signupTitle => "SignUp";
   String get t => "";
   String get u => "";
   String get v => "";
@@ -69,15 +71,19 @@ class $vi extends S {
   @override
   String get backAgainToLeaveMessage => "Bấm lần nữa để thoát";
   @override
+  String get signinTitle => "Đăng nhập";
+  @override
+  String get password => "Mật khẩu";
+  @override
   String get requestPermissionDialogTitle => "Allow \"Maps\" to access your location while you are using the app?";
   @override
   String get requestPermissionDialogContent => "Your current location will be displayed on the map and used\nfor directions, nearby search results, and estimated travel times.";
   @override
   String get downloadingDataDialogTitle => "Đang tải dự liệu";
   @override
-  String get c => "";
+  String get confirmPassword => "Xác thực mật khẩu";
   @override
-  String get e => "";
+  String get email => "Email";
   @override
   String get initializingDataDialogTitle => "Đang khởi tạo dữ liệu";
   @override
@@ -101,9 +107,9 @@ class $vi extends S {
   @override
   String get n => "";
   @override
-  String get o => "";
+  String get signupTitle => "Đăng ký";
   @override
-  String get p => "";
+  String get o => "";
   @override
   String get moreButtonLabel => "Nhiều hơn";
   @override

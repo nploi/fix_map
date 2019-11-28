@@ -9,7 +9,7 @@ class MarkerUtils {
 
   static Future initIcons() async {
     settingsCircle = await getBytesFromAsset("assets/map/circle.png", 50);
-    settingsLocation = await getBytesFromAsset("assets/map/marker.png", 100);
+    settingsLocation = await getBytesFromAsset("assets/map/marker.png", 70);
   }
 
   static Future<Uint8List> getBytesFromAsset(String path, int width) async {

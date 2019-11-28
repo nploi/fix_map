@@ -45,3 +45,12 @@ class ShopsSearchEvent extends ShopsEvent {
   @override
   String toString() => 'ShopsSearchEvent {bounds: ${bounds.toString()}';
 }
+
+class ShopsCanRefreshEvent extends ShopsEvent {
+  ShopsCanRefreshEvent();
+
+  List<Object> get props => [];
+
+  @override
+  String toString() => 'ShopsCanRefreshEvent {}';
+}

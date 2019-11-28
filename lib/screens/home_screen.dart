@@ -54,6 +54,9 @@ class _HomeScreenState extends State<HomeScreen> {
             BlocListener<MapBloc, MapState>(
               listener: (context, state) async {
                 if (state is MapCurrentLocationUpdatedState) {
+                  _refresh(
+                      latLng: LatLng(
+                          state.position.latitude, state.position.longitude));
                   await _controller.future.then(
                     (controller) => controller.animateCamera(
                         CameraUpdate.newLatLngZoom(
@@ -105,64 +108,72 @@ class _HomeScreenState extends State<HomeScreen> {
               }
               List<Shop> shops = BlocProvider.of<ShopsBloc>(context).shops;
               if (state is ShopsLoadedState) {
-                _markers.clear();
                 for (int index = 0; index < shops.length; index++) {
                   var shop = shops[index];
                   _markers[shop.hash] = Marker(
-                      markerId: MarkerId(shop.hash),
-                      position: LatLng(shop.latitude, shop.longitude),
-                      icon: BitmapDescriptor.fromBytes(
-                          MarkerUtils.settingsCircle),
-                      onTap: () {
-                        BlocProvider.of<MapBloc>(context)
-                            .add(MapMarkerPressedEvent(shop.hash));
+                    markerId: MarkerId(shop.hash),
+                    position: LatLng(shop.latitude, shop.longitude),
+                    icon:
+                        BitmapDescriptor.fromBytes(MarkerUtils.settingsCircle),
+                    onTap: () {
+                      String currentMarkerId =
+                          BlocProvider.of<MapBloc>(context).currentMarkerId;
+                      if (_markers.containsKey(currentMarkerId)) {
+                        _markers[currentMarkerId] =
+                            _markers[currentMarkerId].copyWith(
+                          iconParam: BitmapDescriptor.fromBytes(
+                              MarkerUtils.settingsCircle),
+                        );
+                      }
+                      BlocProvider.of<MapBloc>(context)
+                          .add(MapMarkerPressedEvent(shop.hash));
 //                        _scrollController.animateTo(
 //                            (_scrollController.position.maxScrollExtent /
 //                                    shops.length) *
 //                                (index + 1),
 //                            duration: Duration(seconds: 1),
 //                            curve: Curves.easeOut);
-                      },
-                      infoWindow: InfoWindow(title: shop.name));
+                    },
+                  );
                 }
               }
+              LatLngBounds bounds;
+              if (center != null) {
+                bounds = MapUtils.toBounds(center, MapUtils.RADIUS);
+                _markers.entries.forEach((entry) {
+                  if (!bounds.contains(entry.value.position)) {
+                    _markers[entry.key] =
+                        _markers[entry.key].copyWith(visibleParam: false);
+                  }
+                });
+              }
+
               double mapPaddingBottom = 0.0;
+
               if (shops.isNotEmpty) {
                 mapPaddingBottom = MediaQuery.of(context).size.height * 0.3;
               }
-              return Stack(
-                children: <Widget>[
-                  BlocBuilder<MapBloc, MapState>(
-                    builder: (context, mapState) {
-                      if (mapState is MapMarkerPressedState) {
-                        _markers[mapState.markerId] =
-                            _markers[mapState.markerId].copyWith(
-                          iconParam: BitmapDescriptor.fromBytes(
-                              MarkerUtils.settingsLocation),
-                        );
-                      }
-                      return GoogleMap(
+              return BlocBuilder<MapBloc, MapState>(
+                builder: (context, mapState) {
+                  if (mapState is MapMarkerPressedState) {
+                    _markers[mapState.markerId] =
+                        _markers[mapState.markerId].copyWith(
+                      iconParam: BitmapDescriptor.fromBytes(
+                          MarkerUtils.settingsLocation),
+                    );
+                  }
+                  return Stack(
+                    children: <Widget>[
+                      GoogleMap(
                         initialCameraPosition: _cameraPosition,
                         markers: Set<Marker>.from(_markers.values),
                         myLocationEnabled: true,
                         myLocationButtonEnabled: false,
+                        mapToolbarEnabled: false,
                         compassEnabled: true,
-                        onCameraIdle: () async {
-                          if (!(BlocProvider.of<ShopsBloc>(context).state
-                              is ShopsLoadingState)) {
-                            BlocProvider.of<ShopsBloc>(context)
-                                .add(ShopsLoadingEvent());
-                            LatLngBounds bounds;
-                            if (center != null) {
-                              bounds = MapUtils.toBounds(center, 300.0);
-                            } else {
-                              var controller = await _controller.future;
-                              bounds = await controller.getVisibleRegion();
-                            }
-
-                            BlocProvider.of<ShopsBloc>(context)
-                                .add(ShopsSearchEvent(bounds));
-                          }
+                        onCameraIdle: () {
+                          BlocProvider.of<ShopsBloc>(context)
+                              .add(ShopsCanRefreshEvent());
                         },
                         onCameraMove: (CameraPosition camera) {
                           zoom = camera.zoom;
@@ -177,72 +188,91 @@ class _HomeScreenState extends State<HomeScreen> {
                           bottom: mapPaddingBottom,
                         ),
                         onMapCreated: _onMapCreated,
-                      );
-                    },
-                  ),
-                  shops.isNotEmpty
-                      ? Align(
-                          alignment: Alignment.bottomCenter,
-                          child: Container(
-                            height: MediaQuery.of(context).size.height * 0.3,
-                            child: ListView.builder(
-                              controller: _scrollController,
-                              scrollDirection: Axis.horizontal,
-                              itemCount: shops.length,
-                              itemBuilder: (context, index) {
-                                if (shops[index].name.isEmpty) {
-                                  return Container();
-                                }
-                                return ShopCard(
-                                  shop: shops[index],
-                                  onPressed: () {
-                                    Navigator.pushNamed(this.context,
-                                        ShopDetailScreen.routeName,
-                                        arguments: shops[index]);
-                                  },
-                                );
-                              },
-                            ),
-                          ),
-                        )
-                      : SizedBox(),
-                  Positioned(
-                    top: MediaQuery.of(context).padding.top + 5,
-                    left: 5,
-                    child: _buildMenuButton(),
-                  ),
-                  Positioned(
-                    top: MediaQuery.of(context).padding.top + 5,
-                    right: 5,
-                    child: _buildAction(),
-                  ),
-                  isLoading
-                      ? Align(
-                          alignment: Alignment.topCenter,
-                          child: Container(
-                            height: 3,
-                            margin: EdgeInsets.only(
-                                top: MediaQuery.of(context).padding.top),
-                            child: LinearProgressIndicator(),
-                          ),
-                        )
-                      : SizedBox(),
-                  Positioned(
-                    bottom: mapPaddingBottom + 5,
-                    right: 10,
-                    child: SizedBox(
-                      height: Theme.of(context).iconTheme.size * 1.5,
-                      width: Theme.of(context).iconTheme.size * 1.5,
-                      child: FloatingActionButton(
-                        onPressed: () {
-                          BlocProvider.of<MapBloc>(context)
-                              .add(MapGetCurrentLocationEvent());
-                        },
-                        child: Icon(Icons.my_location),
                       ),
-                    ),
-                  ),
-                ],
+                      shops.isNotEmpty
+                          ? Align(
+                              alignment: Alignment.bottomCenter,
+                              child: Container(
+                                height:
+                                    MediaQuery.of(context).size.height * 0.3,
+                                child: PageView.builder(
+                                  itemCount: shops.length,
+                                  pageSnapping: false,
+                                  onPageChanged: (index) {
+                                    String currentMarkerId =
+                                        BlocProvider.of<MapBloc>(context)
+                                            .currentMarkerId;
+                                    if (_markers.containsKey(currentMarkerId)) {
+                                      _markers[currentMarkerId] =
+                                          _markers[currentMarkerId].copyWith(
+                                        iconParam: BitmapDescriptor.fromBytes(
+                                            MarkerUtils.settingsCircle),
+                                      );
+                                    }
+                                    BlocProvider.of<MapBloc>(context).add(
+                                        MapMarkerPressedEvent(
+                                            shops[index].hash));
+                                    _controller.future.then(
+                                      (controller) => controller.animateCamera(
+                                          CameraUpdate.newLatLngZoom(
+                                              LatLng(shops[index].latitude,
+                                                  shops[index].longitude),
+                                              16)),
+                                    );
+                                  },
+                                  itemBuilder: (context, index) {
+                                    if (shops[index].name.isEmpty) {
+                                      return Container();
+                                    }
+                                    return ShopCard(
+                                      shop: shops[index],
+                                      onPressed: () {
+                                        Navigator.pushNamed(this.context,
+                                            ShopDetailScreen.routeName,
+                                            arguments: shops[index]);
+                                      },
+                                    );
+                                  },
+                                ),
+                              ),
+                            )
+                          : SizedBox(),
+                      Positioned(
+                        top: MediaQuery.of(context).padding.top + 5,
+                        left: 5,
+                        child: _buildMenuButton(),
+                      ),
+                      Positioned(
+                        top: MediaQuery.of(context).padding.top + 5,
+                        right: 5,
+                        child: _buildAction(),
+                      ),
+                      isLoading
+                          ? Align(
+                              alignment: Alignment.topCenter,
+                              child: Container(
+                                height: 3,
+                                margin: EdgeInsets.only(
+                                    top: MediaQuery.of(context).padding.top),
+                                child: LinearProgressIndicator(),
+                              ),
+                            )
+                          : SizedBox(),
+                      AnimatedPositioned(
+                        bottom: mapPaddingBottom +
+                            ((state is ShopsCanRefreshState) ? 45 : 5),
+                        right: 10,
+                        child: _buildRefreshButton(),
+                        duration: Duration(milliseconds: 200),
+                      ),
+                      Positioned(
+                        bottom: mapPaddingBottom + 5,
+                        right: 10,
+                        child: _buildMyLocation(),
+                      ),
+                    ],
+                  );
+                },
               );
             },
           ),
@@ -263,6 +293,32 @@ class _HomeScreenState extends State<HomeScreen> {
     });
   }
 
+  Widget _buildMyLocation() {
+    return SizedBox(
+      height: Theme.of(context).iconTheme.size * 1.5,
+      width: Theme.of(context).iconTheme.size * 1.5,
+      child: FloatingActionButton(
+        heroTag: null,
+        onPressed: () {
+          BlocProvider.of<MapBloc>(context).add(MapGetCurrentLocationEvent());
+        },
+        child: Icon(Icons.my_location),
+      ),
+    );
+  }
+
+  Widget _buildRefreshButton() {
+    return SizedBox(
+      height: Theme.of(context).iconTheme.size * 1.5,
+      width: Theme.of(context).iconTheme.size * 1.5,
+      child: FloatingActionButton(
+        onPressed: _refresh,
+        heroTag: null,
+        child: Icon(Icons.refresh),
+      ),
+    );
+  }
+
   Widget _buildAction() {
     return Builder(builder: (context) {
       return IconButton(
@@ -270,6 +326,22 @@ class _HomeScreenState extends State<HomeScreen> {
         onPressed: () {},
       );
     });
+  }
+
+  Future _refresh({LatLng latLng}) async {
+    if (!(BlocProvider.of<ShopsBloc>(context).state is ShopsLoadingState)) {
+      BlocProvider.of<ShopsBloc>(context).add(ShopsLoadingEvent());
+      LatLngBounds bounds;
+      if (center != null) {
+        bounds = MapUtils.toBounds(center, MapUtils.RADIUS);
+      } else if (latLng == null) {
+        var controller = await _controller.future;
+        bounds = await controller.getVisibleRegion();
+      } else {
+        bounds = MapUtils.toBounds(latLng, MapUtils.RADIUS);
+      }
+      BlocProvider.of<ShopsBloc>(context).add(ShopsSearchEvent(bounds));
+    }
   }
 
   void _onMapCreated(GoogleMapController controller) {

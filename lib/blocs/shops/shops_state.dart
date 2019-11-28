@@ -48,3 +48,12 @@ class ShopsLoadedState extends ShopsState {
   @override
   String toString() => 'ShopsLoadedState {counter: $counter}';
 }
+
+class ShopsCanRefreshState extends ShopsState {
+  ShopsCanRefreshState();
+
+  List<Object> get props => [];
+
+  @override
+  String toString() => 'ShopsCanRefreshState {}';
+}
