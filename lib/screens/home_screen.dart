@@ -221,26 +221,6 @@ class _HomeScreenState extends State<HomeScreen> {
                                     if (shops[index].name.isEmpty) {
                                       return Container();
                                     }
-//                                    if (index == shops.length - 1) {
-//                                      return Row(
-//                                        children: <Widget>[
-//                                          ShopCard(
-//                                            shop: shops[index],
-//                                            onPressed: () {
-//                                              Navigator.pushNamed(this.context,
-//                                                  ShopDetailScreen.routeName,
-//                                                  arguments: shops[index]);
-//                                            },
-//                                          ),
-//                                          Container(
-//                                            width: MediaQuery.of(context)
-//                                                    .size
-//                                                    .width *
-//                                                045,
-//                                          ),
-//                                        ],
-//                                      );
-//                                    }
                                     return ShopCard(
                                       shop: shops[index],
                                       onPressed: () {
