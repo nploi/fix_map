@@ -27,6 +27,8 @@ class _HomeScreenState extends State<HomeScreen> {
   ScrollController _scrollController;
   Completer<GoogleMapController> _controller = Completer();
   Map<String, Marker> _markers = {};
+  int lastIndex = -1;
+  bool isFirst = false;
   static final CameraPosition _cameraPosition = CameraPosition(
     target: LatLng(10.755639, 106.134703),
     zoom: 16,
@@ -37,6 +39,19 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   void initState() {
     _scrollController = ScrollController();
+    _scrollController.addListener(() {
+      var index = _scrollController.position.pixels ~/
+          (MediaQuery.of(context).size.width * 0.45);
+      if (_scrollController.offset ==
+          _scrollController.position.maxScrollExtent) {
+        index = BlocProvider.of<ShopsBloc>(context).shops.length - 1;
+      }
+      if (index != lastIndex) {
+        print("change");
+        lastIndex = index;
+        onShopChange(index, BlocProvider.of<ShopsBloc>(context).shops);
+      }
+    });
     BlocProvider.of<ShopsBloc>(context).add(ShopsCheckDataEvent());
     MarkerUtils.initIcons();
     super.initState();
@@ -54,9 +69,6 @@ class _HomeScreenState extends State<HomeScreen> {
             BlocListener<MapBloc, MapState>(
               listener: (context, state) async {
                 if (state is MapCurrentLocationUpdatedState) {
-                  _refresh(
-                      latLng: LatLng(
-                          state.position.latitude, state.position.longitude));
                   await _controller.future.then(
                     (controller) => controller.animateCamera(
                         CameraUpdate.newLatLngZoom(
@@ -172,8 +184,13 @@ class _HomeScreenState extends State<HomeScreen> {
                         mapToolbarEnabled: false,
                         compassEnabled: true,
                         onCameraIdle: () {
-                          BlocProvider.of<ShopsBloc>(context)
-                              .add(ShopsCanRefreshEvent());
+                          if (!isFirst) {
+                            isFirst = true;
+                            _refresh();
+                          } else {
+                            BlocProvider.of<ShopsBloc>(context)
+                                .add(ShopsCanRefreshEvent());
+                          }
                         },
                         onCameraMove: (CameraPosition camera) {
                           zoom = camera.zoom;
@@ -195,35 +212,35 @@ class _HomeScreenState extends State<HomeScreen> {
                               child: Container(
                                 height:
                                     MediaQuery.of(context).size.height * 0.3,
-                                child: PageView.builder(
+                                child: ListView.builder(
+                                  scrollDirection: Axis.horizontal,
+                                  padding: EdgeInsets.only(left: 20, right: 20),
+                                  controller: _scrollController,
                                   itemCount: shops.length,
-                                  pageSnapping: false,
-                                  onPageChanged: (index) {
-                                    String currentMarkerId =
-                                        BlocProvider.of<MapBloc>(context)
-                                            .currentMarkerId;
-                                    if (_markers.containsKey(currentMarkerId)) {
-                                      _markers[currentMarkerId] =
-                                          _markers[currentMarkerId].copyWith(
-                                        iconParam: BitmapDescriptor.fromBytes(
-                                            MarkerUtils.settingsCircle),
-                                      );
-                                    }
-                                    BlocProvider.of<MapBloc>(context).add(
-                                        MapMarkerPressedEvent(
-                                            shops[index].hash));
-                                    _controller.future.then(
-                                      (controller) => controller.animateCamera(
-                                          CameraUpdate.newLatLngZoom(
-                                              LatLng(shops[index].latitude,
-                                                  shops[index].longitude),
-                                              16)),
-                                    );
-                                  },
                                   itemBuilder: (context, index) {
                                     if (shops[index].name.isEmpty) {
                                       return Container();
                                     }
+//                                    if (index == shops.length - 1) {
+//                                      return Row(
+//                                        children: <Widget>[
+//                                          ShopCard(
+//                                            shop: shops[index],
+//                                            onPressed: () {
+//                                              Navigator.pushNamed(this.context,
+//                                                  ShopDetailScreen.routeName,
+//                                                  arguments: shops[index]);
+//                                            },
+//                                          ),
+//                                          Container(
+//                                            width: MediaQuery.of(context)
+//                                                    .size
+//                                                    .width *
+//                                                045,
+//                                          ),
+//                                        ],
+//                                      );
+//                                    }
                                     return ShopCard(
                                       shop: shops[index],
                                       onPressed: () {
@@ -278,6 +295,21 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
         ),
       ),
+    );
+  }
+
+  void onShopChange(int index, shops) {
+    String currentMarkerId = BlocProvider.of<MapBloc>(context).currentMarkerId;
+    if (_markers.containsKey(currentMarkerId)) {
+      _markers[currentMarkerId] = _markers[currentMarkerId].copyWith(
+        iconParam: BitmapDescriptor.fromBytes(MarkerUtils.settingsCircle),
+      );
+    }
+    BlocProvider.of<MapBloc>(context)
+        .add(MapMarkerPressedEvent(shops[index].hash));
+    _controller.future.then(
+      (controller) => controller.animateCamera(CameraUpdate.newLatLngZoom(
+          LatLng(shops[index].latitude, shops[index].longitude), 16)),
     );
   }
 
