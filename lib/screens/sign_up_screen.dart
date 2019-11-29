@@ -146,24 +146,23 @@ class _SignUpScreenState extends State<SignUpScreen> {
             height: 25,
           ),
           Padding(
-              padding: EdgeInsets.symmetric(horizontal: 32),
-              child: Container(
-                decoration: BoxDecoration(
-                    borderRadius: BorderRadius.all(Radius.circular(100)),
-                    color: Color(0xffff3a5a)),
-                child: FlatButton(
-                  child: Text(
-                    "Sign Up",
-                    style: TextStyle(
-                        color: Colors.white,
-                        fontWeight: FontWeight.w700,
-                        fontSize: 18),
-                  ),
-                  onPressed: () {
-                    onSubmit();
-                  },
-                ),
-              )),
+            padding: EdgeInsets.symmetric(horizontal: 32),
+            child: RaisedButton(
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(18.0),
+              ),
+              child: Text(
+                "Sign Up",
+                style: TextStyle(
+                    color: Colors.white,
+                    fontWeight: FontWeight.w700,
+                    fontSize: 18),
+              ),
+              onPressed: () {
+                onSubmit();
+              },
+            ),
+          ),
           SizedBox(
             height: 20,
           ),

@@ -18,25 +18,23 @@ class Input extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      child: TextField(
-        onChanged: (String value) {
-          this.onChange(this.id, value);
-        },
-        cursorColor: Colors.deepOrange,
-        obscureText: this.obscureText,
-        decoration: InputDecoration(
-            hintText: this.hintText,
-            prefixIcon: Material(
-              elevation: 0,
-              borderRadius: BorderRadius.all(Radius.circular(30)),
-              child: this.icon,
-            ),
-            border: InputBorder.none,
-            focusedBorder: InputBorder.none,
-            enabledBorder: InputBorder.none,
-            contentPadding: EdgeInsets.symmetric(horizontal: 25, vertical: 13)),
-      ),
+    return TextField(
+      onChanged: (String value) {
+        this.onChange(this.id, value);
+      },
+      cursorColor: Colors.deepOrange,
+      obscureText: this.obscureText,
+      decoration: InputDecoration(
+          hintText: this.hintText,
+          prefixIcon: Material(
+            elevation: 0,
+            borderRadius: BorderRadius.all(Radius.circular(30)),
+            child: this.icon,
+          ),
+          border: InputBorder.none,
+          focusedBorder: InputBorder.none,
+          enabledBorder: InputBorder.none,
+          contentPadding: EdgeInsets.symmetric(horizontal: 25, vertical: 13)),
     );
   }
 }

@@ -24,7 +24,6 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   DateTime currentBackPressTime;
-  ScrollController _scrollController;
   PageController _pageController;
   Completer<GoogleMapController> _controller = Completer();
   Map<String, Marker> _markers = {};
@@ -39,8 +38,7 @@ class _HomeScreenState extends State<HomeScreen> {
   double zoom = 16;
   @override
   void initState() {
-    _scrollController = ScrollController();
-    _pageController = PageController(viewportFraction: 0.45);
+    _pageController = PageController(viewportFraction: 0.5);
     BlocProvider.of<ShopsBloc>(context).add(ShopsCheckDataEvent());
     super.initState();
   }

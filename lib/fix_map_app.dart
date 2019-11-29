@@ -34,12 +34,14 @@ class FixMapApp extends StatelessWidget {
               ? HomeScreen.routeName
               : IntroThreePage.routeName,
           routes: {
-            SignInScreen.routeName: (context) => BlocProvider<SignInBloc>(
-                  builder: (context) => SignInBloc(),
+            SignInScreen.routeName: (context) =>
+                BlocProvider<AuthenticationBloc>(
+                  builder: (context) => AuthenticationBloc(),
                   child: SignInScreen(),
                 ),
-            SignUpScreen.routeName: (context) => BlocProvider<SignUpBloc>(
-                  builder: (context) => SignUpBloc(),
+            SignUpScreen.routeName: (context) =>
+                BlocProvider<AuthenticationBloc>(
+                  builder: (context) => AuthenticationBloc(),
                   child: SignUpScreen(),
                 ),
             IntroThreePage.routeName: (context) => IntroThreePage(
