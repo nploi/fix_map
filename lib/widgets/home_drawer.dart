@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:fix_map/generated/i18n.dart';
 import 'package:fix_map/screens/screens.dart';
 import 'package:flutter/cupertino.dart';
@@ -13,12 +14,26 @@ class HomeDrawer extends StatelessWidget {
       child: Column(
         children: <Widget>[
           DrawerHeader(
-            child: Center(child: Text(S.of(context).appName)),
+            child: Center(
+              child: ListTile(
+                leading: Icon(
+                  Icons.account_circle,
+                  size: MediaQuery.of(context).size.height * 0.07,
+                ),
+                title: Text(
+                  S.of(context).signUpTitle,
+                ),
+                trailing: Icon(Icons.arrow_forward_ios),
+                onTap: () {
+                  Navigator.of(context).pushNamed(SignUpScreen.routeName);
+                },
+              ),
+            ),
             margin: EdgeInsets.zero,
+            padding: EdgeInsets.zero,
           ),
           MediaQuery.removePadding(
             context: context,
-            // DrawerHeader consumes top MediaQuery padding.
             removeTop: true,
             child: Expanded(
               child: ListView(
@@ -30,20 +45,6 @@ class HomeDrawer extends StatelessWidget {
                     title: Text(S.of(context).settingsTitle),
                     onTap: () {
                       Navigator.of(context).pushNamed(SettingsScreen.routeName);
-                    },
-                  ),
-                  ListTile(
-                    leading: Icon(Icons.account_circle),
-                    title: Text("Đăng nhập"),
-                    onTap: () {
-                      Navigator.of(context).pushNamed(SignInScreen.routeName);
-                    },
-                  ),
-                  ListTile(
-                    leading: Icon(Icons.account_circle),
-                    title: Text("Đăng ký"),
-                    onTap: () {
-                      Navigator.of(context).pushNamed(SignUpScreen.routeName);
                     },
                   ),
                 ],

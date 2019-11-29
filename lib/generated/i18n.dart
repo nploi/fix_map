@@ -47,8 +47,8 @@ class S implements WidgetsLocalizations {
   String get searchHintText => "Searching ...";
   String get settingsTitle => "Settings";
   String get shopDetailTitle => "Shop Detail";
-  String get signinTitle => "SignIn";
-  String get signupTitle => "SignUp";
+  String get signInTitle => "Sign in";
+  String get signUpTitle => "Sign up";
   String get t => "";
   String get u => "";
   String get v => "";
@@ -67,11 +67,11 @@ class $vi extends S {
   @override
   String get darkModeToggleTitle => "Giao diện tối";
   @override
+  String get signUpTitle => "Đăng ký";
+  @override
   String get allowLabelButton => "Cho phép";
   @override
   String get backAgainToLeaveMessage => "Bấm lần nữa để thoát";
-  @override
-  String get signinTitle => "Đăng nhập";
   @override
   String get password => "Mật khẩu";
   @override
@@ -84,6 +84,8 @@ class $vi extends S {
   String get confirmPassword => "Xác thực mật khẩu";
   @override
   String get email => "Email";
+  @override
+  String get signInTitle => "Đăng nhập";
   @override
   String get initializingDataDialogTitle => "Đang khởi tạo dữ liệu";
   @override
@@ -106,8 +108,6 @@ class $vi extends S {
   String get doNotAllowLabelButton => "Không cho phép";
   @override
   String get n => "";
-  @override
-  String get signupTitle => "Đăng ký";
   @override
   String get o => "";
   @override

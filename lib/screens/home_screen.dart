@@ -47,13 +47,11 @@ class _HomeScreenState extends State<HomeScreen> {
         index = BlocProvider.of<ShopsBloc>(context).shops.length - 1;
       }
       if (index != lastIndex) {
-        print("change");
         lastIndex = index;
         onShopChange(index, BlocProvider.of<ShopsBloc>(context).shops);
       }
     });
     BlocProvider.of<ShopsBloc>(context).add(ShopsCheckDataEvent());
-    MarkerUtils.initIcons();
     super.initState();
   }
 

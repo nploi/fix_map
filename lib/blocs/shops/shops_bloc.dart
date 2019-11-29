@@ -2,7 +2,6 @@ import 'dart:async';
 import 'package:bloc/bloc.dart';
 import 'package:fix_map/models/models.dart';
 import 'package:fix_map/repositories/repostiories.dart';
-import 'package:rxdart/rxdart.dart';
 
 import 'bloc.dart';
 import 'dart:developer' as developer;

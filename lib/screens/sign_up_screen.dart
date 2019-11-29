@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import '../widgets/widgets.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:fix_map/generated/i18n.dart';
 
 class SignUpScreen extends StatefulWidget {
   static final String routeName = "signup";
