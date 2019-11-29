@@ -21,11 +21,11 @@ class HomeDrawer extends StatelessWidget {
                   size: MediaQuery.of(context).size.height * 0.07,
                 ),
                 title: Text(
-                  S.of(context).signUpTitle,
+                  S.of(context).signInTitle,
                 ),
                 trailing: Icon(Icons.arrow_forward_ios),
                 onTap: () {
-                  Navigator.of(context).pushNamed(SignUpScreen.routeName);
+                  Navigator.of(context).pushNamed(SignInScreen.routeName);
                 },
               ),
             ),

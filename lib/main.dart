@@ -8,6 +8,7 @@ Future main() async {
   BlocSupervisor.delegate = FixMapBlocDelegate();
   // ignore: close_sinks
   final SettingsBloc settingsBloc = SettingsBloc();
+
   await settingsBloc.boot();
   await MarkerUtils.initIcons();
 

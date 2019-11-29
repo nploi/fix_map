@@ -42,3 +42,12 @@ class AuthenticationSignOutEvent extends AuthenticationEvent {
   @override
   String toString() => 'AuthenticationSignUpEvent {}';
 }
+
+class AuthenticationCheckSignInEvent extends AuthenticationEvent {
+  AuthenticationCheckSignInEvent();
+
+  List<Object> get props => [];
+
+  @override
+  String toString() => 'AuthenticationCheckSignInEvent {}';
+}

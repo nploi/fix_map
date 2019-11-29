@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:bloc/bloc.dart';
+import 'package:fix_map/models/models.dart';
 import 'package:fix_map/repositories/repostiories.dart';
 
 import 'authentication_event.dart';
@@ -10,6 +11,8 @@ class AuthenticationBloc
     extends Bloc<AuthenticationEvent, AuthenticationState> {
   final AuthenticationRepository authenticationRepository =
       AuthenticationRepository();
+
+  Future<User> get user async => await authenticationRepository.getUser();
 
   @override
   AuthenticationState get initialState => InitialAuthenticationState();
@@ -28,6 +31,10 @@ class AuthenticationBloc
       }
       if (event is AuthenticationSignOutEvent) {
         yield* _handleSignOutEvent(event);
+        return;
+      }
+      if (event is AuthenticationCheckSignInEvent) {
+        yield* _handleAuthenticationCheckSignInEvent(event);
         return;
       }
     } catch (_, stackTrace) {
@@ -68,9 +75,21 @@ class AuthenticationBloc
 
     var success = await authenticationRepository.removeUser();
     if (success) {
-      AuthenticationSignedOutState();
-      return;
+      yield AuthenticationSignedOutState();
+    } else {
+      yield AuthenticationErrorState("Cant not sign out");
     }
-    yield AuthenticationErrorState("Cant not sign out");
+  }
+
+  Stream<AuthenticationState> _handleAuthenticationCheckSignInEvent(
+      AuthenticationCheckSignInEvent event) async* {
+    yield AuthenticationLoadingState();
+
+    var user = await authenticationRepository.getUser();
+    if (user == null) {
+      yield AuthenticationUserNotFoundState();
+    } else {
+      yield AuthenticationSignedInState(user);
+    }
   }
 }

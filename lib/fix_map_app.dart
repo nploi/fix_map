@@ -9,6 +9,9 @@ import 'utils/utils.dart';
 
 class FixMapApp extends StatelessWidget {
   final SettingsBloc settingsBloc;
+  // ignore: close_sinks
+  final AuthenticationBloc authenticationBloc = AuthenticationBloc();
+
   FixMapApp({Key key, this.settingsBloc}) : super(key: key);
 
   @override
@@ -36,12 +39,12 @@ class FixMapApp extends StatelessWidget {
           routes: {
             SignInScreen.routeName: (context) =>
                 BlocProvider<AuthenticationBloc>(
-                  builder: (context) => AuthenticationBloc(),
+                  builder: (context) => authenticationBloc,
                   child: SignInScreen(),
                 ),
             SignUpScreen.routeName: (context) =>
                 BlocProvider<AuthenticationBloc>(
-                  builder: (context) => AuthenticationBloc(),
+                  builder: (context) => authenticationBloc,
                   child: SignUpScreen(),
                 ),
             IntroThreePage.routeName: (context) => IntroThreePage(
@@ -51,6 +54,9 @@ class FixMapApp extends StatelessWidget {
                   providers: [
                     BlocProvider<SettingsBloc>(
                       builder: (context) => settingsBloc,
+                    ),
+                    BlocProvider<AuthenticationBloc>(
+                      builder: (context) => authenticationBloc,
                     ),
                     BlocProvider<MapBloc>(
                       builder: (context) => MapBloc(settingsBloc: settingsBloc),

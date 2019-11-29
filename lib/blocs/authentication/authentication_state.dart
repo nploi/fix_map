@@ -42,6 +42,15 @@ class AuthenticationSignedOutState extends AuthenticationState {
   String toString() => 'AuthenticationSignedOutState {}';
 }
 
+class AuthenticationUserNotFoundState extends AuthenticationState {
+  AuthenticationUserNotFoundState();
+
+  List<Object> get props => [];
+
+  @override
+  String toString() => 'AuthenticationUserNotFoundState {}';
+}
+
 class AuthenticationErrorState extends AuthenticationState {
   final String message;
   AuthenticationErrorState(this.message);
