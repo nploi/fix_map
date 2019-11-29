@@ -4,7 +4,7 @@ import 'package:dio/dio.dart';
 import 'package:fix_map/models/models.dart';
 
 class FixMapClient {
-  static const baseUrl = 'https://fixmap.documents.asia:5005';
+  static const baseUrl = 'http://fixmap.documents.asia:5005';
 
   static Future<FixMapResponse> getAllShop() async {
     Response response = await Dio().get(baseUrl + "/shop/list-all");
@@ -19,22 +19,15 @@ class FixMapClient {
 
   static Future<AuthenticateResponse> signIn(
       {String email, String password, String accessToken}) async {
-//    Response response = await Dio().post(baseUrl + "/user/sign-in",
-//        data: '{'
-//            '"email": $email,'
-//            '"password": $password,'
-//            '"accessToken": $accessToken,'
-//            '}');
-
     Response response = await Dio().post(
       baseUrl + "/user/sign-in",
-      queryParameters: {
+      data: {
         "email": email,
         "password": password,
         "accessToken": accessToken,
       },
     );
-    print(response.toString());
+
     AuthenticateResponse authenticateResponse =
         AuthenticateResponse.fromJson(jsonDecode(response.toString()));
     return authenticateResponse;

@@ -38,15 +38,9 @@ class FixMapApp extends StatelessWidget {
               : IntroThreePage.routeName,
           routes: {
             SignInScreen.routeName: (context) =>
-                BlocProvider<AuthenticationBloc>(
-                  builder: (context) => authenticationBloc,
-                  child: SignInScreen(),
-                ),
+                SignInScreen(authenticationBloc: authenticationBloc),
             SignUpScreen.routeName: (context) =>
-                BlocProvider<AuthenticationBloc>(
-                  builder: (context) => authenticationBloc,
-                  child: SignUpScreen(),
-                ),
+                SignUpScreen(authenticationBloc: authenticationBloc),
             IntroThreePage.routeName: (context) => IntroThreePage(
                   settingsBloc: settingsBloc,
                 ),

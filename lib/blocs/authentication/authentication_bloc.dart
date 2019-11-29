@@ -52,7 +52,8 @@ class AuthenticationBloc
           email: event.email,
           password: event.password,
           accessToken: event.accessToken);
-      yield AuthenticationSignedUpState(user);
+      await authenticationRepository.setUser(user);
+      yield AuthenticationSignedInState(user);
     } catch (exception) {
       yield AuthenticationErrorState(exception.message);
     }

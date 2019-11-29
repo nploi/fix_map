@@ -1,9 +1,13 @@
+import 'package:fix_map/blocs/blocs.dart';
 import 'package:flutter/material.dart';
 import '../widgets/widgets.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class SignUpScreen extends StatefulWidget {
   static final String routeName = "signup";
+  final AuthenticationBloc authenticationBloc;
+
+  const SignUpScreen({Key key, this.authenticationBloc}) : super(key: key);
   @override
   _SignUpScreenState createState() => _SignUpScreenState();
 }

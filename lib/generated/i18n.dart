@@ -48,6 +48,7 @@ class S implements WidgetsLocalizations {
   String get settingsTitle => "Settings";
   String get shopDetailTitle => "Shop Detail";
   String get signInTitle => "Sign in";
+  String get signOutTitle => "Sign out";
   String get signUpTitle => "Sign up";
   String get t => "";
   String get u => "";
@@ -67,7 +68,7 @@ class $vi extends S {
   @override
   String get darkModeToggleTitle => "Giao diện tối";
   @override
-  String get signUpTitle => "Đăng ký";
+  String get signUpTitle => "Đăng xuất";
   @override
   String get allowLabelButton => "Cho phép";
   @override

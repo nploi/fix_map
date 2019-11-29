@@ -9,6 +9,10 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class SignInScreen extends StatefulWidget {
   static final String routeName = "signin";
+  final AuthenticationBloc authenticationBloc;
+
+  const SignInScreen({Key key, this.authenticationBloc}) : super(key: key);
+
   @override
   _SignInScreenState createState() => _SignInScreenState();
 }
@@ -27,6 +31,7 @@ class _SignInScreenState extends State<SignInScreen> {
       ),
       backgroundColor: Colors.white,
       body: BlocListener<AuthenticationBloc, AuthenticationState>(
+        bloc: widget.authenticationBloc,
         listener: (context, state) {
           if (state is AuthenticationSignedInState) {
             Fluttertoast.showToast(msg: "Signed In");
@@ -34,6 +39,7 @@ class _SignInScreenState extends State<SignInScreen> {
           }
         },
         child: BlocBuilder<AuthenticationBloc, AuthenticationState>(
+          bloc: widget.authenticationBloc,
           builder: (context, state) {
             return Stack(
               children: <Widget>[
@@ -273,7 +279,7 @@ class _SignInScreenState extends State<SignInScreen> {
     if (this._account["email"] == "") return;
     if (this._account["password"] == "") return;
 
-    BlocProvider.of<AuthenticationBloc>(context).add(AuthenticationSignInEvent(
+    widget.authenticationBloc.add(AuthenticationSignInEvent(
         this._account["email"], this._account["password"], ""));
   }
 }
