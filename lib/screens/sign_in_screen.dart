@@ -1,6 +1,7 @@
 import 'package:fix_map/blocs/authentication/authentication_bloc.dart';
 import 'package:fix_map/blocs/authentication/authentication_event.dart';
 import 'package:fix_map/blocs/authentication/authentication_state.dart';
+import 'package:fix_map/screens/screens.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -235,12 +236,18 @@ class _SignInScreenState extends State<SignInScreen> {
                               fontSize: 12,
                               fontWeight: FontWeight.normal),
                         ),
-                        Text("Sign Up ",
-                            style: TextStyle(
-                                color: Colors.red,
-                                fontWeight: FontWeight.w500,
-                                fontSize: 12,
-                                decoration: TextDecoration.underline)),
+                        GestureDetector(
+                          onTap: () {
+                            Navigator.of(context)
+                                .pushNamed(SignUpScreen.routeName);
+                          },
+                          child: Text("Sign Up ",
+                              style: TextStyle(
+                                  color: Colors.red,
+                                  fontWeight: FontWeight.w500,
+                                  fontSize: 12,
+                                  decoration: TextDecoration.underline)),
+                        ),
                       ],
                     ),
                   ],

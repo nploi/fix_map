@@ -63,7 +63,8 @@ class AuthenticationBloc
       AuthenticationSignUpEvent event) async* {
     yield AuthenticationLoadingState();
     try {
-      var user = await authenticationRepository.signUp(user: event.user);
+      var user = await authenticationRepository.signUp(
+          user: event.user);
       yield AuthenticationSignedUpState(user);
     } catch (exception) {
       yield AuthenticationErrorState(exception.message);

@@ -26,12 +26,14 @@ class AuthenticationSignInEvent extends AuthenticationEvent {
 
 class AuthenticationSignUpEvent extends AuthenticationEvent {
   final User user;
-  AuthenticationSignUpEvent(this.user);
+  AuthenticationSignUpEvent(
+    this.user,
+  );
 
   List<Object> get props => [user];
 
   @override
-  String toString() => 'AuthenticationSignUpEvent {user: ${user.toJson()}';
+  String toString() => 'AuthenticationSignUpEvent {user: ${user.toJson()}}';
 }
 
 class AuthenticationSignOutEvent extends AuthenticationEvent {

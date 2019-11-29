@@ -34,8 +34,16 @@ class FixMapClient {
   }
 
   static Future<AuthenticateResponse> signUp({User user}) async {
-    Response response = await Dio()
-        .post(baseUrl + "/user/sign-up", data: jsonEncode(user.toJson()));
+    Response response = await Dio().post(
+      baseUrl + "/user/sign-up",
+      data: {
+        "email": user.email,
+        "fullname": user.email,
+        "password": user.password,
+        "repassword": user.password,
+        "accessToken": "",
+      },
+    );
     AuthenticateResponse authenticateResponse =
         AuthenticateResponse.fromJson(jsonDecode(response.toString()));
     return authenticateResponse;
