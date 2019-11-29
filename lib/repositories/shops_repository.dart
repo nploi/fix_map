@@ -1,6 +1,3 @@
-import 'dart:convert';
-
-import 'package:dio/dio.dart';
 import 'package:fix_map/dao/dao.dart';
 import 'package:fix_map/models/models.dart';
 import 'package:fix_map/repositories/fix_map_client.dart';

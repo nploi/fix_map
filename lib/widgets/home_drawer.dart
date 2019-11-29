@@ -1,4 +1,3 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:fix_map/blocs/authentication/authentication_state.dart';
 import 'package:fix_map/blocs/blocs.dart';
 import 'package:fix_map/generated/i18n.dart';

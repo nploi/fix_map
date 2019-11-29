@@ -1,4 +1,3 @@
-import 'dart:math';
 
 import 'package:equatable/equatable.dart';
 import 'package:fix_map/models/models.dart';
