@@ -9,13 +9,9 @@ import 'dart:developer' as developer;
 
 class ShopsBloc extends Bloc<ShopsEvent, ShopsState> {
   final ShopRepository _shopRepository = ShopRepository();
-  // ignore: close_sinks
-  final _downloadListener = BehaviorSubject<double>();
-
-  bool loading = false;
   List<Shop> _shops = [];
   List<Shop> get shops => this._shops;
-  BehaviorSubject<double> get downloadListener => this._downloadListener;
+
   @override
   ShopsState get initialState => InitialShopsState();
 
@@ -53,15 +49,21 @@ class ShopsBloc extends Bloc<ShopsEvent, ShopsState> {
   }
 
   Stream<ShopsState> _handleMapFetchShopsEvent(ShopsSearchEvent event) async* {
+    yield ShopsLoadingState();
     _shops = await _shopRepository.getShops(event.bounds);
     yield ShopsLoadedState(_shops.length);
   }
 
   Stream<ShopsState> _handleShopsDownLoadEvent(
       ShopsDownLoadEvent event) async* {
-    await _shopRepository.downloadShops((percent) {
-      downloadListener.add(percent);
-    });
+    var shops = await _shopRepository.downloadShops();
+
+    for (int index = 0; index < shops.length; index++) {
+      var shop = shops[index];
+      await _shopRepository.insertShop(shop);
+      double percent = (((index + 1) / shops.length) * 100).toDouble();
+      yield ShopsDataInitState(percent);
+    }
     yield ShopsDownloadedState();
   }
 
@@ -82,7 +84,6 @@ class ShopsBloc extends Bloc<ShopsEvent, ShopsState> {
 
   @override
   Future<void> close() {
-    downloadListener.close();
     return super.close();
   }
 }

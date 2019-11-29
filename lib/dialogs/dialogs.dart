@@ -20,30 +20,34 @@ showDownloadDialog(BuildContext context, ShopsBloc bloc) {
                   Navigator.of(context).pop();
                 }
               },
-              child: StreamBuilder<double>(
-                  stream: bloc.downloadListener,
-                  initialData: 0,
-                  builder: (context, snapshot) {
-                    return CupertinoAlertDialog(
-                      title: Text(snapshot.data <= 0.0
-                          ? S.of(context).downloadingDataDialogTitle
-                          : S.of(context).initializingDataDialogTitle),
-                      content: Padding(
-                        padding: const EdgeInsets.only(top: 20),
-                        child: snapshot.data <= 0.0
-                            ? CupertinoActivityIndicator()
-                            : LinearPercentIndicator(
-                                lineHeight: 15.0,
-                                percent: snapshot.data / 100.0,
-                                center: Text(
-                                  "${snapshot.data.toStringAsFixed(2)}%",
-                                ),
-                                linearStrokeCap: LinearStrokeCap.roundAll,
-                                progressColor: Theme.of(context).accentColor,
+              child: BlocBuilder<ShopsBloc, ShopsState>(
+                bloc: bloc,
+                builder: (context, state) {
+                  double percent = 0.0;
+                  if (state is ShopsDataInitState) {
+                    percent = state.percent;
+                  }
+                  return CupertinoAlertDialog(
+                    title: Text(percent <= 0.0
+                        ? S.of(context).downloadingDataDialogTitle
+                        : S.of(context).initializingDataDialogTitle),
+                    content: Padding(
+                      padding: const EdgeInsets.only(top: 20),
+                      child: percent <= 0.0
+                          ? CupertinoActivityIndicator()
+                          : LinearPercentIndicator(
+                              lineHeight: 15.0,
+                              percent: percent / 100.0,
+                              center: Text(
+                                "${percent.toStringAsFixed(2)}%",
                               ),
-                      ),
-                    );
-                  }),
+                              linearStrokeCap: LinearStrokeCap.roundAll,
+                              progressColor: Theme.of(context).accentColor,
+                            ),
+                    ),
+                  );
+                },
+              ),
             ),
           ));
 }

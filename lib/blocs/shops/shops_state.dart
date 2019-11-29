@@ -57,3 +57,13 @@ class ShopsCanRefreshState extends ShopsState {
   @override
   String toString() => 'ShopsCanRefreshState {}';
 }
+
+class ShopsDataInitState extends ShopsState {
+  final double percent;
+  ShopsDataInitState(this.percent);
+
+  List<Object> get props => [percent];
+
+  @override
+  String toString() => 'ShopsDataInitState {percent : $percent}';
+}

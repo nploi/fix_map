@@ -148,16 +148,17 @@ class _HomeScreenState extends State<HomeScreen> {
                     },
                   );
                 }
-              }
-              LatLngBounds bounds;
-              if (center != null) {
-                bounds = MapUtils.toBounds(center, MapUtils.RADIUS);
-                _markers.entries.forEach((entry) {
-                  if (!bounds.contains(entry.value.position)) {
-                    _markers[entry.key] =
-                        _markers[entry.key].copyWith(visibleParam: false);
-                  }
-                });
+
+                LatLngBounds bounds;
+                if (center != null) {
+                  bounds = MapUtils.toBounds(center, MapUtils.RADIUS);
+                  _markers.entries.forEach((entry) {
+                    if (!bounds.contains(entry.value.position)) {
+                      _markers[entry.key] =
+                          _markers[entry.key].copyWith(visibleParam: false);
+                    }
+                  });
+                }
               }
 
               double mapPaddingBottom = 0.0;
@@ -165,6 +166,7 @@ class _HomeScreenState extends State<HomeScreen> {
               if (shops.isNotEmpty) {
                 mapPaddingBottom = MediaQuery.of(context).size.height * 0.3;
               }
+
               return BlocBuilder<MapBloc, MapState>(
                 builder: (context, mapState) {
                   if (mapState is MapMarkerPressedState) {
@@ -287,10 +289,9 @@ class _HomeScreenState extends State<HomeScreen> {
     }
     BlocProvider.of<MapBloc>(context)
         .add(MapMarkerPressedEvent(shops[index].hash));
-    _controller.future.then(
-      (controller) => controller.animateCamera(CameraUpdate.newLatLngZoom(
-          LatLng(shops[index].latitude, shops[index].longitude), 16)),
-    );
+    _controller.future.then((controller) => controller.animateCamera(
+        CameraUpdate.newLatLng(
+            LatLng(shops[index].latitude, shops[index].longitude))));
   }
 
   Widget _buildMenuButton() {
@@ -342,7 +343,6 @@ class _HomeScreenState extends State<HomeScreen> {
 
   Future _refresh({LatLng latLng}) async {
     if (!(BlocProvider.of<ShopsBloc>(context).state is ShopsLoadingState)) {
-      BlocProvider.of<ShopsBloc>(context).add(ShopsLoadingEvent());
       LatLngBounds bounds;
       if (center != null) {
         bounds = MapUtils.toBounds(center, MapUtils.RADIUS);
