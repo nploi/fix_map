@@ -28,7 +28,7 @@ class _HomeScreenState extends State<HomeScreen> {
   Completer<GoogleMapController> _controller = Completer();
   Map<String, Marker> _markers = {};
   int lastIndex = -1;
-  bool isFirst = false;
+  int isFirst = 0;
   static final CameraPosition _cameraPosition = CameraPosition(
     target: LatLng(10.755639, 106.134703),
     zoom: 16,
@@ -172,8 +172,8 @@ class _HomeScreenState extends State<HomeScreen> {
                         mapToolbarEnabled: false,
                         compassEnabled: true,
                         onCameraIdle: () {
-                          if (!isFirst) {
-                            isFirst = true;
+                          if (isFirst < 3) {
+                            isFirst++;
                             _refresh();
                           } else {
                             BlocProvider.of<ShopsBloc>(context)
