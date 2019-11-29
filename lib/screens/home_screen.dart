@@ -25,6 +25,7 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   DateTime currentBackPressTime;
   ScrollController _scrollController;
+  PageController _pageController;
   Completer<GoogleMapController> _controller = Completer();
   Map<String, Marker> _markers = {};
   int lastIndex = -1;
@@ -39,18 +40,7 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   void initState() {
     _scrollController = ScrollController();
-    _scrollController.addListener(() {
-      var index = _scrollController.position.pixels ~/
-          (MediaQuery.of(context).size.width * 0.45);
-      if (_scrollController.offset ==
-          _scrollController.position.maxScrollExtent) {
-        index = BlocProvider.of<ShopsBloc>(context).shops.length - 1;
-      }
-      if (index != lastIndex) {
-        lastIndex = index;
-        onShopChange(index, BlocProvider.of<ShopsBloc>(context).shops);
-      }
-    });
+    _pageController = PageController(viewportFraction: 0.45);
     BlocProvider.of<ShopsBloc>(context).add(ShopsCheckDataEvent());
     super.initState();
   }
@@ -212,11 +202,13 @@ class _HomeScreenState extends State<HomeScreen> {
                               child: Container(
                                 height:
                                     MediaQuery.of(context).size.height * 0.3,
-                                child: ListView.builder(
+                                child: PageView.builder(
                                   scrollDirection: Axis.horizontal,
-                                  padding: EdgeInsets.only(left: 20, right: 20),
-                                  controller: _scrollController,
+                                  controller: _pageController,
                                   itemCount: shops.length,
+                                  onPageChanged: (index) {
+                                    onShopChange(index, shops);
+                                  },
                                   itemBuilder: (context, index) {
                                     if (shops[index].name.isEmpty) {
                                       return Container();
