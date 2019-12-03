@@ -1,5 +1,6 @@
 import 'package:fix_map/blocs/blocs.dart';
 import 'package:fix_map/models/user.dart';
+import 'package:fix_map/screens/screens.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -29,7 +30,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
       appBar: AppBar(
         title: Text("Sign Up"),
       ),
-      backgroundColor: Colors.white,
+      backgroundColor: Theme.of(context).backgroundColor,
       body: BlocListener<AuthenticationBloc, AuthenticationState>(
         bloc: widget.authenticationBloc,
         listener: (context, state) {
@@ -55,8 +56,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
                               height: 300,
                               decoration: BoxDecoration(
                                   gradient: LinearGradient(colors: [
-                                Color(0x22ff3a5a),
-                                Color(0x22fe494d)
+                                Theme.of(context).primaryColorLight,
+                                Theme.of(context).primaryColorDark,
                               ])),
                             ),
                           ),
@@ -68,8 +69,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
                               height: 300,
                               decoration: BoxDecoration(
                                   gradient: LinearGradient(colors: [
-                                Color(0x44ff3a5a),
-                                Color(0x44fe494d)
+                                Theme.of(context).primaryColorDark,
+                                Theme.of(context).primaryColorLight,
                               ])),
                             ),
                           ),
@@ -102,15 +103,15 @@ class _SignUpScreenState extends State<SignUpScreen> {
                               height: 300,
                               decoration: BoxDecoration(
                                   gradient: LinearGradient(colors: [
-                                Color(0xffff3a5a),
-                                Color(0xfffe494d)
+                                Theme.of(context).primaryColor,
+                                Theme.of(context).primaryColor,
                               ])),
                             ),
                           ),
                         ],
                       ),
                       SizedBox(
-                        height: 30,
+                        height: 10,
                       ),
                       Padding(
                         padding: EdgeInsets.symmetric(horizontal: 32),
@@ -124,7 +125,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                             hintText: "Email",
                             icon: Icon(
                               Icons.email,
-                              color: Colors.red,
+                              color: Theme.of(context).iconTheme.color,
                             ),
                           ),
                         ),
@@ -144,7 +145,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                             hintText: "Full Name",
                             icon: Icon(
                               Icons.account_circle,
-                              color: Colors.red,
+                              color: Theme.of(context).iconTheme.color,
                             ),
                           ),
                         ),
@@ -164,7 +165,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                             hintText: "Password",
                             icon: Icon(
                               Icons.lock,
-                              color: Colors.red,
+                              color: Theme.of(context).iconTheme.color,
                             ),
                           ),
                         ),
@@ -184,7 +185,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                             hintText: "Confirm Password",
                             icon: Icon(
                               Icons.lock,
-                              color: Colors.red,
+                              color: Theme.of(context).iconTheme.color,
                             ),
                           ),
                         ),
@@ -193,23 +194,26 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         height: 25,
                       ),
                       Padding(
-                        padding: EdgeInsets.symmetric(horizontal: 32),
-                        child: RaisedButton(
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(18.0),
-                          ),
-                          child: Text(
-                            "Sign Up",
-                            style: TextStyle(
-                                color: Colors.white,
-                                fontWeight: FontWeight.w700,
-                                fontSize: 18),
-                          ),
-                          onPressed: () {
-                            onSubmit();
-                          },
-                        ),
-                      ),
+                          padding: EdgeInsets.symmetric(horizontal: 32),
+                          child: Container(
+                            decoration: BoxDecoration(
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(100)),
+                              color: Theme.of(context).primaryColorDark,
+                            ),
+                            child: FlatButton(
+                              child: Text(
+                                "Sign Up",
+                                style: TextStyle(
+                                    color: Theme.of(context).primaryColorLight,
+                                    fontWeight: FontWeight.w700,
+                                    fontSize: 18),
+                              ),
+                              onPressed: () {
+                                onSubmit();
+                              },
+                            ),
+                          )),
                       SizedBox(
                         height: 20,
                       ),
@@ -257,16 +261,20 @@ class _SignUpScreenState extends State<SignUpScreen> {
                           Text(
                             "Do have an Account ? ",
                             style: TextStyle(
-                                color: Colors.black,
-                                fontSize: 12,
-                                fontWeight: FontWeight.normal),
+                                fontSize: 12, fontWeight: FontWeight.normal),
                           ),
-                          Text("Sign In ",
-                              style: TextStyle(
-                                  color: Colors.red,
-                                  fontWeight: FontWeight.w500,
-                                  fontSize: 12,
-                                  decoration: TextDecoration.underline)),
+                          GestureDetector(
+                            onTap: () {
+                              Navigator.of(context)
+                                  .pushNamed(SignInScreen.routeName);
+                            },
+                            child: Text("Sign In ",
+                                style: TextStyle(
+                                    color: Colors.red,
+                                    fontWeight: FontWeight.w500,
+                                    fontSize: 12,
+                                    decoration: TextDecoration.underline)),
+                          ),
                         ],
                       ),
                     ],

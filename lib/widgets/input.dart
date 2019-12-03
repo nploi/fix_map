@@ -22,7 +22,7 @@ class Input extends StatelessWidget {
       onChanged: (String value) {
         this.onChange(this.id, value);
       },
-      cursorColor: Colors.deepOrange,
+      cursorColor: Theme.of(context).primaryColorLight,
       obscureText: this.obscureText,
       decoration: InputDecoration(
           hintText: this.hintText,
