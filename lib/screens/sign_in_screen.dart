@@ -30,7 +30,7 @@ class _SignInScreenState extends State<SignInScreen> {
       appBar: AppBar(
         title: Text("Sign In"),
       ),
-      backgroundColor: Colors.white,
+      backgroundColor: Theme.of(context).backgroundColor,
       body: BlocListener<AuthenticationBloc, AuthenticationState>(
         bloc: widget.authenticationBloc,
         listener: (context, state) {
@@ -56,8 +56,8 @@ class _SignInScreenState extends State<SignInScreen> {
                             height: 300,
                             decoration: BoxDecoration(
                                 gradient: LinearGradient(colors: [
-                              Color(0x22ff3a5a),
-                              Color(0x22fe494d)
+                              Theme.of(context).primaryColorLight,
+                              Theme.of(context).primaryColorDark,
                             ])),
                           ),
                         ),
@@ -69,8 +69,8 @@ class _SignInScreenState extends State<SignInScreen> {
                             height: 300,
                             decoration: BoxDecoration(
                                 gradient: LinearGradient(colors: [
-                              Color(0x44ff3a5a),
-                              Color(0x44fe494d)
+                              Theme.of(context).primaryColorDark,
+                              Theme.of(context).primaryColorLight,
                             ])),
                           ),
                         ),
@@ -103,8 +103,8 @@ class _SignInScreenState extends State<SignInScreen> {
                             height: 300,
                             decoration: BoxDecoration(
                                 gradient: LinearGradient(colors: [
-                              Color(0xffff3a5a),
-                              Color(0xfffe494d)
+                              Theme.of(context).primaryColor,
+                              Theme.of(context).primaryColor,
                             ])),
                           ),
                         ),
@@ -125,7 +125,7 @@ class _SignInScreenState extends State<SignInScreen> {
                           hintText: "Email",
                           icon: Icon(
                             Icons.email,
-                            color: Colors.red,
+                            color: Theme.of(context).iconTheme.color,
                           ),
                         ),
                       ),
@@ -145,7 +145,7 @@ class _SignInScreenState extends State<SignInScreen> {
                           hintText: "Password",
                           icon: Icon(
                             Icons.lock,
-                            color: Colors.red,
+                            color: Theme.of(context).iconTheme.color,
                           ),
                         ),
                       ),
@@ -157,14 +157,15 @@ class _SignInScreenState extends State<SignInScreen> {
                         padding: EdgeInsets.symmetric(horizontal: 32),
                         child: Container(
                           decoration: BoxDecoration(
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(100)),
-                              color: Color(0xffff3a5a)),
+                            borderRadius:
+                                BorderRadius.all(Radius.circular(100)),
+                            color: Theme.of(context).primaryColorDark,
+                          ),
                           child: FlatButton(
                             child: Text(
                               "Sign In",
                               style: TextStyle(
-                                  color: Colors.white,
+                                  color: Theme.of(context).primaryColorLight,
                                   fontWeight: FontWeight.w700,
                                   fontSize: 18),
                             ),
@@ -232,9 +233,7 @@ class _SignInScreenState extends State<SignInScreen> {
                         Text(
                           "Don't have an Account ? ",
                           style: TextStyle(
-                              color: Colors.black,
-                              fontSize: 12,
-                              fontWeight: FontWeight.normal),
+                              fontSize: 12, fontWeight: FontWeight.normal),
                         ),
                         GestureDetector(
                           onTap: () {
