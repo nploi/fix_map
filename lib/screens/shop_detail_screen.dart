@@ -34,9 +34,12 @@ class _ShopDetailScreenState extends State<ShopDetailScreen> {
             Container(
                 foregroundDecoration: BoxDecoration(color: Colors.black26),
                 height: 400,
-                child: CachedNetworkImage(
-                  imageUrl: widget.shop.imageBig,
-                  fit: BoxFit.cover,
+                child: Hero(
+                  tag: widget.shop.name,
+                  child: CachedNetworkImage(
+                    imageUrl: widget.shop.imageBig,
+                    fit: BoxFit.cover,
+                  ),
                 )),
             SingleChildScrollView(
               padding: const EdgeInsets.only(top: 16.0, bottom: 20.0),

@@ -22,7 +22,9 @@ class ShopDao {
     if (query != null) {
       if (query.isNotEmpty)
         result = await db.query(shopTABLE,
-            columns: columns, where: 'name LIKE ?', whereArgs: ["%$query%"]);
+            columns: columns,
+            where: 'name LIKE ? OR address LIKE ?',
+            whereArgs: ["%$query%", "%$query%"]);
     } else {
       result = await db.query(shopTABLE, columns: columns);
     }

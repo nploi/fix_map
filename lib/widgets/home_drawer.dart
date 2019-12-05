@@ -26,7 +26,6 @@ class HomeDrawer extends StatelessWidget {
                 );
               }
               var user = snapshot.data;
-
               return Column(
                 children: <Widget>[
                   DrawerHeader(

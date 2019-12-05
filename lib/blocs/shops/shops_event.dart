@@ -46,6 +46,16 @@ class ShopsSearchEvent extends ShopsEvent {
   String toString() => 'ShopsSearchEvent {bounds: ${bounds.toString()}';
 }
 
+class ShopsSearchByKeywordEvent extends ShopsEvent {
+  final String keyword;
+  ShopsSearchByKeywordEvent(this.keyword);
+
+  List<Object> get props => [this.keyword];
+
+  @override
+  String toString() => 'ShopsSearchByKeywordEvent {keyword: $keyword}';
+}
+
 class ShopsCanRefreshEvent extends ShopsEvent {
   ShopsCanRefreshEvent();
 

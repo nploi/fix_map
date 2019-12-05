@@ -27,15 +27,17 @@ class _HomeScreenState extends State<HomeScreen> {
   PageController _pageController;
   Completer<GoogleMapController> _controller = Completer();
   Map<String, Marker> _markers = {};
-  int lastIndex = -1;
-  int isFirst = 0;
+  final ShopsSearchDelegate _delegate = ShopsSearchDelegate();
+
   static final CameraPosition _cameraPosition = CameraPosition(
     target: LatLng(10.755639, 106.134703),
     zoom: 16,
   );
 
+  bool isFirst = false;
   LatLng center;
   double zoom = 16;
+
   @override
   void initState() {
     _pageController = PageController(viewportFraction: 0.5);
@@ -125,12 +127,9 @@ class _HomeScreenState extends State<HomeScreen> {
                       }
                       BlocProvider.of<MapBloc>(context)
                           .add(MapMarkerPressedEvent(shop.hash));
-//                        _scrollController.animateTo(
-//                            (_scrollController.position.maxScrollExtent /
-//                                    shops.length) *
-//                                (index + 1),
-//                            duration: Duration(seconds: 1),
-//                            curve: Curves.easeOut);
+                      _pageController.animateToPage(index,
+                          duration: Duration(milliseconds: 200),
+                          curve: Curves.easeInOut);
                     },
                   );
                 }
@@ -172,8 +171,8 @@ class _HomeScreenState extends State<HomeScreen> {
                         mapToolbarEnabled: false,
                         compassEnabled: true,
                         onCameraIdle: () {
-                          if (isFirst < 3) {
-                            isFirst++;
+                          if (!isFirst) {
+                            isFirst = true;
                             _refresh();
                           } else {
                             BlocProvider.of<ShopsBloc>(context)
@@ -324,7 +323,12 @@ class _HomeScreenState extends State<HomeScreen> {
     return Builder(builder: (context) {
       return IconButton(
         icon: const Icon(Icons.search),
-        onPressed: () {},
+        onPressed: () async {
+          await showSearch<Shop>(
+            context: context,
+            delegate: _delegate,
+          );
+        },
       );
     });
   }

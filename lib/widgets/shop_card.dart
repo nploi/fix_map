@@ -23,30 +23,33 @@ class ShopCard extends StatelessWidget {
         ),
         child: Container(
           width: MediaQuery.of(context).size.width * 0.45,
+          height: MediaQuery.of(context).size.height * 0.25,
           child: Padding(
             padding: const EdgeInsets.all(8.0),
             child: Column(
+              mainAxisSize: MainAxisSize.min,
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: <Widget>[
-                SizedBox(
-                  height: 5,
-                ),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: <Widget>[
-                    CircleAvatar(
+                    Hero(
+                      tag: shop.name,
                       child: CachedNetworkImage(
                         imageUrl: shop.image,
                         fit: BoxFit.contain,
+                        imageBuilder: (context, provider) {
+                          return CircleAvatar(
+                            backgroundImage: provider,
+                          );
+                        },
                       ),
                     ),
                     SizedBox(
-                      width: 5,
+                      width: 10,
                     ),
                     Expanded(child: AutoSizeText(shop.name)),
                   ],
-                ),
-                SizedBox(
-                  height: 5,
                 ),
                 Padding(
                   padding: const EdgeInsets.all(5.0),
