@@ -7,6 +7,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import '../widgets/widgets.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:fix_map/generated/i18n.dart';
 
 class SignInScreen extends StatefulWidget {
   static final String routeName = "signin";
@@ -28,14 +29,14 @@ class _SignInScreenState extends State<SignInScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Sign In"),
+        title: Text(S.of(context).signInTitle),
       ),
       backgroundColor: Theme.of(context).backgroundColor,
       body: BlocListener<AuthenticationBloc, AuthenticationState>(
         bloc: widget.authenticationBloc,
         listener: (context, state) {
           if (state is AuthenticationSignedInState) {
-            Fluttertoast.showToast(msg: "Signed In");
+            Fluttertoast.showToast(msg: S.of(context).signInTitle);
             Navigator.of(context).maybePop();
           }
         },
@@ -122,7 +123,7 @@ class _SignInScreenState extends State<SignInScreen> {
                           obscureText: false,
                           id: "email",
                           onChange: handleOnChange,
-                          hintText: "Email",
+                          hintText: S.of(context).email,
                           icon: Icon(
                             Icons.email,
                             color: Theme.of(context).iconTheme.color,
@@ -142,7 +143,7 @@ class _SignInScreenState extends State<SignInScreen> {
                           obscureText: true,
                           id: "password",
                           onChange: handleOnChange,
-                          hintText: "Password",
+                          hintText: S.of(context).password,
                           icon: Icon(
                             Icons.lock,
                             color: Theme.of(context).iconTheme.color,
@@ -163,7 +164,7 @@ class _SignInScreenState extends State<SignInScreen> {
                           ),
                           child: FlatButton(
                             child: Text(
-                              "Sign In",
+                              S.of(context).signInTitle,
                               style: TextStyle(
                                   color: Theme.of(context).primaryColorLight,
                                   fontWeight: FontWeight.w700,
@@ -240,7 +241,7 @@ class _SignInScreenState extends State<SignInScreen> {
                             Navigator.of(context)
                                 .pushNamed(SignUpScreen.routeName);
                           },
-                          child: Text("Sign Up ",
+                          child: Text(S.of(context).signUpTitle,
                               style: TextStyle(
                                   color: Colors.red,
                                   fontWeight: FontWeight.w500,

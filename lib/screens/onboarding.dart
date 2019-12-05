@@ -20,9 +20,9 @@ class _IntroThreePageState extends State<IntroThreePage> {
   int _currentIndex = 0;
 
   final List<String> titles = [
-    "Lorem ipsum dolor \nsit amet, consectetur adipiscing \n elit placerat. ",
-    "Aliquam eget justo \n nec arcu ultricies elementum \n id at metus. ",
-    "Nulla facilisi. \nFusce non tempus risus.\n Sed ultrices scelerisque sem,"
+    "Welcome !\nApplication help for \n motorbike repair points.",
+    "Direct !\nFind the shortest path to the correction point.",
+    "Evaluate !\n Leave a review of the correction point.",
   ];
   final List<Color> pageBgs = [
     Colors.blue.shade300,
@@ -30,13 +30,9 @@ class _IntroThreePageState extends State<IntroThreePage> {
     Colors.cyan.shade300
   ];
   final List<String> images = [
-    'https://firebasestorage.googleapis.com/v0/b/dl-flutter-ui-challenges.appspot.com/o/img%2F1.jpg?alt=media',
-    'https://firebasestorage.googleapis.com/v0/b/dl-flutter-ui-challenges.appspot.com/o/img%2F2.jpg?alt=media',
-    'https://firebasestorage.googleapis.com/v0/b/dl-flutter-ui-challenges.appspot.com/o/img%2F3.jpg?alt=media',
-    'https://firebasestorage.googleapis.com/v0/b/dl-flutter-ui-challenges.appspot.com/o/img%2F4.jpg?alt=media',
-    'https://firebasestorage.googleapis.com/v0/b/dl-flutter-ui-challenges.appspot.com/o/img%2F5.jpg?alt=media',
-    'https://firebasestorage.googleapis.com/v0/b/dl-flutter-ui-challenges.appspot.com/o/img%2F6.jpg?alt=media',
-    'https://firebasestorage.googleapis.com/v0/b/dl-flutter-ui-challenges.appspot.com/o/img%2F7.jpg?alt=media',
+    'assets/onboarding/1.png',
+    'assets/onboarding/1.png',
+    'assets/onboarding/1.png',
   ];
 
   @override
@@ -71,7 +67,7 @@ class _IntroThreePageState extends State<IntroThreePage> {
                 itemBuilder: (context, index) {
                   return _buildPage(
                       title: titles[index],
-                      icon: images[index + 2],
+                      icon: images[index],
                       pageBg: pageBgs[index]);
                 },
                 pagination: SwiperPagination(
@@ -146,7 +142,7 @@ class _IntroThreePageState extends State<IntroThreePage> {
               width: 300,
               decoration: BoxDecoration(
                   image: DecorationImage(
-                      image: new NetworkImage(images[1]), fit: BoxFit.cover)),
+                      image: AssetImage(icon), fit: BoxFit.cover)),
             )),
           ),
           SizedBox(height: 50.0),
