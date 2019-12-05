@@ -66,8 +66,18 @@ class ShopsSearchDelegate extends SearchDelegate<Shop> {
 
   @override
   Widget buildSuggestions(BuildContext context) {
-    bloc.add(ShopsSearchByKeywordEvent(query));
-
+    int limit = 20;
+    int offset = 0;
+    final List<Shop> shops = [];
+    bloc.add(ShopsSearchByKeywordEvent(query, offset, limit));
+    ScrollController scrollController = ScrollController();
+    scrollController.addListener(() {
+      if (scrollController.offset ==
+          scrollController.position.maxScrollExtent) {
+        bloc.add(
+            ShopsSearchByKeywordNextOffsetEvent(query, offset += limit, limit));
+      }
+    });
     return BlocBuilder<ShopsBloc, ShopsState>(
       bloc: bloc,
       builder: (context, state) {
@@ -77,8 +87,9 @@ class ShopsSearchDelegate extends SearchDelegate<Shop> {
           );
         }
         if (state is ShopsLoadedState) {
-          var shops = bloc.shops;
+          shops.addAll(bloc.shops);
           return ListView.builder(
+            controller: scrollController,
             itemBuilder: (context, index) {
               return ListTile(
                 leading: CachedNetworkImage(

@@ -15,18 +15,20 @@ class ShopDao {
 
   //Get All Shop items
   //Searches if query string was passed
-  Future<List<Shop>> getShops({List<String> columns, String query}) async {
+  Future<List<Shop>> getShops(
+      {String query, int offset = 0, int limit = 20}) async {
     final db = await dbProvider.database;
 
     List<Map<String, dynamic>> result;
     if (query != null) {
       if (query.isNotEmpty)
         result = await db.query(shopTABLE,
-            columns: columns,
             where: 'name LIKE ? OR address LIKE ?',
-            whereArgs: ["%$query%", "%$query%"]);
+            whereArgs: ["%$query%", "%$query%"],
+            offset: offset,
+            limit: limit);
     } else {
-      result = await db.query(shopTABLE, columns: columns);
+      result = await db.query(shopTABLE);
     }
 
     List<Shop> shops = result.isNotEmpty

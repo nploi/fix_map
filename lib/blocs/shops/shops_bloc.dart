@@ -27,6 +27,11 @@ class ShopsBloc extends Bloc<ShopsEvent, ShopsState> {
         return;
       }
 
+      if (event is ShopsSearchByKeywordNextOffsetEvent) {
+        yield* _handleShopsSearchByKeywordNextOffsetEvent(event);
+        return;
+      }
+
       if (event is ShopsLoadingEvent) {
         yield ShopsLoadingState();
         return;
@@ -55,13 +60,22 @@ class ShopsBloc extends Bloc<ShopsEvent, ShopsState> {
   Stream<ShopsState> _handleMapFetchShopsEvent(ShopsSearchEvent event) async* {
     yield ShopsLoadingState();
     _shops = await _shopRepository.getShops(event.bounds);
-    yield ShopsLoadedState(_shops.length);
+    yield ShopsLoadedState(_shops);
   }
 
-  Stream<ShopsState> _handleShopsSearchByKeywordEvent(ShopsSearchByKeywordEvent event) async* {
+  Stream<ShopsState> _handleShopsSearchByKeywordEvent(
+      ShopsSearchByKeywordEvent event) async* {
     yield ShopsLoadingState();
-    _shops = await _shopRepository.getAllShops(query: event.keyword);
-    yield ShopsLoadedState(_shops.length);
+    _shops = await _shopRepository.getAllShops(
+        query: event.keyword, limit: event.limit, offset: event.limit);
+    yield ShopsLoadedState(_shops);
+  }
+
+  Stream<ShopsState> _handleShopsSearchByKeywordNextOffsetEvent(
+      ShopsSearchByKeywordNextOffsetEvent event) async* {
+    _shops = await _shopRepository.getAllShops(
+        query: event.keyword, limit: event.limit, offset: event.limit);
+    yield ShopsLoadedState(_shops);
   }
 
   Stream<ShopsState> _handleShopsDownLoadEvent(

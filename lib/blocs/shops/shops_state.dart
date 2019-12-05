@@ -1,4 +1,5 @@
 import 'package:equatable/equatable.dart';
+import 'package:fix_map/models/models.dart';
 import 'package:flutter/foundation.dart';
 
 @immutable
@@ -40,13 +41,13 @@ class ShopsDownloadingState extends ShopsState {
 }
 
 class ShopsLoadedState extends ShopsState {
-  final int counter;
-  ShopsLoadedState(this.counter);
+  final List<Shop> shops;
+  ShopsLoadedState(this.shops);
 
-  List<Object> get props => [counter];
+  List<Object> get props => [shops];
 
   @override
-  String toString() => 'ShopsLoadedState {counter: $counter}';
+  String toString() => 'ShopsLoadedState {shops: $shops}';
 }
 
 class ShopsCanRefreshState extends ShopsState {

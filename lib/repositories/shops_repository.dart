@@ -28,7 +28,8 @@ class ShopRepository {
     return [];
   }
 
-  Future getAllShops({String query}) => shopDao.getShops(query: query);
+  Future getAllShops({String query, int offset, int limit}) =>
+      shopDao.getShops(query: query, offset: offset, limit: limit);
 
   Future<int> insertShop(Shop shop) => shopDao.createShop(shop);
 
