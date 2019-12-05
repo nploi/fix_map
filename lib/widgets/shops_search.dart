@@ -1,12 +1,14 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:fix_map/blocs/shops/bloc.dart';
 import 'package:fix_map/models/models.dart';
+import 'package:fix_map/screens/screens.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class ShopsSearchDelegate extends SearchDelegate<Shop> {
   // ignore: close_sinks
   final ShopsBloc bloc = ShopsBloc();
+  final ScrollController scrollController = ScrollController();
 
   @override
   ThemeData appBarTheme(BuildContext context) {
@@ -70,10 +72,9 @@ class ShopsSearchDelegate extends SearchDelegate<Shop> {
     int offset = 0;
     final List<Shop> shops = [];
     bloc.add(ShopsSearchByKeywordEvent(query, offset, limit));
-    ScrollController scrollController = ScrollController();
     scrollController.addListener(() {
-      if (scrollController.offset ==
-          scrollController.position.maxScrollExtent) {
+      if (scrollController.offset >
+          scrollController.position.maxScrollExtent - 100) {
         bloc.add(
             ShopsSearchByKeywordNextOffsetEvent(query, offset += limit, limit));
       }
@@ -87,27 +88,39 @@ class ShopsSearchDelegate extends SearchDelegate<Shop> {
           );
         }
         if (state is ShopsLoadedState) {
-          shops.addAll(bloc.shops);
+          shops.addAll(state.shops);
           return ListView.builder(
             controller: scrollController,
             itemBuilder: (context, index) {
-              return ListTile(
-                leading: CachedNetworkImage(
-                  imageUrl: shops[index].image,
-                  fit: BoxFit.contain,
-                  imageBuilder: (context, provider) {
-                    return CircleAvatar(
-                      backgroundImage: provider,
-                    );
-                  },
-                ),
-                title: Text(shops[index].name),
-                subtitle: Text(
-                  shops[index].address,
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                ),
-                trailing: Icon(Icons.arrow_forward_ios),
+              return Column(
+                mainAxisSize: MainAxisSize.min,
+                children: <Widget>[
+                  ListTile(
+                    leading: CachedNetworkImage(
+                      imageUrl: shops[index].image,
+                      fit: BoxFit.contain,
+                      imageBuilder: (context, provider) {
+                        return CircleAvatar(
+                          backgroundImage: provider,
+                        );
+                      },
+                    ),
+                    title: Text(shops[index].name),
+                    subtitle: Text(
+                      shops[index].address,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                    trailing: Icon(Icons.arrow_forward_ios),
+                    onTap: () {
+                      Navigator.pushNamed(context, ShopDetailScreen.routeName,
+                          arguments: shops[index]);
+                    },
+                  ),
+                  Divider(
+                    height: 1,
+                  )
+                ],
               );
             },
             itemCount: shops.length,
