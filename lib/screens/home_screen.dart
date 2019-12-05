@@ -327,6 +327,7 @@ class _HomeScreenState extends State<HomeScreen> {
           await showSearch<Shop>(
             context: context,
             delegate: _delegate,
+            query: " "
           );
         },
       );

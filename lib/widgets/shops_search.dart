@@ -9,6 +9,21 @@ class ShopsSearchDelegate extends SearchDelegate<Shop> {
   final ShopsBloc bloc = ShopsBloc();
 
   @override
+  ThemeData appBarTheme(BuildContext context) {
+    final ThemeData theme = Theme.of(context);
+    return theme.copyWith(
+        inputDecorationTheme: InputDecorationTheme(
+            hintStyle: TextStyle(color: theme.primaryTextTheme.title.color)),
+        primaryColor: theme.primaryColor,
+        primaryIconTheme: theme.primaryIconTheme,
+        primaryColorBrightness: theme.primaryColorBrightness,
+        primaryTextTheme: theme.primaryTextTheme,
+        textTheme: theme.textTheme.copyWith(
+            title: theme.textTheme.title
+                .copyWith(color: theme.primaryTextTheme.title.color)));
+  }
+
+  @override
   List<Widget> buildActions(BuildContext context) {
     return <Widget>[
       query.isEmpty
@@ -66,27 +81,30 @@ class ShopsSearchDelegate extends SearchDelegate<Shop> {
           return ListView.builder(
             itemBuilder: (context, index) {
               return ListTile(
-                leading: Hero(
-                  tag: shops[index].name,
-                  child: CachedNetworkImage(
-                    imageUrl: shops[index].image,
-                    fit: BoxFit.contain,
-                    imageBuilder: (context, provider) {
-                      return CircleAvatar(
-                        backgroundImage: provider,
-                      );
-                    },
-                  ),
+                leading: CachedNetworkImage(
+                  imageUrl: shops[index].image,
+                  fit: BoxFit.contain,
+                  imageBuilder: (context, provider) {
+                    return CircleAvatar(
+                      backgroundImage: provider,
+                    );
+                  },
                 ),
                 title: Text(shops[index].name),
-                subtitle: Text(shops[index].address, maxLines: 1, overflow: TextOverflow.ellipsis,),
+                subtitle: Text(
+                  shops[index].address,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                ),
                 trailing: Icon(Icons.arrow_forward_ios),
               );
             },
             itemCount: shops.length,
           );
         }
-        return Center(child: Text("Enter keyword"),);
+        return Center(
+          child: Text("Enter keyword"),
+        );
       },
     );
   }
