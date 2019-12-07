@@ -10,6 +10,14 @@ class ShopRepository {
     return await shopDao.searchShops(bounds: bounds);
   }
 
+  Future<Shop> getShopBy(String hash) async {
+//    FixMapResponse fixMapResponse = await FixMapClient.getShop(hash);
+//
+//    if (fixMapResponse.responseText != "Successfully") {
+//      throw Exception("Opps, has error!");
+//    }
+  }
+
   Future<List<Shop>> downloadShops() async {
     FixMapResponse fixMapResponse = await FixMapClient.getAllShop();
 

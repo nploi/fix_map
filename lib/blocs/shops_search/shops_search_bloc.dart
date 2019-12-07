@@ -29,7 +29,8 @@ class ShopsSearchBloc extends Bloc<ShopsSearchEvent, ShopsSearchState> {
         return;
       }
     } catch (_, stackTrace) {
-      developer.log('$_', name: 'ShopsBloc', error: _, stackTrace: stackTrace);
+      developer.log('$_',
+          name: 'ShopsSearchBloc', error: _, stackTrace: stackTrace);
       yield state;
     }
   }

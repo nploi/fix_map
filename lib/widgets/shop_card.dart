@@ -60,16 +60,20 @@ class ShopCard extends StatelessWidget {
                   ),
                 ),
 //                Row(children: getRatings()),
-//                Padding(
-//                  padding: const EdgeInsets.all(5.0),
-//                  child: Row(
-//                    children: <Widget>[
-//                      Text(
-//                        "Status: ${shop.status}",
-//                      ),
-//                    ],
-//                  ),
-//                ),
+                shop.phoneNumber.isNotEmpty
+                    ? Padding(
+                        padding: const EdgeInsets.all(5.0),
+                        child: Row(
+                          children: <Widget>[
+                            Expanded(
+                              child: Text(
+                                "Phone: ${shop.phoneNumber}",
+                              ),
+                            ),
+                          ],
+                        ),
+                      )
+                    : Container(),
               ],
             ),
           ),

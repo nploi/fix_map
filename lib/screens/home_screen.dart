@@ -160,7 +160,7 @@ class _HomeScreenState extends State<HomeScreen> {
               double mapPaddingBottom = 0.0;
 
               if (shops.isNotEmpty) {
-                mapPaddingBottom = MediaQuery.of(context).size.height * 0.2;
+                mapPaddingBottom = MediaQuery.of(context).size.height * 0.3;
               }
 
               return BlocBuilder<MapBloc, MapState>(
@@ -211,7 +211,7 @@ class _HomeScreenState extends State<HomeScreen> {
                               alignment: Alignment.bottomCenter,
                               child: Container(
                                 height:
-                                    MediaQuery.of(context).size.height * 0.2,
+                                mapPaddingBottom,
                                 child: PageView.builder(
                                   scrollDirection: Axis.horizontal,
                                   controller: _pageController,
