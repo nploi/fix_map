@@ -6,6 +6,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import '../widgets/widgets.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:fix_map/generated/i18n.dart';
 
 class SignUpScreen extends StatefulWidget {
   static final String routeName = "signup";
@@ -28,14 +29,14 @@ class _SignUpScreenState extends State<SignUpScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Sign Up"),
+        title: Text(S.of(context).signUpTitle),
       ),
       backgroundColor: Theme.of(context).backgroundColor,
       body: BlocListener<AuthenticationBloc, AuthenticationState>(
         bloc: widget.authenticationBloc,
         listener: (context, state) {
           if (state is AuthenticationSignedUpState) {
-            Fluttertoast.showToast(msg: "Signed Up");
+            Fluttertoast.showToast(msg: S.of(context).signUpTitle);
             Navigator.of(context).maybePop();
           }
         },
@@ -122,7 +123,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                             obscureText: false,
                             id: "email",
                             onChange: handleOnChange,
-                            hintText: "Email",
+                            hintText: S.of(context).email,
                             icon: Icon(
                               Icons.email,
                               color: Theme.of(context).iconTheme.color,
@@ -162,7 +163,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                             obscureText: true,
                             id: "password",
                             onChange: handleOnChange,
-                            hintText: "Password",
+                            hintText: S.of(context).password,
                             icon: Icon(
                               Icons.lock,
                               color: Theme.of(context).iconTheme.color,
@@ -182,7 +183,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                             obscureText: true,
                             id: "confirm_password",
                             onChange: handleOnChange,
-                            hintText: "Confirm Password",
+                            hintText: S.of(context).confirmPassword,
                             icon: Icon(
                               Icons.lock,
                               color: Theme.of(context).iconTheme.color,
@@ -203,7 +204,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                             ),
                             child: FlatButton(
                               child: Text(
-                                "Sign Up",
+                                S.of(context).signUpTitle,
                                 style: TextStyle(
                                     color: Theme.of(context).primaryColorLight,
                                     fontWeight: FontWeight.w700,
@@ -268,7 +269,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                               Navigator.of(context)
                                   .pushNamed(SignInScreen.routeName);
                             },
-                            child: Text("Sign In ",
+                            child: Text(S.of(context).signInTitle,
                                 style: TextStyle(
                                     color: Colors.red,
                                     fontWeight: FontWeight.w500,
