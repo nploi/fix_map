@@ -40,7 +40,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   void initState() {
-    _pageController = PageController(viewportFraction: 0.5);
+    _pageController = PageController(viewportFraction: 0.6);
     BlocProvider.of<ShopsBloc>(context).add(ShopsCheckDataEvent());
     super.initState();
   }
@@ -108,6 +108,7 @@ class _HomeScreenState extends State<HomeScreen> {
               }
               List<Shop> shops = BlocProvider.of<ShopsBloc>(context).shops;
               if (state is ShopsLoadedState) {
+                _markers.clear();
                 for (int index = 0; index < shops.length; index++) {
                   var shop = shops[index];
                   _markers[shop.hash] = Marker(
@@ -134,32 +135,34 @@ class _HomeScreenState extends State<HomeScreen> {
                   );
                 }
 
-                LatLngBounds bounds;
-                if (center != null) {
-                  bounds = MapUtils.toBounds(center, MapUtils.RADIUS);
-                  _markers.entries.forEach((entry) {
-                    if (!bounds.contains(entry.value.position)) {
-                      _markers[entry.key] =
-                          _markers[entry.key].copyWith(visibleParam: false);
-                    }
-                  });
-                }
+//                LatLngBounds bounds;
+//                if (center != null) {
+//                  bounds = MapUtils.toBounds(center, MapUtils.RADIUS);
+//                  _markers.entries.forEach((entry) {
+//                    if (!bounds.contains(entry.value.position)) {
+//                      _markers[entry.key] =
+//                          _markers[entry.key].copyWith(visibleParam: false);
+//                    }
+//                  });
+//                }
               }
 
               double mapPaddingBottom = 0.0;
 
               if (shops.isNotEmpty) {
-                mapPaddingBottom = MediaQuery.of(context).size.height * 0.3;
+                mapPaddingBottom = MediaQuery.of(context).size.height * 0.2;
               }
 
               return BlocBuilder<MapBloc, MapState>(
                 builder: (context, mapState) {
                   if (mapState is MapMarkerPressedState) {
-                    _markers[mapState.markerId] =
-                        _markers[mapState.markerId].copyWith(
-                      iconParam: BitmapDescriptor.fromBytes(
-                          MarkerUtils.settingsLocation),
-                    );
+                    if (_markers.containsKey(mapState.markerId)) {
+                      _markers[mapState.markerId] =
+                          _markers[mapState.markerId].copyWith(
+                        iconParam: BitmapDescriptor.fromBytes(
+                            MarkerUtils.settingsLocation),
+                      );
+                    }
                   }
                   return Stack(
                     children: <Widget>[
@@ -198,7 +201,7 @@ class _HomeScreenState extends State<HomeScreen> {
                               alignment: Alignment.bottomCenter,
                               child: Container(
                                 height:
-                                    MediaQuery.of(context).size.height * 0.3,
+                                    MediaQuery.of(context).size.height * 0.2,
                                 child: PageView.builder(
                                   scrollDirection: Axis.horizontal,
                                   controller: _pageController,

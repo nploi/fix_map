@@ -22,7 +22,7 @@ class ShopCard extends StatelessWidget {
           borderRadius: BorderRadius.circular(20.0),
         ),
         child: Container(
-          width: MediaQuery.of(context).size.width * 0.45,
+          width: MediaQuery.of(context).size.width * 0.6,
           height: MediaQuery.of(context).size.height * 0.25,
           child: Padding(
             padding: const EdgeInsets.all(8.0),
@@ -59,17 +59,17 @@ class ShopCard extends StatelessWidget {
                     overflow: TextOverflow.ellipsis,
                   ),
                 ),
-                Row(children: getRatings()),
-                Padding(
-                  padding: const EdgeInsets.all(5.0),
-                  child: Row(
-                    children: <Widget>[
-                      Text(
-                        "Status: ${shop.status}",
-                      ),
-                    ],
-                  ),
-                ),
+//                Row(children: getRatings()),
+//                Padding(
+//                  padding: const EdgeInsets.all(5.0),
+//                  child: Row(
+//                    children: <Widget>[
+//                      Text(
+//                        "Status: ${shop.status}",
+//                      ),
+//                    ],
+//                  ),
+//                ),
               ],
             ),
           ),

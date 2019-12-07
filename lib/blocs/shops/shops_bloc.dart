@@ -50,6 +50,9 @@ class ShopsBloc extends Bloc<ShopsEvent, ShopsState> {
   Stream<ShopsState> _handleMapFetchShopsEvent(ShopsSearchByBoundsEvent event) async* {
     yield ShopsLoadingState();
     _shops = await _shopRepository.getShops(event.bounds);
+    if (_shops != null && _shops.isNotEmpty) {
+
+    }
     yield ShopsLoadedState(_shops);
   }
 
