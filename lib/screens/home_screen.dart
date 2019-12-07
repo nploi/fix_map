@@ -79,6 +79,16 @@ class _HomeScreenState extends State<HomeScreen> {
                   BlocProvider.of<SettingsBloc>(context)
                       .add(SettingsRequestPermissionEvent());
                 }
+
+                if (state is ShopsLoadedState) {
+                  if (state.shops.isNotEmpty) {
+                    _pageController.animateToPage(0,
+                        duration: Duration(milliseconds: 200),
+                        curve: Curves.easeInOut);
+                    BlocProvider.of<MapBloc>(context)
+                        .add(MapMarkerPressedEvent(state.shops[0].hash));
+                  }
+                }
               },
             ),
             BlocListener<SettingsBloc, SettingsState>(
