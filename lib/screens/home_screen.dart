@@ -325,10 +325,7 @@ class _HomeScreenState extends State<HomeScreen> {
         icon: const Icon(Icons.search),
         onPressed: () async {
           await showSearch<Shop>(
-            context: context,
-            delegate: _delegate,
-            query: " "
-          );
+              context: context, delegate: _delegate, query: "Sửa xe");
         },
       );
     });
@@ -345,7 +342,7 @@ class _HomeScreenState extends State<HomeScreen> {
       } else {
         bounds = MapUtils.toBounds(latLng, MapUtils.RADIUS);
       }
-      BlocProvider.of<ShopsBloc>(context).add(ShopsSearchEvent(bounds));
+      BlocProvider.of<ShopsBloc>(context).add(ShopsSearchByBoundsEvent(bounds));
     }
   }
 

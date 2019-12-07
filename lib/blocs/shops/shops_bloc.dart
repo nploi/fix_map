@@ -17,18 +17,8 @@ class ShopsBloc extends Bloc<ShopsEvent, ShopsState> {
   @override
   Stream<ShopsState> mapEventToState(ShopsEvent event) async* {
     try {
-      if (event is ShopsSearchEvent) {
+      if (event is ShopsSearchByBoundsEvent) {
         yield* _handleMapFetchShopsEvent(event);
-        return;
-      }
-
-      if (event is ShopsSearchByKeywordEvent) {
-        yield* _handleShopsSearchByKeywordEvent(event);
-        return;
-      }
-
-      if (event is ShopsSearchByKeywordNextOffsetEvent) {
-        yield* _handleShopsSearchByKeywordNextOffsetEvent(event);
         return;
       }
 
@@ -57,24 +47,9 @@ class ShopsBloc extends Bloc<ShopsEvent, ShopsState> {
     }
   }
 
-  Stream<ShopsState> _handleMapFetchShopsEvent(ShopsSearchEvent event) async* {
+  Stream<ShopsState> _handleMapFetchShopsEvent(ShopsSearchByBoundsEvent event) async* {
     yield ShopsLoadingState();
     _shops = await _shopRepository.getShops(event.bounds);
-    yield ShopsLoadedState(_shops);
-  }
-
-  Stream<ShopsState> _handleShopsSearchByKeywordEvent(
-      ShopsSearchByKeywordEvent event) async* {
-    yield ShopsLoadingState();
-    _shops = await _shopRepository.getAllShops(
-        query: event.keyword, limit: event.limit, offset: event.limit);
-    yield ShopsLoadedState(_shops);
-  }
-
-  Stream<ShopsState> _handleShopsSearchByKeywordNextOffsetEvent(
-      ShopsSearchByKeywordNextOffsetEvent event) async* {
-    _shops = await _shopRepository.getAllShops(
-        query: event.keyword, limit: event.limit, offset: event.limit);
     yield ShopsLoadedState(_shops);
   }
 

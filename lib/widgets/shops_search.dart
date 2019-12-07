@@ -1,5 +1,5 @@
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:fix_map/blocs/shops/bloc.dart';
+import 'package:fix_map/blocs/blocs.dart';
 import 'package:fix_map/models/models.dart';
 import 'package:fix_map/screens/screens.dart';
 import 'package:flutter/material.dart';
@@ -7,7 +7,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 class ShopsSearchDelegate extends SearchDelegate<Shop> {
   // ignore: close_sinks
-  final ShopsBloc bloc = ShopsBloc();
+  final ShopsSearchBloc bloc = ShopsSearchBloc();
   final ScrollController scrollController = ScrollController();
 
   @override
@@ -68,63 +68,61 @@ class ShopsSearchDelegate extends SearchDelegate<Shop> {
 
   @override
   Widget buildSuggestions(BuildContext context) {
-    int limit = 20;
-    int offset = 0;
-    final List<Shop> shops = [];
-    bloc.add(ShopsSearchByKeywordEvent(query, offset, limit));
+    bloc.add(ShopsSearchByQueryEvent(query));
     scrollController.addListener(() {
       if (scrollController.offset >
           scrollController.position.maxScrollExtent - 100) {
-        bloc.add(
-            ShopsSearchByKeywordNextOffsetEvent(query, offset += limit, limit));
+        bloc.add(ShopsSearchNextOffsetEvent(query));
       }
     });
-    return BlocBuilder<ShopsBloc, ShopsState>(
+
+    return BlocBuilder<ShopsSearchBloc, ShopsSearchState>(
       bloc: bloc,
       builder: (context, state) {
-        if (state is ShopsLoadingState) {
+        if (state is ShopsSearchLoadingState) {
           return Center(
             child: CircularProgressIndicator(),
           );
         }
-        if (state is ShopsLoadedState) {
-          shops.addAll(state.shops);
-          return ListView.builder(
-            controller: scrollController,
-            itemBuilder: (context, index) {
-              return Column(
-                mainAxisSize: MainAxisSize.min,
-                children: <Widget>[
-                  ListTile(
-                    leading: CachedNetworkImage(
-                      imageUrl: shops[index].image,
-                      fit: BoxFit.contain,
-                      imageBuilder: (context, provider) {
-                        return CircleAvatar(
-                          backgroundImage: provider,
-                        );
+        if (state is ShopsSearchLoadedState) {
+          if (state.shops != null && state.shops.isNotEmpty) {
+            return ListView.builder(
+              controller: scrollController,
+              itemBuilder: (context, index) {
+                return Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: <Widget>[
+                    ListTile(
+                      leading: CachedNetworkImage(
+                        imageUrl: state.shops[index].image,
+                        fit: BoxFit.contain,
+                        imageBuilder: (context, provider) {
+                          return CircleAvatar(
+                            backgroundImage: provider,
+                          );
+                        },
+                      ),
+                      title: Text(state.shops[index].name),
+                      subtitle: Text(
+                        state.shops[index].address,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                      trailing: Icon(Icons.arrow_forward_ios),
+                      onTap: () {
+                        Navigator.pushNamed(context, ShopDetailScreen.routeName,
+                            arguments: state.shops[index]);
                       },
                     ),
-                    title: Text(shops[index].name),
-                    subtitle: Text(
-                      shops[index].address,
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                    trailing: Icon(Icons.arrow_forward_ios),
-                    onTap: () {
-                      Navigator.pushNamed(context, ShopDetailScreen.routeName,
-                          arguments: shops[index]);
-                    },
-                  ),
-                  Divider(
-                    height: 1,
-                  )
-                ],
-              );
-            },
-            itemCount: shops.length,
-          );
+                    Divider(
+                      height: 1,
+                    )
+                  ],
+                );
+              },
+              itemCount: state.shops.length,
+            );
+          }
         }
         return Center(
           child: Text("Enter keyword"),

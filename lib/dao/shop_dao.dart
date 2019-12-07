@@ -20,15 +20,16 @@ class ShopDao {
     final db = await dbProvider.database;
 
     List<Map<String, dynamic>> result;
-    if (query != null) {
-      if (query.isNotEmpty)
+    if (query != null && query != "") {
+      if (query.isNotEmpty) {
         result = await db.query(shopTABLE,
-            where: 'name LIKE ? OR address LIKE ?',
-            whereArgs: ["%$query%", "%$query%"],
+            where: 'name LIKE ?',
+            whereArgs: ["%$query%"],
             offset: offset,
             limit: limit);
+      }
     } else {
-      result = await db.query(shopTABLE);
+      result = [];
     }
 
     List<Shop> shops = result.isNotEmpty

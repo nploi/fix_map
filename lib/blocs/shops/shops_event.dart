@@ -36,40 +36,14 @@ class ShopsDownLoadEvent extends ShopsEvent {
   String toString() => 'ShopsDownLoadEvent {}';
 }
 
-class ShopsSearchEvent extends ShopsEvent {
+class ShopsSearchByBoundsEvent extends ShopsEvent {
   final LatLngBounds bounds;
-  ShopsSearchEvent(this.bounds);
+  ShopsSearchByBoundsEvent(this.bounds);
 
   List<Object> get props => [this.bounds];
 
   @override
-  String toString() => 'ShopsSearchEvent {bounds: ${bounds.toString()}';
-}
-
-class ShopsSearchByKeywordEvent extends ShopsEvent {
-  final String keyword;
-  final int offset;
-  final int limit;
-  ShopsSearchByKeywordEvent(this.keyword, this.offset, this.limit);
-
-  List<Object> get props => [this.keyword, this.offset, this.limit];
-
-  @override
-  String toString() =>
-      'ShopsSearchByKeywordEvent {keyword: $keyword, offset: $offset, limit: $limit}';
-}
-
-class ShopsSearchByKeywordNextOffsetEvent extends ShopsEvent {
-  final String keyword;
-  final int offset;
-  final int limit;
-  ShopsSearchByKeywordNextOffsetEvent(this.keyword, this.offset, this.limit);
-
-  List<Object> get props => [this.keyword, this.offset, this.limit];
-
-  @override
-  String toString() =>
-      'ShopsSearchByKeywordNextOffsetEvent {keyword: $keyword, offset: $offset, limit: $limit}';
+  String toString() => 'ShopsSearchByBoundsEvent {bounds: ${bounds.toString()}';
 }
 
 class ShopsCanRefreshEvent extends ShopsEvent {
