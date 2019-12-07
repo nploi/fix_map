@@ -15,8 +15,7 @@ class ShopsSearchByQueryEvent extends ShopsSearchEvent {
   List<Object> get props => [this.query];
 
   @override
-  String toString() =>
-      'ShopsSearchByQueryEvent {query: $query}';
+  String toString() => 'ShopsSearchByQueryEvent {query: $query}';
 }
 
 class ShopsSearchNextOffsetEvent extends ShopsSearchEvent {
@@ -26,6 +25,5 @@ class ShopsSearchNextOffsetEvent extends ShopsSearchEvent {
   List<Object> get props => [this.query];
 
   @override
-  String toString() =>
-      'ShopsSearchNextOffsetEvent {query: $query}';
+  String toString() => 'ShopsSearchNextOffsetEvent {query: $query}';
 }

@@ -1,5 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:fix_map/blocs/blocs.dart';
+import 'package:fix_map/generated/i18n.dart';
 import 'package:fix_map/models/models.dart';
 import 'package:fix_map/screens/screens.dart';
 import 'package:flutter/material.dart';
@@ -63,7 +64,7 @@ class ShopsSearchDelegate extends SearchDelegate<Shop> {
 
   @override
   Widget buildResults(BuildContext context) {
-    return null;
+    return Container();
   }
 
   @override
@@ -125,7 +126,7 @@ class ShopsSearchDelegate extends SearchDelegate<Shop> {
           }
         }
         return Center(
-          child: Text("Enter keyword"),
+          child: Text(S.of(context).enterKeywordTitle),
         );
       },
     );

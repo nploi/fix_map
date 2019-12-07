@@ -27,10 +27,13 @@ class S implements WidgetsLocalizations {
   String get backAgainToLeaveMessage => "Tap back again to leave";
   String get confirmPassword => "Confirm Password";
   String get darkModeToggleTitle => "Dark theme";
+  String get doHaveAnAccount => "Do have an Account ? ";
   String get doNotAllowLabelButton => "Don't Allow";
+  String get dontHaveAnAccount => "Don't have an Account ? ";
   String get downloadingDataDialogTitle => "Downloading data";
   String get email => "Email";
-  String get f => "";
+  String get enterKeywordTitle => "Enter keyword";
+  String get forgotPassword => "FORGOT PASSWORD ?";
   String get g => "";
   String get h => "";
   String get initializingDataDialogTitle => "Initializing data";
@@ -39,7 +42,7 @@ class S implements WidgetsLocalizations {
   String get languagePickerTitle => "Languages";
   String get moreButtonLabel => "More";
   String get n => "";
-  String get o => "";
+  String get orContinueWith => "or continue with";
   String get password => "Password";
   String get q => "";
   String get requestPermissionDialogContent => "Your current location will be displayed on the map and used\nfor directions, nearby search results, and estimated travel times.";
@@ -68,11 +71,15 @@ class $vi extends S {
   @override
   String get darkModeToggleTitle => "Giao diện tối";
   @override
+  String get enterKeywordTitle => "Nhập từ khóa";
+  @override
   String get signUpTitle => "Đăng xuất";
   @override
   String get allowLabelButton => "Cho phép";
   @override
   String get backAgainToLeaveMessage => "Bấm lần nữa để thoát";
+  @override
+  String get forgotPassword => "QUÊN MẬT KHẨU ?";
   @override
   String get password => "Mật khẩu";
   @override
@@ -92,8 +99,6 @@ class $vi extends S {
   @override
   String get appName => "Fix Map";
   @override
-  String get f => "";
-  @override
   String get g => "";
   @override
   String get h => "";
@@ -110,15 +115,17 @@ class $vi extends S {
   @override
   String get n => "";
   @override
-  String get o => "";
-  @override
   String get moreButtonLabel => "Nhiều hơn";
   @override
   String get q => "";
   @override
+  String get orContinueWith => "hoặc tiếp tục với";
+  @override
   String get t => "";
   @override
   String get u => "";
+  @override
+  String get doHaveAnAccount => "Đã có tài khoản ? ";
   @override
   String get v => "";
   @override
@@ -131,6 +138,8 @@ class $vi extends S {
   String get shopDetailTitle => "Chi tiết cửa hàng";
   @override
   String get z => "";
+  @override
+  String get dontHaveAnAccount => "Chưa có tài khoản ? ";
   @override
   String get languagePickerTitle => "Ngôn ngữ";
 }
