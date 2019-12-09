@@ -2,9 +2,9 @@ class User {
   int id;
   String email;
   String password;
-  Null avatar;
+  String avatar;
   String fullName;
-  Null phone;
+  String phone;
 
   User(
       {this.id,
