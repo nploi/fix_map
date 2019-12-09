@@ -7,19 +7,31 @@ import "generated/i18n.dart";
 import "screens/screens.dart";
 import "utils/utils.dart";
 
-class FixMapApp extends StatelessWidget {
+class FixMapApp extends StatefulWidget {
   final SettingsBloc settingsBloc;
-  // ignore: close_sinks
-  final AuthenticationBloc authenticationBloc = AuthenticationBloc();
 
-  FixMapApp({Key key, this.settingsBloc}) : super(key: key);
+  const FixMapApp({Key key, this.settingsBloc}) : super(key: key);
+
+  @override
+  _FixMapAppState createState() => _FixMapAppState();
+}
+
+class _FixMapAppState extends State<FixMapApp> {
+  AuthenticationBloc authenticationBloc;
+
+  @override
+  void initState() {
+    super.initState();
+    authenticationBloc = AuthenticationBloc();
+  }
 
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<SettingsBloc, SettingsState>(
-      bloc: settingsBloc,
+      bloc: widget.settingsBloc,
       builder: (context, state) {
-        final settings = settingsBloc.settings;
+        final settings = widget.settingsBloc.settings;
+        print(settings.toJson());
         return MaterialApp(
           onGenerateTitle: (BuildContext context) => S.of(context).appName,
           debugShowCheckedModeBanner: false,
@@ -33,7 +45,7 @@ class FixMapApp extends StatelessWidget {
           theme: themeLight,
           darkTheme: themeDark,
           themeMode: settings.darkMode ? ThemeMode.dark : ThemeMode.light,
-          initialRoute: this.settingsBloc.settings.isLoadFirstScreen
+          initialRoute: this.widget.settingsBloc.settings.isLoadFirstScreen
               ? HomeScreen.routeName
               : IntroThreePage.routeName,
           routes: {
@@ -42,18 +54,19 @@ class FixMapApp extends StatelessWidget {
             SignUpScreen.routeName: (context) =>
                 SignUpScreen(authenticationBloc: authenticationBloc),
             IntroThreePage.routeName: (context) => IntroThreePage(
-                  settingsBloc: settingsBloc,
+                  settingsBloc: widget.settingsBloc,
                 ),
             HomeScreen.routeName: (context) => MultiBlocProvider(
                   providers: [
                     BlocProvider<SettingsBloc>(
-                      create: (context) => settingsBloc,
+                      create: (context) => widget.settingsBloc,
                     ),
                     BlocProvider<AuthenticationBloc>(
                       create: (context) => authenticationBloc,
                     ),
                     BlocProvider<MapBloc>(
-                      create: (context) => MapBloc(settingsBloc: settingsBloc),
+                      create: (context) =>
+                          MapBloc(settingsBloc: widget.settingsBloc),
                     ),
                     BlocProvider<ShopsBloc>(
                       create: (context) => ShopsBloc(),
@@ -62,7 +75,7 @@ class FixMapApp extends StatelessWidget {
                   child: HomeScreen(),
                 ),
             SettingsScreen.routeName: (context) => SettingsScreen(
-                  settingsBloc: settingsBloc,
+                  settingsBloc: widget.settingsBloc,
                 ),
           },
           // ignore: missing_return
@@ -78,5 +91,11 @@ class FixMapApp extends StatelessWidget {
         );
       },
     );
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    authenticationBloc.close();
   }
 }

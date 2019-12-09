@@ -81,7 +81,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 }
 
                 if (state is ShopsLoadedState) {
-                  if (state.shops.isNotEmpty) {
+                  if (state.shops.isNotEmpty && _pageController.hasClients) {
                     await _pageController.animateToPage(0,
                         duration: Duration(milliseconds: 200),
                         curve: Curves.easeInOut);

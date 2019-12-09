@@ -2,7 +2,11 @@ class Settings {
   bool darkMode = false;
   bool isLoadFirstScreen = false;
   String languageCode = "en";
-  Settings({this.darkMode, this.isLoadFirstScreen, this.languageCode});
+
+  Settings(
+      {this.darkMode = false,
+      this.isLoadFirstScreen = false,
+      this.languageCode = "en"});
 
   Settings copyWith({
     bool darkMode,
