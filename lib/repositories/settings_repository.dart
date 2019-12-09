@@ -11,7 +11,7 @@ class SettingsRepository extends SharedPreferencesRepository {
     if (settingValue == null) {
       return Settings();
     }
-    return Settings.fromMappedJson(jsonDecode(settingValue));
+    return Settings.fromJson(jsonDecode(settingValue));
   }
 
   Future<bool> setSettings(Settings settings) async {

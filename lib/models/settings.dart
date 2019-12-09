@@ -2,7 +2,7 @@ class Settings {
   bool darkMode = false;
   bool isLoadFirstScreen = false;
   String languageCode = 'en';
-  Settings();
+  Settings({this.darkMode, this.isLoadFirstScreen, this.languageCode});
 
   Settings copyWith({
     bool darkMode,
@@ -18,7 +18,7 @@ class Settings {
     return settings;
   }
 
-  Settings.fromMappedJson(Map<String, dynamic> json)
+  Settings.fromJson(Map<String, dynamic> json)
       : darkMode = json['dark_mode'] != null ? json['dark_mode'] : false,
         isLoadFirstScreen = json['is_load_first_screen'] != null
             ? json['is_load_first_screen']
