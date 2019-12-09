@@ -38,7 +38,7 @@ class FixMapClient {
       baseUrl + "/user/sign-up",
       data: {
         "email": user.email,
-        "fullname": user.email,
+        "fullname": user.fullName,
         "password": user.password,
         "repassword": user.password,
         "accessToken": "",
