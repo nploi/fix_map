@@ -7,7 +7,6 @@ import "package:flutter/material.dart";
 import "package:flutter_bloc/flutter_bloc.dart";
 
 class ShopsSearchDelegate extends SearchDelegate<Shop> {
-  // ignore: close_sinks
   final ShopsSearchBloc bloc = ShopsSearchBloc();
   final ScrollController scrollController = ScrollController();
 
