@@ -5,7 +5,7 @@ class Shop {
   String phoneNumber;
   String address;
   String status;
-  int rating;
+  double rating;
   String image;
   String imageBig;
   double latitude;
