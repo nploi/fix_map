@@ -6,14 +6,12 @@ import "utils/utils.dart";
 
 Future main() async {
   BlocSupervisor.delegate = FixMapBlocDelegate();
-  final SettingsBloc settingsBloc = SettingsBloc();
+  // ignore: close_sinks
+  final settingsBloc = SettingsBloc();
 
   await settingsBloc.boot();
   await MarkerUtils.initIcons();
-
   runApp(
     FixMapApp(settingsBloc: settingsBloc),
   );
-
-  await settingsBloc.close();
 }

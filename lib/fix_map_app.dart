@@ -31,7 +31,6 @@ class _FixMapAppState extends State<FixMapApp> {
       bloc: widget.settingsBloc,
       builder: (context, state) {
         final settings = widget.settingsBloc.settings;
-        print(settings.toJson());
         return MaterialApp(
           onGenerateTitle: (BuildContext context) => S.of(context).appName,
           debugShowCheckedModeBanner: false,
