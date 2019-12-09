@@ -1,11 +1,11 @@
-import 'package:fix_map/blocs/blocs.dart';
-import 'package:fix_map/blocs/shops/bloc.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_localizations/flutter_localizations.dart';
-import 'generated/i18n.dart';
-import 'screens/screens.dart';
-import 'utils/utils.dart';
+import "package:fix_map/blocs/blocs.dart";
+import "package:fix_map/blocs/shops/bloc.dart";
+import "package:flutter/material.dart";
+import "package:flutter_bloc/flutter_bloc.dart";
+import "package:flutter_localizations/flutter_localizations.dart";
+import "generated/i18n.dart";
+import "screens/screens.dart";
+import "utils/utils.dart";
 
 class FixMapApp extends StatelessWidget {
   final SettingsBloc settingsBloc;
@@ -19,7 +19,7 @@ class FixMapApp extends StatelessWidget {
     return BlocBuilder<SettingsBloc, SettingsState>(
       bloc: settingsBloc,
       builder: (context, state) {
-        var settings = settingsBloc.settings;
+        final settings = settingsBloc.settings;
         return MaterialApp(
           onGenerateTitle: (BuildContext context) => S.of(context).appName,
           debugShowCheckedModeBanner: false,
@@ -28,7 +28,7 @@ class FixMapApp extends StatelessWidget {
             GlobalMaterialLocalizations.delegate,
             GlobalWidgetsLocalizations.delegate,
           ],
-          locale: Locale(settings.languageCode, ''),
+          locale: Locale(settings.languageCode, ""),
           supportedLocales: S.delegate.supportedLocales,
           theme: themeLight,
           darkTheme: themeDark,
@@ -47,16 +47,16 @@ class FixMapApp extends StatelessWidget {
             HomeScreen.routeName: (context) => MultiBlocProvider(
                   providers: [
                     BlocProvider<SettingsBloc>(
-                      builder: (context) => settingsBloc,
+                      create: (context) => settingsBloc,
                     ),
                     BlocProvider<AuthenticationBloc>(
-                      builder: (context) => authenticationBloc,
+                      create: (context) => authenticationBloc,
                     ),
                     BlocProvider<MapBloc>(
-                      builder: (context) => MapBloc(settingsBloc: settingsBloc),
+                      create: (context) => MapBloc(settingsBloc: settingsBloc),
                     ),
                     BlocProvider<ShopsBloc>(
-                      builder: (context) => ShopsBloc(),
+                      create: (context) => ShopsBloc(),
                     ),
                   ],
                   child: HomeScreen(),
@@ -68,7 +68,7 @@ class FixMapApp extends StatelessWidget {
           // ignore: missing_return
           onGenerateRoute: (routeSettings) {
             if (routeSettings.name == ShopDetailScreen.routeName) {
-              var shop = routeSettings.arguments;
+              final shop = routeSettings.arguments;
               return MaterialPageRoute(
                   builder: (context) => ShopDetailScreen(
                         shop: shop,

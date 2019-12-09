@@ -1,10 +1,10 @@
-import 'package:fix_map/blocs/blocs.dart';
-import 'package:fix_map/blocs/shops/bloc.dart';
-import 'package:fix_map/generated/i18n.dart';
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:percent_indicator/percent_indicator.dart';
+import "package:fix_map/blocs/blocs.dart";
+import "package:fix_map/blocs/shops/bloc.dart";
+import "package:fix_map/generated/i18n.dart";
+import "package:flutter/cupertino.dart";
+import "package:flutter/material.dart";
+import "package:flutter_bloc/flutter_bloc.dart";
+import "package:percent_indicator/percent_indicator.dart";
 
 showDownloadDialog(BuildContext context, ShopsBloc bloc) {
   showCupertinoDialog(

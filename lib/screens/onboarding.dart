@@ -1,8 +1,8 @@
-import 'package:flutter/material.dart';
-import 'package:flutter_swiper/flutter_swiper.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import '../widgets/swiper_pagination.dart';
-import 'package:fix_map/blocs/blocs.dart';
+import "package:flutter/material.dart";
+import "package:flutter_swiper/flutter_swiper.dart";
+import "package:font_awesome_flutter/font_awesome_flutter.dart";
+import "../widgets/swiper_pagination.dart";
+import "package:fix_map/blocs/blocs.dart";
 
 class IntroThreePage extends StatefulWidget {
   static const String routeName = "onboarding";
@@ -30,9 +30,9 @@ class _IntroThreePageState extends State<IntroThreePage> {
     Colors.cyan.shade300
   ];
   final List<String> images = [
-    'assets/onboarding/1.png',
-    'assets/onboarding/1.png',
-    'assets/onboarding/1.png',
+    "assets/onboarding/1.png",
+    "assets/onboarding/1.png",
+    "assets/onboarding/1.png",
   ];
 
   @override
@@ -104,10 +104,10 @@ class _IntroThreePageState extends State<IntroThreePage> {
                 : FontAwesomeIcons.check),
             onPressed: () async {
               if (_currentIndex < _pageCount - 1)
-                _swiperController.next();
+                await _swiperController.next();
               else {
                 updateSetting();
-                Navigator.pushReplacementNamed(this.context, "home");
+                await Navigator.pushReplacementNamed(this.context, "home");
               }
             },
           )
@@ -152,7 +152,7 @@ class _IntroThreePageState extends State<IntroThreePage> {
   }
 
   void updateSetting() {
-    var updateSetting = widget.settingsBloc.settings;
+    final updateSetting = widget.settingsBloc.settings;
     updateSetting.isLoadFirstScreen = true;
     widget.settingsBloc.add(SettingsUpdateSettingsEvent(updateSetting));
   }

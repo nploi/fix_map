@@ -1,11 +1,8 @@
-import 'package:cached_network_image/cached_network_image.dart';
-import 'package:fix_map/blocs/blocs.dart';
-import 'package:fix_map/generated/i18n.dart';
-import 'package:fix_map/models/models.dart';
-import 'package:fix_map/widgets/widgets.dart';
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
+import "package:cached_network_image/cached_network_image.dart";
+import "package:fix_map/generated/i18n.dart";
+import "package:fix_map/models/models.dart";
+import "package:flutter/cupertino.dart";
+import "package:flutter/material.dart";
 
 class ShopDetailScreen extends StatefulWidget {
   static final String routeName = "/shop_detail";

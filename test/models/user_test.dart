@@ -1,10 +1,10 @@
-import 'package:fix_map/models/models.dart';
-import 'package:flutter_test/flutter_test.dart';
+import "package:fix_map/models/models.dart";
+import "package:flutter_test/flutter_test.dart";
 
 void main() {
-  group('User', () {
-    var json = {
-      'id': 1,
+  group("User", () {
+    final json = {
+      "id": 1,
       "fullname": "Loi hai",
       "password": "asdf",
       "email": "nploi1998@gmail.com",
@@ -12,8 +12,8 @@ void main() {
       "phone": "8412345678"
     };
 
-    test('toJson', () {
-      User user = User(
+    test("toJson", () {
+      final User user = User(
           id: 1,
           fullName: "Loi hai",
           password: "asdf",
@@ -24,8 +24,8 @@ void main() {
       expect(user.toJson(), json);
     });
 
-    test('fromJson', () {
-      User user = User.fromJson(json);
+    test("fromJson", () {
+      final User user = User.fromJson(json);
       expect(user.toJson(), json);
     });
   });

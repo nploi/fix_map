@@ -1,12 +1,12 @@
-import 'dart:async';
-import 'package:bloc/bloc.dart';
-import 'package:fix_map/models/models.dart';
-import 'package:fix_map/repositories/settings_repository.dart';
-import 'package:geolocator/geolocator.dart';
-import 'package:permission_handler/permission_handler.dart';
-import 'dart:developer' as developer;
+import "dart:async";
+import "package:bloc/bloc.dart";
+import "package:fix_map/models/models.dart";
+import "package:fix_map/repositories/settings_repository.dart";
+import "package:geolocator/geolocator.dart";
+import "package:permission_handler/permission_handler.dart";
+import "dart:developer" as developer;
 
-import 'bloc.dart';
+import "bloc.dart";
 
 class SettingsBloc extends Bloc<SettingsEvent, SettingsState> {
   final SettingsRepository _repository = SettingsRepository();
@@ -17,7 +17,7 @@ class SettingsBloc extends Bloc<SettingsEvent, SettingsState> {
   SettingsState get initialState => InitialSettingsState();
 
   Future boot() async {
-    await this._repository.boot();
+    await _repository.boot();
   }
 
   @override
@@ -33,8 +33,8 @@ class SettingsBloc extends Bloc<SettingsEvent, SettingsState> {
         return;
       }
     } catch (_, stackTrace) {
-      developer.log('$_',
-          name: 'SettingsBloc', error: _, stackTrace: stackTrace);
+      developer.log("$_",
+          name: "SettingsBloc", error: _, stackTrace: stackTrace);
       yield state;
     }
   }
@@ -42,7 +42,7 @@ class SettingsBloc extends Bloc<SettingsEvent, SettingsState> {
   Stream<SettingsState> _handleUpdateSettingsSettingsEvent(
       SettingsUpdateSettingsEvent event) async* {
     if (!event.settings.isEqual(settings)) {
-      this._repository.setSettings(event.settings);
+      await _repository.setSettings(event.settings);
       yield SettingsUpdatedSettingsState(settings.copyWith());
     }
   }
@@ -50,10 +50,10 @@ class SettingsBloc extends Bloc<SettingsEvent, SettingsState> {
   Stream<SettingsState> _handleSettingsRequestPermissionEvent(
       SettingsRequestPermissionEvent event) async* {
     try {
-      GeolocationStatus status =
+      final GeolocationStatus status =
           await _repository.checkGeolocationPermissionStatus();
       if (status == GeolocationStatus.denied) {
-        Map<PermissionGroup, PermissionStatus> permissions =
+        final Map<PermissionGroup, PermissionStatus> permissions =
             await PermissionHandler().requestPermissions([
           PermissionGroup.location,
         ]);

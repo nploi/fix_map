@@ -1,9 +1,9 @@
-import 'package:shared_preferences/shared_preferences.dart';
+import "package:shared_preferences/shared_preferences.dart";
 
 abstract class SharedPreferencesRepository {
-  static const String SETTINGS = 'settings';
-  static const String LAST_LOCATION = 'last location';
-  static const String USER = 'user';
+  static const String SETTINGS = "settings";
+  static const String LAST_LOCATION = "last location";
+  static const String USER = "user";
 
   SharedPreferences _prefs;
 

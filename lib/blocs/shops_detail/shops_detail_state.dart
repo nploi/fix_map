@@ -1,6 +1,6 @@
-import 'package:equatable/equatable.dart';
-import 'package:fix_map/models/models.dart';
-import 'package:flutter/foundation.dart';
+import "package:equatable/equatable.dart";
+import "package:fix_map/models/models.dart";
+import "package:flutter/foundation.dart";
 
 @immutable
 abstract class ShopsDetailState extends Equatable {
@@ -16,10 +16,10 @@ class ShopsDetailLoadingState extends ShopsDetailState {}
 class ShopsDetailLoadedState extends ShopsDetailState {
   final List<Shop> shops;
   final int size;
-  ShopsDetailLoadedState(this.shops, this.size);
+  const ShopsDetailLoadedState(this.shops, this.size);
 
   List<Object> get props => [shops, size];
 
   @override
-  String toString() => 'ShopsDetailLoadedState {shops: $shops, size: $size}';
+  String toString() => "ShopsDetailLoadedState {shops: $shops, size: $size}";
 }

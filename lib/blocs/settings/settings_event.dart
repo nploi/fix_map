@@ -1,6 +1,6 @@
-import 'package:equatable/equatable.dart';
-import 'package:fix_map/models/models.dart';
-import 'package:flutter/foundation.dart';
+import "package:equatable/equatable.dart";
+import "package:fix_map/models/models.dart";
+import "package:flutter/foundation.dart";
 
 @immutable
 abstract class SettingsEvent extends Equatable {
@@ -11,20 +11,20 @@ abstract class SettingsEvent extends Equatable {
 
 class SettingsUpdateSettingsEvent extends SettingsEvent {
   final Settings settings;
-  SettingsUpdateSettingsEvent(this.settings);
+  const SettingsUpdateSettingsEvent(this.settings);
 
   List<Object> get props => [settings];
 
   @override
   String toString() =>
-      'SettingsUpdateSettingsEvent {settings: ${settings.toJson()}';
+      "SettingsUpdateSettingsEvent {settings: ${settings.toJson()}";
 }
 
 class SettingsRequestPermissionEvent extends SettingsEvent {
-  SettingsRequestPermissionEvent();
+  const SettingsRequestPermissionEvent();
 
   List<Object> get props => [];
 
   @override
-  String toString() => 'SettingsRequestPermissionEvent {}';
+  String toString() => "SettingsRequestPermissionEvent {}";
 }

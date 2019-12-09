@@ -1,4 +1,4 @@
-import 'user.dart';
+import "user.dart";
 
 class AuthenticateResponse {
   String responseText;
@@ -7,15 +7,15 @@ class AuthenticateResponse {
   AuthenticateResponse({this.responseText, this.user});
 
   AuthenticateResponse.fromJson(Map<String, dynamic> json) {
-    responseText = json['responseText'];
-    user = json['user'] != null ? new User.fromJson(json['user']) : null;
+    responseText = json["responseText"];
+    user = json["user"] != null ? User.fromJson(json["user"]) : null;
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['responseText'] = this.responseText;
-    if (this.user != null) {
-      data['user'] = this.user.toJson();
+    final Map<String, dynamic> data = Map<String, dynamic>();
+    data["responseText"] = responseText;
+    if (user != null) {
+      data["user"] = user.toJson();
     }
     return data;
   }

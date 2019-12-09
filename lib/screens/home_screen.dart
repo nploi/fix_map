@@ -1,22 +1,22 @@
-import 'dart:async';
-import 'package:fix_map/blocs/blocs.dart';
-import 'package:fix_map/blocs/shops/bloc.dart';
-import 'package:fix_map/dialogs/dialogs.dart';
-import 'package:fix_map/generated/i18n.dart';
-import 'package:fix_map/models/models.dart';
-import 'package:fix_map/screens/screens.dart';
-import 'package:fix_map/utils/utils.dart';
-import 'package:fix_map/widgets/shop_card.dart';
-import 'package:fix_map/widgets/widgets.dart';
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:fluttertoast/fluttertoast.dart';
-import 'package:google_maps_flutter/google_maps_flutter.dart';
+import "dart:async";
+import "package:fix_map/blocs/blocs.dart";
+import "package:fix_map/blocs/shops/bloc.dart";
+import "package:fix_map/dialogs/dialogs.dart";
+import "package:fix_map/generated/i18n.dart";
+import "package:fix_map/models/models.dart";
+import "package:fix_map/screens/screens.dart";
+import "package:fix_map/utils/utils.dart";
+import "package:fix_map/widgets/shop_card.dart";
+import "package:fix_map/widgets/widgets.dart";
+import "package:flutter/cupertino.dart";
+import "package:flutter/material.dart";
+import "package:flutter_bloc/flutter_bloc.dart";
+import "package:fluttertoast/fluttertoast.dart";
+import "package:google_maps_flutter/google_maps_flutter.dart";
 
 class HomeScreen extends StatefulWidget {
   static String routeName = "home";
-  HomeScreen({Key key}) : super(key: key);
+  const HomeScreen({Key key}) : super(key: key);
 
   @override
   _HomeScreenState createState() => _HomeScreenState();
@@ -25,8 +25,8 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   DateTime currentBackPressTime;
   PageController _pageController;
-  Completer<GoogleMapController> _controller = Completer();
-  Map<String, Marker> _markers = {};
+  final Completer<GoogleMapController> _controller = Completer();
+  final Map<String, Marker> _markers = {};
   final ShopsSearchDelegate _delegate = ShopsSearchDelegate();
 
   static final CameraPosition _cameraPosition = CameraPosition(
@@ -82,7 +82,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
                 if (state is ShopsLoadedState) {
                   if (state.shops.isNotEmpty) {
-                    _pageController.animateToPage(0,
+                    await _pageController.animateToPage(0,
                         duration: Duration(milliseconds: 200),
                         curve: Curves.easeInOut);
                     BlocProvider.of<MapBloc>(context)
@@ -116,18 +116,18 @@ class _HomeScreenState extends State<HomeScreen> {
               if (state is ShopsLoadingState) {
                 isLoading = true;
               }
-              List<Shop> shops = BlocProvider.of<ShopsBloc>(context).shops;
+              final List<Shop> shops = BlocProvider.of<ShopsBloc>(context).shops;
               if (state is ShopsLoadedState) {
                 _markers.clear();
                 for (int index = 0; index < shops.length; index++) {
-                  var shop = shops[index];
+                  final shop = shops[index];
                   _markers[shop.hash] = Marker(
                     markerId: MarkerId(shop.hash),
                     position: LatLng(shop.latitude, shop.longitude),
                     icon:
                         BitmapDescriptor.fromBytes(MarkerUtils.settingsCircle),
                     onTap: () {
-                      String currentMarkerId =
+                      final String currentMarkerId =
                           BlocProvider.of<MapBloc>(context).currentMarkerId;
                       if (_markers.containsKey(currentMarkerId)) {
                         _markers[currentMarkerId] =
@@ -281,7 +281,7 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   void onShopChange(int index, shops) {
-    String currentMarkerId = BlocProvider.of<MapBloc>(context).currentMarkerId;
+    final String currentMarkerId = BlocProvider.of<MapBloc>(context).currentMarkerId;
     if (_markers.containsKey(currentMarkerId)) {
       _markers[currentMarkerId] = _markers[currentMarkerId].copyWith(
         iconParam: BitmapDescriptor.fromBytes(MarkerUtils.settingsCircle),
@@ -350,7 +350,7 @@ class _HomeScreenState extends State<HomeScreen> {
       if (center != null) {
         bounds = MapUtils.toBounds(center, MapUtils.RADIUS);
       } else if (latLng == null) {
-        var controller = await _controller.future;
+        final controller = await _controller.future;
         bounds = await controller.getVisibleRegion();
       } else {
         bounds = MapUtils.toBounds(latLng, MapUtils.RADIUS);
@@ -371,11 +371,11 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Future<bool> _onWillPop() async {
-    DateTime now = DateTime.now();
+    final DateTime now = DateTime.now();
     if (currentBackPressTime == null ||
         now.difference(currentBackPressTime) > Duration(seconds: 2)) {
       currentBackPressTime = now;
-      Fluttertoast.showToast(msg: S.of(context).backAgainToLeaveMessage);
+      await Fluttertoast.showToast(msg: S.of(context).backAgainToLeaveMessage);
       return Future.value(false);
     }
     return Future.value(true);

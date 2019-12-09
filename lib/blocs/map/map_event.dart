@@ -1,5 +1,5 @@
-import 'package:equatable/equatable.dart';
-import 'package:flutter/foundation.dart';
+import "package:equatable/equatable.dart";
+import "package:flutter/foundation.dart";
 
 @immutable
 abstract class MapEvent extends Equatable {
@@ -9,20 +9,20 @@ abstract class MapEvent extends Equatable {
 }
 
 class MapGetCurrentLocationEvent extends MapEvent {
-  MapGetCurrentLocationEvent();
+  const MapGetCurrentLocationEvent();
 
   List<Object> get props => [];
 
   @override
-  String toString() => 'MapGetCurrentLocationEvent {}';
+  String toString() => "MapGetCurrentLocationEvent {}";
 }
 
 class MapMarkerPressedEvent extends MapEvent {
   final String markerId;
-  MapMarkerPressedEvent(this.markerId);
+  const MapMarkerPressedEvent(this.markerId);
 
   List<Object> get props => [markerId];
 
   @override
-  String toString() => 'MapMarkerPressedEvent {markerId: $markerId}';
+  String toString() => "MapMarkerPressedEvent {markerId: $markerId}";
 }

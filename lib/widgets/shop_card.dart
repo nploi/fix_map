@@ -1,8 +1,8 @@
-import 'package:auto_size_text/auto_size_text.dart';
-import 'package:cached_network_image/cached_network_image.dart';
-import 'package:fix_map/models/models.dart';
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
+import "package:auto_size_text/auto_size_text.dart";
+import "package:cached_network_image/cached_network_image.dart";
+import "package:fix_map/models/models.dart";
+import "package:flutter/cupertino.dart";
+import "package:flutter/material.dart";
 
 class ShopCard extends StatelessWidget {
   final Shop shop;
@@ -84,12 +84,12 @@ class ShopCard extends StatelessWidget {
   }
 
   List<Widget> getRatings() {
-    List<Widget> ratings = [];
+    final List<Widget> ratings = [];
     for (int i = 0; i < 5; i++) {
       if (i < shop.rating) {
-        ratings.add(new Icon(Icons.star, color: Colors.yellow));
+        ratings.add(Icon(Icons.star, color: Colors.yellow));
       } else {
-        ratings.add(new Icon(Icons.star_border, color: Colors.black));
+        ratings.add(Icon(Icons.star_border, color: Colors.black));
       }
     }
     return ratings;

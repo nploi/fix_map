@@ -1,6 +1,6 @@
-import 'package:equatable/equatable.dart';
-import 'package:fix_map/models/models.dart';
-import 'package:flutter/foundation.dart';
+import "package:equatable/equatable.dart";
+import "package:fix_map/models/models.dart";
+import "package:flutter/foundation.dart";
 
 @immutable
 abstract class ShopsState extends Equatable {
@@ -14,57 +14,57 @@ class InitialShopsState extends ShopsState {}
 class ShopsLoadingState extends ShopsState {}
 
 class ShopsDownloadedState extends ShopsState {
-  ShopsDownloadedState();
+  const ShopsDownloadedState();
 
   List<Object> get props => [];
 
   @override
-  String toString() => 'ShopsDownloadedState {}';
+  String toString() => "ShopsDownloadedState {}";
 }
 
 class ShopsDataNotFoundState extends ShopsState {
-  ShopsDataNotFoundState();
+  const ShopsDataNotFoundState();
 
   List<Object> get props => [];
 
   @override
-  String toString() => 'ShopsDataNotFoundState {}';
+  String toString() => "ShopsDataNotFoundState {}";
 }
 
 class ShopsDownloadingState extends ShopsState {
-  ShopsDownloadingState();
+  const ShopsDownloadingState();
 
   List<Object> get props => [];
 
   @override
-  String toString() => 'ShopsDownloadingState {}';
+  String toString() => "ShopsDownloadingState {}";
 }
 
 class ShopsLoadedState extends ShopsState {
   final List<Shop> shops;
-  ShopsLoadedState(this.shops);
+  const ShopsLoadedState(this.shops);
 
   List<Object> get props => [shops];
 
   @override
-  String toString() => 'ShopsLoadedState {shops: $shops}';
+  String toString() => "ShopsLoadedState {shops: $shops}";
 }
 
 class ShopsCanRefreshState extends ShopsState {
-  ShopsCanRefreshState();
+  const ShopsCanRefreshState();
 
   List<Object> get props => [];
 
   @override
-  String toString() => 'ShopsCanRefreshState {}';
+  String toString() => "ShopsCanRefreshState {}";
 }
 
 class ShopsDataInitState extends ShopsState {
   final double percent;
-  ShopsDataInitState(this.percent);
+  const ShopsDataInitState(this.percent);
 
   List<Object> get props => [percent];
 
   @override
-  String toString() => 'ShopsDataInitState {percent : $percent}';
+  String toString() => "ShopsDataInitState {percent : $percent}";
 }

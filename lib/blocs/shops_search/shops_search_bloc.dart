@@ -1,10 +1,10 @@
-import 'dart:async';
-import 'package:bloc/bloc.dart';
-import 'package:fix_map/models/models.dart';
-import 'package:fix_map/repositories/repostiories.dart';
+import "dart:async";
+import "package:bloc/bloc.dart";
+import "package:fix_map/models/models.dart";
+import "package:fix_map/repositories/repostiories.dart";
 
-import 'bloc.dart';
-import 'dart:developer' as developer;
+import "bloc.dart";
+import "dart:developer" as developer;
 
 class ShopsSearchBloc extends Bloc<ShopsSearchEvent, ShopsSearchState> {
   final ShopRepository _shopRepository = ShopRepository();
@@ -29,8 +29,8 @@ class ShopsSearchBloc extends Bloc<ShopsSearchEvent, ShopsSearchState> {
         return;
       }
     } catch (_, stackTrace) {
-      developer.log('$_',
-          name: 'ShopsSearchBloc', error: _, stackTrace: stackTrace);
+      developer.log("$_",
+          name: "ShopsSearchBloc", error: _, stackTrace: stackTrace);
       yield state;
     }
   }
@@ -48,7 +48,7 @@ class ShopsSearchBloc extends Bloc<ShopsSearchEvent, ShopsSearchState> {
   Stream<ShopsSearchState> _handleShopsSearchNextOffsetEvent(
       ShopsSearchNextOffsetEvent event) async* {
     _offset += _limit;
-    var shops = await _shopRepository.getAllShops(
+    final shops = await _shopRepository.getAllShops(
         query: event.query, limit: _limit, offset: _offset);
     _shops.addAll(shops);
     yield ShopsSearchLoadedState(_shops, _shops.length);

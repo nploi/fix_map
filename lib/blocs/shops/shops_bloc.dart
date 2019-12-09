@@ -1,15 +1,15 @@
-import 'dart:async';
-import 'package:bloc/bloc.dart';
-import 'package:fix_map/models/models.dart';
-import 'package:fix_map/repositories/repostiories.dart';
+import "dart:async";
+import "package:bloc/bloc.dart";
+import "package:fix_map/models/models.dart";
+import "package:fix_map/repositories/repostiories.dart";
 
-import 'bloc.dart';
-import 'dart:developer' as developer;
+import "bloc.dart";
+import "dart:developer" as developer;
 
 class ShopsBloc extends Bloc<ShopsEvent, ShopsState> {
   final ShopRepository _shopRepository = ShopRepository();
   List<Shop> _shops = [];
-  List<Shop> get shops => this._shops;
+  List<Shop> get shops => _shops;
 
   @override
   ShopsState get initialState => InitialShopsState();
@@ -42,7 +42,7 @@ class ShopsBloc extends Bloc<ShopsEvent, ShopsState> {
         return;
       }
     } catch (_, stackTrace) {
-      developer.log('$_', name: 'ShopsBloc', error: _, stackTrace: stackTrace);
+      developer.log("$_", name: "ShopsBloc", error: _, stackTrace: stackTrace);
       yield state;
     }
   }
@@ -58,12 +58,12 @@ class ShopsBloc extends Bloc<ShopsEvent, ShopsState> {
 
   Stream<ShopsState> _handleShopsDownLoadEvent(
       ShopsDownLoadEvent event) async* {
-    var shops = await _shopRepository.downloadShops();
+    final shops = await _shopRepository.downloadShops();
 
     for (int index = 0; index < shops.length; index++) {
-      var shop = shops[index];
+      final shop = shops[index];
       await _shopRepository.insertShop(shop);
-      double percent = (((index + 1) / shops.length) * 100).toDouble();
+      final double percent = (((index + 1) / shops.length) * 100).toDouble();
       yield ShopsDataInitState(percent);
     }
     yield ShopsDownloadedState();
@@ -71,7 +71,7 @@ class ShopsBloc extends Bloc<ShopsEvent, ShopsState> {
 
   Stream<ShopsState> _handleShopsCheckDataEvent(
       ShopsCheckDataEvent event) async* {
-    var shops = await _shopRepository.getAllRecord();
+    final shops = await _shopRepository.getAllRecord();
     if (shops.isNotEmpty) {
       yield ShopsDownloadedState();
       return;

@@ -1,7 +1,7 @@
-import 'package:fix_map/dao/dao.dart';
-import 'package:fix_map/models/models.dart';
-import 'package:fix_map/repositories/fix_map_client.dart';
-import 'package:google_maps_flutter/google_maps_flutter.dart';
+import "package:fix_map/dao/dao.dart";
+import "package:fix_map/models/models.dart";
+import "package:fix_map/repositories/fix_map_client.dart";
+import "package:google_maps_flutter/google_maps_flutter.dart";
 
 class ShopRepository {
   final shopDao = ShopDao();
@@ -16,10 +16,11 @@ class ShopRepository {
 //    if (fixMapResponse.responseText != "Successfully") {
 //      throw Exception("Opps, has error!");
 //    }
+    return null;
   }
 
   Future<List<Shop>> downloadShops() async {
-    FixMapResponse fixMapResponse = await FixMapClient.getAllShop();
+    final FixMapResponse fixMapResponse = await FixMapClient.getAllShop();
 
     if (fixMapResponse.responseText != "Successfully") {
       throw Exception("Opps, has error!");
@@ -29,7 +30,7 @@ class ShopRepository {
   }
 
   Future<List<Shop>> getAllRecord() async {
-    var shops = await shopDao.getAllShop();
+    final shops = await shopDao.getAllShop();
     if (shops.isNotEmpty) {
       return shops;
     }

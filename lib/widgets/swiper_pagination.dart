@@ -1,5 +1,5 @@
-import 'package:flutter/material.dart';
-import 'package:flutter_swiper/flutter_swiper.dart';
+import "package:flutter/material.dart";
+import "package:flutter_swiper/flutter_swiper.dart";
 
 class CustomPaginationBuilder extends SwiperPlugin {
   final Color activeColor;
@@ -20,23 +20,23 @@ class CustomPaginationBuilder extends SwiperPlugin {
 
   @override
   Widget build(BuildContext context, SwiperPluginConfig config) {
-    ThemeData themeData = Theme.of(context);
-    Color activeColor = this.activeColor ?? themeData.primaryColor;
-    Color color = this.color ?? themeData.scaffoldBackgroundColor;
+    final ThemeData themeData = Theme.of(context);
+    final Color activeColor = this.activeColor ?? themeData.primaryColor;
+    final Color color = this.color ?? themeData.scaffoldBackgroundColor;
 
-    List<Widget> list = [];
+    final List<Widget> list = [];
 
     if (config.itemCount > 20) {
       print(
           "The itemCount is too big, we suggest use FractionPaginationBuilder instead of DotSwiperPaginationBuilder in this sitituation");
     }
 
-    int itemCount = config.itemCount;
-    int activeIndex = config.activeIndex;
+    final int itemCount = config.itemCount;
+    final int activeIndex = config.activeIndex;
 
     for (int i = 0; i < itemCount; ++i) {
-      bool active = i == activeIndex;
-      Size size = active ? this.activeSize : this.size;
+      final bool active = i == activeIndex;
+      final Size size = active ? this.activeSize : this.size;
       list.add(SizedBox(
         width: size.width,
         height: size.height,
@@ -51,13 +51,13 @@ class CustomPaginationBuilder extends SwiperPlugin {
     }
 
     if (config.scrollDirection == Axis.vertical) {
-      return new Column(
+      return Column(
         key: key,
         mainAxisSize: MainAxisSize.min,
         children: list,
       );
     } else {
-      return new Row(
+      return Row(
         key: key,
         mainAxisSize: MainAxisSize.min,
         children: list,

@@ -1,16 +1,16 @@
-import 'package:fix_map/blocs/authentication/authentication_state.dart';
-import 'package:fix_map/blocs/blocs.dart';
-import 'package:fix_map/generated/i18n.dart';
-import 'package:fix_map/models/models.dart';
-import 'package:fix_map/screens/screens.dart';
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/gestures.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import "package:fix_map/blocs/authentication/authentication_state.dart";
+import "package:fix_map/blocs/blocs.dart";
+import "package:fix_map/generated/i18n.dart";
+import "package:fix_map/models/models.dart";
+import "package:fix_map/screens/screens.dart";
+import "package:flutter/cupertino.dart";
+import "package:flutter/gestures.dart";
+import "package:flutter/material.dart";
+import "package:flutter_bloc/flutter_bloc.dart";
+import "package:font_awesome_flutter/font_awesome_flutter.dart";
 
 class HomeDrawer extends StatelessWidget {
-  HomeDrawer({Key key}) : super(key: key);
+  const HomeDrawer({Key key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -25,7 +25,7 @@ class HomeDrawer extends StatelessWidget {
                   child: CircularProgressIndicator(),
                 );
               }
-              var user = snapshot.data;
+              final user = snapshot.data;
               return Column(
                 children: <Widget>[
                   DrawerHeader(

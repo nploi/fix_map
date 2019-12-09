@@ -1,14 +1,14 @@
-import 'dart:convert';
+import "dart:convert";
 
-import 'package:fix_map/models/models.dart';
-import 'package:fix_map/repositories/fix_map_client.dart';
+import "package:fix_map/models/models.dart";
+import "package:fix_map/repositories/fix_map_client.dart";
 
-import 'shared_preferences_repository.dart';
+import "shared_preferences_repository.dart";
 
 class AuthenticationRepository extends SharedPreferencesRepository {
   Future<User> getUser() async {
     await this.boot();
-    var userJson = this.get(SharedPreferencesRepository.USER);
+    final userJson = this.get(SharedPreferencesRepository.USER);
     if (userJson != null) {
       return User.fromJson(jsonDecode(userJson));
     }
@@ -28,7 +28,7 @@ class AuthenticationRepository extends SharedPreferencesRepository {
 
   Future<User> signIn(
       {String email, String password, String accessToken}) async {
-    var response = await FixMapClient.signIn(
+    final response = await FixMapClient.signIn(
         email: email, password: password, accessToken: accessToken);
     if (response.responseText.toLowerCase() != "successfully") {
       throw Exception(response.responseText);
@@ -37,7 +37,7 @@ class AuthenticationRepository extends SharedPreferencesRepository {
   }
 
   Future<User> signUp({User user}) async {
-    var response = await FixMapClient.signUp(user: user);
+    final response = await FixMapClient.signUp(user: user);
     if (response.responseText.toLowerCase() != "successfully") {
       throw Exception(response.responseText);
     }

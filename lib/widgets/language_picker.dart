@@ -1,5 +1,5 @@
-import 'package:fix_map/generated/i18n.dart';
-import 'package:flutter/material.dart';
+import "package:fix_map/generated/i18n.dart";
+import "package:flutter/material.dart";
 
 class LanguagePickerWidget extends StatelessWidget {
   final String currentLanguageCode;
@@ -10,8 +10,8 @@ class LanguagePickerWidget extends StatelessWidget {
         super(key: key);
 
   static final Map<String, String> languages = {
-    'en': "English",
-    'vi': "Tiếng Việt"
+    "en": "English",
+    "vi": "Tiếng Việt"
   };
 
   @override
@@ -23,9 +23,9 @@ class LanguagePickerWidget extends StatelessWidget {
       body: ListView.builder(
         itemCount: S.delegate.supportedLocales.length,
         itemBuilder: (context, index) {
-          var entry = S.delegate.supportedLocales[index];
-          var color = Colors.lightBlue;
-          bool isSelected = entry.languageCode == currentLanguageCode;
+          final entry = S.delegate.supportedLocales[index];
+          final color = Colors.lightBlue;
+          final bool isSelected = entry.languageCode == currentLanguageCode;
           return Column(
             mainAxisSize: MainAxisSize.min,
             children: <Widget>[

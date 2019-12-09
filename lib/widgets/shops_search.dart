@@ -1,10 +1,10 @@
-import 'package:cached_network_image/cached_network_image.dart';
-import 'package:fix_map/blocs/blocs.dart';
-import 'package:fix_map/generated/i18n.dart';
-import 'package:fix_map/models/models.dart';
-import 'package:fix_map/screens/screens.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
+import "package:cached_network_image/cached_network_image.dart";
+import "package:fix_map/blocs/blocs.dart";
+import "package:fix_map/generated/i18n.dart";
+import "package:fix_map/models/models.dart";
+import "package:fix_map/screens/screens.dart";
+import "package:flutter/material.dart";
+import "package:flutter_bloc/flutter_bloc.dart";
 
 class ShopsSearchDelegate extends SearchDelegate<Shop> {
   // ignore: close_sinks
@@ -31,17 +31,17 @@ class ShopsSearchDelegate extends SearchDelegate<Shop> {
     return <Widget>[
       query.isEmpty
           ? IconButton(
-              tooltip: 'Voice Search',
+              tooltip: "Voice Search",
               icon: const Icon(Icons.mic),
               onPressed: () {
-                query = 'TODO: implement voice input';
+                query = "TODO: implement voice input";
               },
             )
           : IconButton(
-              tooltip: 'Clear',
+              tooltip: "Clear",
               icon: const Icon(Icons.clear),
               onPressed: () {
-                query = '';
+                query = "";
                 showSuggestions(context);
               },
             ),
@@ -51,7 +51,7 @@ class ShopsSearchDelegate extends SearchDelegate<Shop> {
   @override
   Widget buildLeading(BuildContext context) {
     return IconButton(
-      tooltip: 'Back',
+      tooltip: "Back",
       icon: AnimatedIcon(
         icon: AnimatedIcons.menu_arrow,
         progress: transitionAnimation,

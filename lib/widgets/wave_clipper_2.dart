@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import "package:flutter/material.dart";
 
 class WaveClipper2 extends CustomClipper<Path> {
   @override
@@ -6,13 +6,13 @@ class WaveClipper2 extends CustomClipper<Path> {
     final path = Path();
     path.lineTo(0.0, size.height - 50);
 
-    var firstEndPoint = Offset(size.width * .7, size.height - 40);
-    var firstControlPoint = Offset(size.width * .25, size.height);
+    final firstEndPoint = Offset(size.width * .7, size.height - 40);
+    final firstControlPoint = Offset(size.width * .25, size.height);
     path.quadraticBezierTo(firstControlPoint.dx, firstControlPoint.dy,
         firstEndPoint.dx, firstEndPoint.dy);
 
-    var secondEndPoint = Offset(size.width, size.height - 45);
-    var secondControlPoint = Offset(size.width * 0.84, size.height - 50);
+    final secondEndPoint = Offset(size.width, size.height - 45);
+    final secondControlPoint = Offset(size.width * 0.84, size.height - 50);
     path.quadraticBezierTo(secondControlPoint.dx, secondControlPoint.dy,
         secondEndPoint.dx, secondEndPoint.dy);
     path.lineTo(size.width, size.height);

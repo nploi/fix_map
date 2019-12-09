@@ -1,4 +1,4 @@
-import 'package:bloc/bloc.dart';
+import "package:bloc/bloc.dart";
 
 class FixMapBlocDelegate extends BlocDelegate {
   final bool debug;

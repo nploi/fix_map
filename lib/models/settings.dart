@@ -1,7 +1,7 @@
 class Settings {
   bool darkMode = false;
   bool isLoadFirstScreen = false;
-  String languageCode = 'en';
+  String languageCode = "en";
   Settings({this.darkMode, this.isLoadFirstScreen, this.languageCode});
 
   Settings copyWith({
@@ -9,7 +9,7 @@ class Settings {
     String languageCode,
     bool isLoadFirstScreen,
   }) {
-    Settings settings = Settings();
+    final Settings settings = Settings();
     settings.darkMode = darkMode != null ? darkMode : this.darkMode;
     settings.isLoadFirstScreen =
         isLoadFirstScreen != null ? isLoadFirstScreen : this.isLoadFirstScreen;
@@ -19,17 +19,17 @@ class Settings {
   }
 
   Settings.fromJson(Map<String, dynamic> json)
-      : darkMode = json['dark_mode'] != null ? json['dark_mode'] : false,
-        isLoadFirstScreen = json['is_load_first_screen'] != null
-            ? json['is_load_first_screen']
+      : darkMode = json["dark_mode"] != null ? json["dark_mode"] : false,
+        isLoadFirstScreen = json["is_load_first_screen"] != null
+            ? json["is_load_first_screen"]
             : false,
         languageCode =
-            json['language_code'] != null ? json['language_code'] : 'en';
+            json["language_code"] != null ? json["language_code"] : "en";
 
   Map<String, dynamic> toJson() => {
-        'dark_mode': darkMode,
-        'is_load_first_screen': isLoadFirstScreen,
-        'language_code': languageCode,
+        "dark_mode": darkMode,
+        "is_load_first_screen": isLoadFirstScreen,
+        "language_code": languageCode,
       };
 
   bool isEqual(Settings settings) {

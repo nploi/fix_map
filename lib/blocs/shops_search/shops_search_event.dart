@@ -1,5 +1,5 @@
-import 'package:equatable/equatable.dart';
-import 'package:flutter/foundation.dart';
+import "package:equatable/equatable.dart";
+import "package:flutter/foundation.dart";
 
 @immutable
 abstract class ShopsSearchEvent extends Equatable {
@@ -10,20 +10,20 @@ abstract class ShopsSearchEvent extends Equatable {
 
 class ShopsSearchByQueryEvent extends ShopsSearchEvent {
   final String query;
-  ShopsSearchByQueryEvent(this.query);
+  const ShopsSearchByQueryEvent(this.query);
 
-  List<Object> get props => [this.query];
+  List<Object> get props => [query];
 
   @override
-  String toString() => 'ShopsSearchByQueryEvent {query: $query}';
+  String toString() => "ShopsSearchByQueryEvent {query: $query}";
 }
 
 class ShopsSearchNextOffsetEvent extends ShopsSearchEvent {
   final String query;
-  ShopsSearchNextOffsetEvent(this.query);
+  const ShopsSearchNextOffsetEvent(this.query);
 
-  List<Object> get props => [this.query];
+  List<Object> get props => [query];
 
   @override
-  String toString() => 'ShopsSearchNextOffsetEvent {query: $query}';
+  String toString() => "ShopsSearchNextOffsetEvent {query: $query}";
 }

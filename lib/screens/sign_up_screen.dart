@@ -1,12 +1,12 @@
-import 'package:fix_map/blocs/blocs.dart';
-import 'package:fix_map/models/user.dart';
-import 'package:fix_map/screens/screens.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:fluttertoast/fluttertoast.dart';
-import '../widgets/widgets.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:fix_map/generated/i18n.dart';
+import "package:fix_map/blocs/blocs.dart";
+import "package:fix_map/models/user.dart";
+import "package:fix_map/screens/screens.dart";
+import "package:flutter/material.dart";
+import "package:flutter_bloc/flutter_bloc.dart";
+import "package:fluttertoast/fluttertoast.dart";
+import "../widgets/widgets.dart";
+import "package:font_awesome_flutter/font_awesome_flutter.dart";
+import "package:fix_map/generated/i18n.dart";
 
 class SignUpScreen extends StatefulWidget {
   static final String routeName = "signup";
@@ -18,7 +18,7 @@ class SignUpScreen extends StatefulWidget {
 }
 
 class _SignUpScreenState extends State<SignUpScreen> {
-  var _account = {
+  final _account = {
     "email": "",
     "password": "",
     "full_name": "",
@@ -315,7 +315,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
     if (this._account["full_name"] == "") return;
     if (this._account["confirm_password"] == "") return;
     if (this._account["confirm_password"] != this._account["password"]) return;
-    User user = User();
+    final User user = User();
     user.email = this._account["email"];
     user.fullName = this._account["full_name"];
     user.password = this._account["password"];

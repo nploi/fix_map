@@ -1,10 +1,10 @@
-import 'dart:async';
-import 'dart:io';
-import 'package:path/path.dart';
-import 'package:path_provider/path_provider.dart';
-import 'package:sqflite/sqflite.dart';
+import "dart:async";
+import "dart:io";
+import "package:path/path.dart";
+import "package:path_provider/path_provider.dart";
+import "package:sqflite/sqflite.dart";
 
-final shopTABLE = 'Shop';
+final shopTABLE = "Shop";
 
 class DatabaseProvider {
   static final DatabaseProvider dbProvider = DatabaseProvider();
@@ -18,10 +18,10 @@ class DatabaseProvider {
   }
 
   createDatabase() async {
-    Directory documentsDirectory = await getApplicationDocumentsDirectory();
+    final Directory documentsDirectory = await getApplicationDocumentsDirectory();
     //"ReactiveShop.db is our database instance name
-    String path = join(documentsDirectory.path, "ReactiveShop.db");
-    var database = await openDatabase(path,
+    final String path = join(documentsDirectory.path, "ReactiveShop.db");
+    final database = await openDatabase(path,
         version: 1, onCreate: initDB, onUpgrade: onUpgrade);
     return database;
   }

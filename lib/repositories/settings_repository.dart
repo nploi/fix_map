@@ -1,13 +1,13 @@
-import 'dart:convert';
+import "dart:convert";
 
-import 'package:fix_map/models/models.dart';
-import 'package:geolocator/geolocator.dart';
+import "package:fix_map/models/models.dart";
+import "package:geolocator/geolocator.dart";
 
-import 'shared_preferences_repository.dart';
+import "shared_preferences_repository.dart";
 
 class SettingsRepository extends SharedPreferencesRepository {
   Settings getSettings() {
-    var settingValue = this.get(SharedPreferencesRepository.SETTINGS);
+    final settingValue = this.get(SharedPreferencesRepository.SETTINGS);
     if (settingValue == null) {
       return Settings();
     }

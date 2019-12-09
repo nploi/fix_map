@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import "package:flutter/material.dart";
 
 class Input extends StatelessWidget {
   final String hintText;
@@ -7,7 +7,7 @@ class Input extends StatelessWidget {
   final String id;
   final bool obscureText;
 
-  Input({
+  const Input({
     Key key,
     @required this.hintText,
     @required this.icon,

@@ -1,9 +1,9 @@
-import 'package:fix_map/blocs/blocs.dart';
-import 'package:fix_map/generated/i18n.dart';
-import 'package:fix_map/widgets/widgets.dart';
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
+import "package:fix_map/blocs/blocs.dart";
+import "package:fix_map/generated/i18n.dart";
+import "package:fix_map/widgets/widgets.dart";
+import "package:flutter/cupertino.dart";
+import "package:flutter/material.dart";
+import "package:flutter_bloc/flutter_bloc.dart";
 
 class SettingsScreen extends StatefulWidget {
   static const String routeName = "/settings";

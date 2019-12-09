@@ -1,11 +1,11 @@
-import 'dart:async';
-import 'package:bloc/bloc.dart';
-import 'package:fix_map/models/models.dart';
-import 'package:fix_map/repositories/repostiories.dart';
+import "dart:async";
+import "package:bloc/bloc.dart";
+import "package:fix_map/models/models.dart";
+import "package:fix_map/repositories/repostiories.dart";
 
-import 'authentication_event.dart';
-import 'authentication_state.dart';
-import 'dart:developer' as developer;
+import "authentication_event.dart";
+import "authentication_state.dart";
+import "dart:developer" as developer;
 
 class AuthenticationBloc
     extends Bloc<AuthenticationEvent, AuthenticationState> {
@@ -38,8 +38,8 @@ class AuthenticationBloc
         return;
       }
     } catch (_, stackTrace) {
-      developer.log('$_',
-          name: 'AuthenticationBloc', error: _, stackTrace: stackTrace);
+      developer.log("$_",
+          name: "AuthenticationBloc", error: _, stackTrace: stackTrace);
       yield state;
     }
   }
@@ -48,7 +48,7 @@ class AuthenticationBloc
       AuthenticationSignInEvent event) async* {
     yield AuthenticationLoadingState();
     try {
-      var user = await authenticationRepository.signIn(
+      final user = await authenticationRepository.signIn(
           email: event.email,
           password: event.password,
           accessToken: event.accessToken);
@@ -63,7 +63,7 @@ class AuthenticationBloc
       AuthenticationSignUpEvent event) async* {
     yield AuthenticationLoadingState();
     try {
-      var user = await authenticationRepository.signUp(
+      final user = await authenticationRepository.signUp(
           user: event.user);
       yield AuthenticationSignedUpState(user);
     } catch (exception) {
@@ -75,7 +75,7 @@ class AuthenticationBloc
       AuthenticationSignOutEvent event) async* {
     yield AuthenticationLoadingState();
 
-    var success = await authenticationRepository.removeUser();
+    final success = await authenticationRepository.removeUser();
     if (success) {
       yield AuthenticationSignedOutState();
     } else {
@@ -87,7 +87,7 @@ class AuthenticationBloc
       AuthenticationCheckSignInEvent event) async* {
     yield AuthenticationLoadingState();
 
-    var user = await authenticationRepository.getUser();
+    final user = await authenticationRepository.getUser();
     if (user == null) {
       yield AuthenticationUserNotFoundState();
     } else {

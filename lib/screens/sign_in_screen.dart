@@ -1,13 +1,13 @@
-import 'package:fix_map/blocs/authentication/authentication_bloc.dart';
-import 'package:fix_map/blocs/authentication/authentication_event.dart';
-import 'package:fix_map/blocs/authentication/authentication_state.dart';
-import 'package:fix_map/screens/screens.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:fluttertoast/fluttertoast.dart';
-import '../widgets/widgets.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:fix_map/generated/i18n.dart';
+import "package:fix_map/blocs/authentication/authentication_bloc.dart";
+import "package:fix_map/blocs/authentication/authentication_event.dart";
+import "package:fix_map/blocs/authentication/authentication_state.dart";
+import "package:fix_map/screens/screens.dart";
+import "package:flutter/material.dart";
+import "package:flutter_bloc/flutter_bloc.dart";
+import "package:fluttertoast/fluttertoast.dart";
+import "../widgets/widgets.dart";
+import "package:font_awesome_flutter/font_awesome_flutter.dart";
+import "package:fix_map/generated/i18n.dart";
 
 class SignInScreen extends StatefulWidget {
   static final String routeName = "signin";
@@ -20,7 +20,7 @@ class SignInScreen extends StatefulWidget {
 }
 
 class _SignInScreenState extends State<SignInScreen> {
-  var _account = {
+  final _account = {
     "email": "",
     "password": "",
   };
