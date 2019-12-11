@@ -179,7 +179,7 @@ class _SignInScreenState extends State<SignInScreen> {
                       height: 20,
                     ),
                     Center(
-                      child: Text("or continue with"),
+                      child: Text(S.of(context).orContinueWith),
                     ),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
@@ -218,7 +218,7 @@ class _SignInScreenState extends State<SignInScreen> {
                     SizedBox(height: 40.0),
                     Center(
                       child: Text(
-                        "FORGOT PASSWORD ?",
+                        S.of(context).forgotPassword,
                         style: TextStyle(
                             color: Colors.red,
                             fontSize: 12,
@@ -232,7 +232,7 @@ class _SignInScreenState extends State<SignInScreen> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: <Widget>[
                         Text(
-                          "Don't have an Account ? ",
+                          S.of(context).dontHaveAnAccount,
                           style: TextStyle(
                               fontSize: 12, fontWeight: FontWeight.normal),
                         ),
