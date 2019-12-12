@@ -11,12 +11,12 @@ class ShopRepository {
   }
 
   Future<Shop> getShopBy(String hash) async {
-//    FixMapResponse fixMapResponse = await FixMapClient.getShop(hash);
-//
-//    if (fixMapResponse.responseText != "Successfully") {
-//      throw Exception("Opps, has error!");
-//    }
-    return null;
+    final ShopResponse shopResponse = await FixMapClient.getShop(hash);
+
+    if (shopResponse.responseText != "Successfully") {
+      throw Exception("Opps, has error!");
+    }
+    return shopResponse.shop;
   }
 
   Future<List<Shop>> downloadShops() async {

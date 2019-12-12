@@ -23,3 +23,4 @@ class ShopsSearchLoadedState extends ShopsSearchState {
   @override
   String toString() => "ShopsSearchLoadedState {shops: $shops, size: $size}";
 }
+

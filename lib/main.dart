@@ -5,6 +5,7 @@ import "fix_map_app.dart";
 import "utils/utils.dart";
 
 Future main() async {
+  WidgetsFlutterBinding.ensureInitialized();
   BlocSupervisor.delegate = FixMapBlocDelegate();
   // ignore: close_sinks
   final settingsBloc = SettingsBloc();

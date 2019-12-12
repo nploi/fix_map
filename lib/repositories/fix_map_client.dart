@@ -8,15 +8,13 @@ class FixMapClient {
 
   static Future<FixMapResponse> getAllShop() async {
     final Response response = await Dio().get(baseUrl + "/shop/list-all");
-
-    final FixMapResponse fixMapResponse =
-        FixMapResponse.fromJson(jsonDecode(response.toString()));
-
-    return fixMapResponse;
+    return FixMapResponse.fromJson(jsonDecode(response.toString()));
   }
 
-  static Future<Shop> getShop(String hash) async {
-    return null;
+  static Future<ShopResponse> getShop(String hash) async {
+    final Response response =
+        await Dio().get(baseUrl + "/shop/list-by-hash?hash=$hash");
+    return ShopResponse.fromJson(jsonDecode(response.toString()));
   }
 
   static Future<AuthenticateResponse> signIn(
@@ -30,9 +28,7 @@ class FixMapClient {
       },
     );
 
-    final AuthenticateResponse authenticateResponse =
-        AuthenticateResponse.fromJson(jsonDecode(response.toString()));
-    return authenticateResponse;
+    return AuthenticateResponse.fromJson(jsonDecode(response.toString()));
   }
 
   static Future<AuthenticateResponse> signUp({User user}) async {
@@ -46,8 +42,6 @@ class FixMapClient {
         "accessToken": "",
       },
     );
-    final AuthenticateResponse authenticateResponse =
-        AuthenticateResponse.fromJson(jsonDecode(response.toString()));
-    return authenticateResponse;
+    return AuthenticateResponse.fromJson(jsonDecode(response.toString()));
   }
 }
