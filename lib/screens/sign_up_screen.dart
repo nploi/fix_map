@@ -219,7 +219,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         height: 20,
                       ),
                       Center(
-                        child: Text("or continue with"),
+                        child: Text(S.of(context).orContinueWith),
                       ),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
@@ -260,7 +260,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: <Widget>[
                           Text(
-                            "Do have an Account ? ",
+                            S.of(context).doHaveAnAccount,
                             style: TextStyle(
                                 fontSize: 12, fontWeight: FontWeight.normal),
                           ),
