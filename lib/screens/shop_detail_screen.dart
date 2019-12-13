@@ -36,7 +36,6 @@ class _ShopDetailScreenState extends State<ShopDetailScreen> {
               return CustomScrollView(
                 slivers: <Widget>[
                   SliverAppBar(
-                    title: Text(widget.shop.name),
                     expandedHeight: MediaQuery.of(context).size.height * 0.3,
                     pinned: true,
                     flexibleSpace: FlexibleSpaceBar(
@@ -47,6 +46,8 @@ class _ShopDetailScreenState extends State<ShopDetailScreen> {
                           fit: BoxFit.cover,
                         ),
                       ),
+                      collapseMode: CollapseMode.pin,
+                      title: Text(widget.shop.name),
                     ),
                   ),
                   SliverPersistentHeader(
@@ -63,6 +64,22 @@ class _ShopDetailScreenState extends State<ShopDetailScreen> {
                             onPressed: () {},
                           ),
                         ),
+                      ),
+                    ),
+                  ),
+                  SliverPersistentHeader(
+                    delegate: SliverAppBarDelegate(
+                      minHeight: 60.0,
+                      maxHeight: 60.0,
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: <Widget>[
+                          Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: <Widget>[Text("4.4"), Icon(Icons.star)],
+                          ),
+                          Text("10 reviews"),
+                        ],
                       ),
                     ),
                   ),
