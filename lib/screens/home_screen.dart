@@ -88,6 +88,10 @@ class _HomeScreenState extends State<HomeScreen> {
                     BlocProvider.of<MapBloc>(context)
                         .add(MapMarkerPressedEvent(state.shops[0].hash));
                   }
+                  if (state.shops.isEmpty) {
+                    await Fluttertoast.showToast(
+                        msg: S.of(context).noSupportThisRegionMessage);
+                  }
                 }
               },
             ),
@@ -116,7 +120,8 @@ class _HomeScreenState extends State<HomeScreen> {
               if (state is ShopsLoadingState) {
                 isLoading = true;
               }
-              final List<Shop> shops = BlocProvider.of<ShopsBloc>(context).shops;
+              final List<Shop> shops =
+                  BlocProvider.of<ShopsBloc>(context).shops;
               if (state is ShopsLoadedState) {
                 _markers.clear();
                 for (int index = 0; index < shops.length; index++) {
@@ -144,17 +149,6 @@ class _HomeScreenState extends State<HomeScreen> {
                     },
                   );
                 }
-
-//                LatLngBounds bounds;
-//                if (center != null) {
-//                  bounds = MapUtils.toBounds(center, MapUtils.RADIUS);
-//                  _markers.entries.forEach((entry) {
-//                    if (!bounds.contains(entry.value.position)) {
-//                      _markers[entry.key] =
-//                          _markers[entry.key].copyWith(visibleParam: false);
-//                    }
-//                  });
-//                }
               }
 
               double mapPaddingBottom = 0.0;
@@ -210,8 +204,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           ? Align(
                               alignment: Alignment.bottomCenter,
                               child: Container(
-                                height:
-                                mapPaddingBottom,
+                                height: mapPaddingBottom,
                                 child: PageView.builder(
                                   scrollDirection: Axis.horizontal,
                                   controller: _pageController,
@@ -269,6 +262,28 @@ class _HomeScreenState extends State<HomeScreen> {
                         right: 10,
                         child: _buildMyLocation(),
                       ),
+                      AnimatedPositioned(
+                        top: ((shops.isEmpty) ? 45 : -50),
+                        right: MediaQuery.of(context).size.width / 2 - 75,
+                        child: Container(
+                          width: 150,
+                          child: FloatingActionButton.extended(
+                            onPressed: () {
+                              _controller.future
+                                  .then((controller) => controller
+                                      .animateCamera(CameraUpdate.newLatLng(
+                                          LatLng(10.8023321, 106.6964673))))
+                                  .whenComplete(() {
+                                _refresh(
+                                    latLng: LatLng(10.8023321, 106.6964673));
+                              });
+                            },
+                            heroTag: null,
+                            label: Text(S.of(context).moveToHCMButton),
+                          ),
+                        ),
+                        duration: Duration(milliseconds: 200),
+                      ),
                     ],
                   );
                 },
@@ -278,20 +293,6 @@ class _HomeScreenState extends State<HomeScreen> {
         ),
       ),
     );
-  }
-
-  void onShopChange(int index, shops) {
-    final String currentMarkerId = BlocProvider.of<MapBloc>(context).currentMarkerId;
-    if (_markers.containsKey(currentMarkerId)) {
-      _markers[currentMarkerId] = _markers[currentMarkerId].copyWith(
-        iconParam: BitmapDescriptor.fromBytes(MarkerUtils.settingsCircle),
-      );
-    }
-    BlocProvider.of<MapBloc>(context)
-        .add(MapMarkerPressedEvent(shops[index].hash));
-    _controller.future.then((controller) => controller.animateCamera(
-        CameraUpdate.newLatLng(
-            LatLng(shops[index].latitude, shops[index].longitude))));
   }
 
   Widget _buildMenuButton() {
@@ -357,6 +358,21 @@ class _HomeScreenState extends State<HomeScreen> {
       }
       BlocProvider.of<ShopsBloc>(context).add(ShopsSearchByBoundsEvent(bounds));
     }
+  }
+
+  void onShopChange(int index, shops) {
+    final String currentMarkerId =
+        BlocProvider.of<MapBloc>(context).currentMarkerId;
+    if (_markers.containsKey(currentMarkerId)) {
+      _markers[currentMarkerId] = _markers[currentMarkerId].copyWith(
+        iconParam: BitmapDescriptor.fromBytes(MarkerUtils.settingsCircle),
+      );
+    }
+    BlocProvider.of<MapBloc>(context)
+        .add(MapMarkerPressedEvent(shops[index].hash));
+    _controller.future.then((controller) => controller.animateCamera(
+        CameraUpdate.newLatLng(
+            LatLng(shops[index].latitude, shops[index].longitude))));
   }
 
   void _onMapCreated(GoogleMapController controller) {

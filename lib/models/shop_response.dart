@@ -8,7 +8,7 @@ class ShopResponse {
 
   ShopResponse.fromJson(Map<String, dynamic> json) {
     responseText = json["responseText"];
-    shop = json["shop"] != null ? Shop.fromJson(json["shop"]) : null;
+    shop = json["data"] != null ? Shop.fromJson(json["data"]) : null;
   }
 
   Map<String, dynamic> toJson() {

@@ -1,5 +1,5 @@
-import 'package:fix_map/models/models.dart';
-import 'package:fix_map/widgets/input.dart';
+import "package:fix_map/generated/i18n.dart";
+import "package:fix_map/models/models.dart";
 import "package:flutter/material.dart";
 import "package:flutter_rating_bar/flutter_rating_bar.dart";
 
@@ -36,30 +36,33 @@ class _ReviewScreenState extends State<ReviewScreen> {
             children: <Widget>[
               Column(
                 children: <Widget>[
-                  Text("Rate and review"),
+                  Text(S.of(context).rateAndReviewTitle),
                   SizedBox(
                     height: 5,
                   ),
-                  RatingBar(
-                    ratingWidget: RatingWidget(
-                        full: Icon(
-                          Icons.star,
-                          color: Colors.amberAccent,
-                        ),
-                        empty: Icon(
-                          Icons.star_border,
-                          color: Colors.amberAccent,
-                        ),
-                        half: Icon(
-                          Icons.star_half,
-                          color: Colors.amberAccent,
-                        )),
-                    onRatingUpdate: (double value) {
-                      rating = value;
-                    },
-                    itemCount: 5,
-                    allowHalfRating: true,
-                    initialRating: widget.rating,
+                  Hero(
+                    tag: "Rating",
+                    child: RatingBar(
+                      ratingWidget: RatingWidget(
+                          full: Icon(
+                            Icons.star,
+                            color: Colors.amberAccent,
+                          ),
+                          empty: Icon(
+                            Icons.star_border,
+                            color: Colors.amberAccent,
+                          ),
+                          half: Icon(
+                            Icons.star_half,
+                            color: Colors.amberAccent,
+                          )),
+                      onRatingUpdate: (double value) {
+                        rating = value;
+                      },
+                      itemCount: 5,
+                      allowHalfRating: true,
+                      initialRating: widget.rating,
+                    ),
                   ),
                 ],
               ),
@@ -87,7 +90,7 @@ class _ReviewScreenState extends State<ReviewScreen> {
                   height: 50,
                   alignment: Alignment.center,
                   child: Text(
-                    "Post",
+                    S.of(context).confirmTitle,
                     style: Theme.of(context)
                         .textTheme
                         .button

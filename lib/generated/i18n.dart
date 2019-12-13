@@ -1,7 +1,7 @@
-import "dart:async";
+import 'dart:async';
 
-import "package:flutter/foundation.dart";
-import "package:flutter/material.dart";
+import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
 
 // ignore_for_file: non_constant_identifier_names
 // ignore_for_file: camel_case_types
@@ -26,6 +26,7 @@ class S implements WidgetsLocalizations {
   String get availableStatusTitle => "Available";
   String get backAgainToLeaveMessage => "Tap back again to leave";
   String get confirmPassword => "Confirm Password";
+  String get confirmTitle => "Confirm";
   String get darkModeToggleTitle => "Dark theme";
   String get doHaveAnAccount => "Do have an Account ? ";
   String get doNotAllowLabelButton => "Don't Allow";
@@ -34,6 +35,7 @@ class S implements WidgetsLocalizations {
   String get email => "Email";
   String get enterKeywordTitle => "Enter keyword";
   String get forgotPassword => "FORGOT PASSWORD ?";
+  String get fullName => "Full name";
   String get g => "";
   String get h => "";
   String get initializingDataDialogTitle => "Initializing data";
@@ -41,10 +43,12 @@ class S implements WidgetsLocalizations {
   String get k => "";
   String get languagePickerTitle => "Languages";
   String get moreButtonLabel => "More";
-  String get n => "";
+  String get moveToHCMButton => "Move to HCM";
+  String get noSupportThisRegionMessage => "No Support this region";
   String get orContinueWith => "or continue with";
   String get password => "Password";
   String get q => "";
+  String get rateAndReviewTitle => "Rate and review";
   String get requestPermissionDialogContent => "Your current location will be displayed on the map and used\nfor directions, nearby search results, and estimated travel times.";
   String get requestPermissionDialogTitle => "Allow \"Maps\" to access your location while you are using the app?";
   String get searchHintText => "Searching ...";
@@ -73,11 +77,13 @@ class $vi extends S {
   @override
   String get enterKeywordTitle => "Nhập từ khóa";
   @override
-  String get signUpTitle => "Đăng xuất";
+  String get signUpTitle => "Đăng ký";
   @override
   String get allowLabelButton => "Cho phép";
   @override
   String get backAgainToLeaveMessage => "Bấm lần nữa để thoát";
+  @override
+  String get signOutTitle => "Đăng xuất";
   @override
   String get forgotPassword => "QUÊN MẬT KHẨU ?";
   @override
@@ -91,7 +97,11 @@ class $vi extends S {
   @override
   String get confirmPassword => "Xác thực mật khẩu";
   @override
+  String get confirmTitle => "Xác nhận";
+  @override
   String get email => "Email";
+  @override
+  String get rateAndReviewTitle => "Góp ý và đánh giá";
   @override
   String get signInTitle => "Đăng nhập";
   @override
@@ -105,6 +115,8 @@ class $vi extends S {
   @override
   String get settingsTitle => "Cài đặt";
   @override
+  String get fullName => "Họ và tên";
+  @override
   String get j => "";
   @override
   String get k => "";
@@ -113,11 +125,13 @@ class $vi extends S {
   @override
   String get doNotAllowLabelButton => "Không cho phép";
   @override
-  String get n => "";
-  @override
   String get moreButtonLabel => "Nhiều hơn";
   @override
+  String get moveToHCMButton => "Di chuyển tới HCM";
+  @override
   String get q => "";
+  @override
+  String get noSupportThisRegionMessage => "Không hổ trợ khu vực này";
   @override
   String get orContinueWith => "hoặc tiếp tục với";
   @override

@@ -80,7 +80,6 @@ class _FixMapAppState extends State<FixMapApp> {
           // ignore: missing_return
           onGenerateRoute: (routeSettings) {
             if (routeSettings.name == ShopDetailScreen.routeName) {
-              print(routeSettings.name);
               final shop = routeSettings.arguments;
               return MaterialPageRoute(
                   builder: (context) => ShopDetailScreen(

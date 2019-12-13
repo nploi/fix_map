@@ -1,5 +1,6 @@
 import "package:cached_network_image/cached_network_image.dart";
 import "package:fix_map/blocs/blocs.dart";
+import 'package:fix_map/generated/i18n.dart';
 import "package:fix_map/models/models.dart";
 import "package:fix_map/screens/review_screen.dart";
 import "package:fix_map/widgets/widgets.dart";
@@ -20,11 +21,13 @@ class ShopDetailScreen extends StatefulWidget {
 
 class _ShopDetailScreenState extends State<ShopDetailScreen> {
   ShopDetailBloc bloc;
+  Shop shop = Shop();
 
   @override
   void initState() {
     super.initState();
-    bloc = ShopDetailBloc();
+    bloc = ShopDetailBloc()..add(ShopDetailByHashEvent(widget.shop.hash));
+    shop = widget.shop;
   }
 
   @override
@@ -33,6 +36,9 @@ class _ShopDetailScreenState extends State<ShopDetailScreen> {
         body: BlocBuilder<ShopDetailBloc, ShopDetailState>(
             bloc: bloc,
             builder: (context, state) {
+              if (state is ShopDetailFoundState) {
+                shop = state.shop;
+              }
               return CustomScrollView(
                 slivers: <Widget>[
                   SliverAppBar(
@@ -41,9 +47,12 @@ class _ShopDetailScreenState extends State<ShopDetailScreen> {
                     flexibleSpace: FlexibleSpaceBar(
                       background: Hero(
                         tag: widget.shop.name,
-                        child: CachedNetworkImage(
-                          imageUrl: widget.shop.imageBig,
-                          fit: BoxFit.cover,
+                        child: Container(
+                          width: MediaQuery.of(context).size.width,
+                          child: CachedNetworkImage(
+                            imageUrl: widget.shop.imageBig,
+                            fit: BoxFit.cover,
+                          ),
                         ),
                       ),
                       collapseMode: CollapseMode.pin,
@@ -64,22 +73,6 @@ class _ShopDetailScreenState extends State<ShopDetailScreen> {
                             onPressed: () {},
                           ),
                         ),
-                      ),
-                    ),
-                  ),
-                  SliverPersistentHeader(
-                    delegate: SliverAppBarDelegate(
-                      minHeight: 60.0,
-                      maxHeight: 60.0,
-                      child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        children: <Widget>[
-                          Row(
-                            mainAxisSize: MainAxisSize.min,
-                            children: <Widget>[Text("4.4"), Icon(Icons.star)],
-                          ),
-                          Text("10 reviews"),
-                        ],
                       ),
                     ),
                   ),
@@ -110,35 +103,71 @@ class _ShopDetailScreenState extends State<ShopDetailScreen> {
                       child: Center(
                           child: Column(
                         children: <Widget>[
-                          Text("Rate and review"),
-                          RatingBar(
-                            ratingWidget: RatingWidget(
-                                full: Icon(
-                                  Icons.star,
-                                  color: Colors.amberAccent,
-                                ),
-                                empty: Icon(
-                                  Icons.star_border,
-                                  color: Colors.amberAccent,
-                                ),
-                                half: Icon(
-                                  Icons.star_half,
-                                  color: Colors.amberAccent,
-                                )),
-                            onRatingUpdate: (double value) {
-                              Navigator.of(context).pushNamed(
-                                ReviewScreen.routeName,
-                                arguments: [value, widget.shop],
-                              );
-                            },
-                            itemCount: 5,
-                            allowHalfRating: true,
+                          Text(S.of(context).rateAndReviewTitle),
+                          Hero(
+                            child: RatingBar(
+                              ratingWidget: RatingWidget(
+                                  full: Icon(
+                                    Icons.star,
+                                    color: Colors.amberAccent,
+                                  ),
+                                  empty: Icon(
+                                    Icons.star_border,
+                                    color: Colors.amberAccent,
+                                  ),
+                                  half: Icon(
+                                    Icons.star_half,
+                                    color: Colors.amberAccent,
+                                  )),
+                              onRatingUpdate: (double value) {
+                                Navigator.of(context).pushNamed(
+                                  ReviewScreen.routeName,
+                                  arguments: [value, widget.shop],
+                                );
+                              },
+                              itemCount: 5,
+                              allowHalfRating: true,
+                            ),
+                            tag: "Rating",
                           ),
                         ],
                       )),
                     ),
                   ),
-                  makeHeader("Review"),
+                  SliverToBoxAdapter(
+                    child: SizedBox(
+                      height: 20,
+                    ),
+                  ),
+                  SliverPersistentHeader(
+                    pinned: true,
+                    delegate: SliverAppBarDelegate(
+                      minHeight: 50.0,
+                      maxHeight: 50.0,
+                      child: Material(
+                        child: IntrinsicHeight(
+                          child: Row(
+                            children: <Widget>[
+                              Expanded(
+                                child: Row(
+                                  mainAxisSize: MainAxisSize.min,
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: <Widget>[
+                                    Text(shop.rating.toStringAsFixed(2)),
+                                    Icon(Icons.star),
+                                  ],
+                                ),
+                              ),
+                              VerticalDivider(),
+                              Expanded(
+                                  child: Center(child: Text("10 reviews"))),
+                            ],
+                          ),
+                        ),
+                        elevation: 1,
+                      ),
+                    ),
+                  ),
                   SliverToBoxAdapter(
                     child: SizedBox(
                       height: MediaQuery.of(context).size.height,
@@ -147,20 +176,6 @@ class _ShopDetailScreenState extends State<ShopDetailScreen> {
                 ],
               );
             }));
-  }
-
-  SliverPersistentHeader makeHeader(String headerText) {
-    return SliverPersistentHeader(
-      pinned: true,
-      delegate: SliverAppBarDelegate(
-        minHeight: 60.0,
-        maxHeight: 60.0,
-        child: Material(
-          child: Center(child: Text(headerText)),
-          elevation: 1,
-        ),
-      ),
-    );
   }
 
   @override
