@@ -132,20 +132,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     icon:
                         BitmapDescriptor.fromBytes(MarkerUtils.settingsCircle),
                     onTap: () {
-                      final String currentMarkerId =
-                          BlocProvider.of<MapBloc>(context).currentMarkerId;
-                      if (_markers.containsKey(currentMarkerId)) {
-                        _markers[currentMarkerId] =
-                            _markers[currentMarkerId].copyWith(
-                          iconParam: BitmapDescriptor.fromBytes(
-                              MarkerUtils.settingsCircle),
-                        );
-                      }
-                      BlocProvider.of<MapBloc>(context)
-                          .add(MapMarkerPressedEvent(shop.hash));
-                      _pageController.animateToPage(index,
-                          duration: Duration(milliseconds: 200),
-                          curve: Curves.easeInOut);
+                      onShopChange(index, shops);
                     },
                   );
                 }
