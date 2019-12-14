@@ -9,8 +9,7 @@ class FeedbackRepository extends SharedPreferencesRepository {
         await FixMapClient.rateShop(hash: hash, userId: userId, rating: rating);
 
     if (response["responseText"] != "Successfully") {
-      print(response["responseText"]);
-      throw Exception("Opps, has error!");
+      throw Exception(response["responseText"]);
     }
     return response["responseText"];
   }
@@ -19,8 +18,7 @@ class FeedbackRepository extends SharedPreferencesRepository {
     final response = await FixMapClient.addFeedback(
         hash: hash, userId: userId, comment: comment);
     if (response["responseText"] != "Successfully") {
-      print(response["responseText"]);
-      throw Exception("Opps, has error!");
+      throw Exception(response["responseText"]);
     }
     return response["responseText"];
   }
