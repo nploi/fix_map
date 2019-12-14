@@ -8,8 +8,8 @@ import "package:flutter/cupertino.dart";
 import "package:flutter/material.dart";
 import "package:flutter_bloc/flutter_bloc.dart";
 import "package:flutter_rating_bar/flutter_rating_bar.dart";
-import 'package:fluttertoast/fluttertoast.dart';
-import 'package:url_launcher/url_launcher.dart';
+import "package:fluttertoast/fluttertoast.dart";
+import "package:url_launcher/url_launcher.dart";
 
 class ShopDetailScreen extends StatefulWidget {
   static final String routeName = "/shop_detail";
@@ -123,6 +123,13 @@ class _ShopDetailScreenState extends State<ShopDetailScreen> {
                                       heroTag: null,
                                       child: Icon(Icons.call),
                                       onPressed: () async {
+                                        final items =
+                                            widget.shop.phoneNumber.split(";");
+                                        if (items.length > 1) {
+                                          _selectPhoneModalBottomSheet(
+                                              context, items);
+                                          return;
+                                        }
                                         final url =
                                             "tel:${widget.shop.phoneNumber}";
                                         if (await canLaunch(url)) {
@@ -226,6 +233,28 @@ class _ShopDetailScreenState extends State<ShopDetailScreen> {
                 },
               );
             }));
+  }
+
+  void _selectPhoneModalBottomSheet(context, List<String> phones) {
+    showModalBottomSheet(
+        context: context,
+        builder: (BuildContext bc) {
+          return Container(
+            child: Wrap(
+              children: phones
+                  .map((phone) => ListTile(
+                      leading: Icon(Icons.phone),
+                      title: Text(phone),
+                      onTap: () async {
+                        final url = "tel:$phone";
+                        if (await canLaunch(url)) {
+                          await launch(url);
+                        }
+                      }))
+                  .toList(),
+            ),
+          );
+        });
   }
 
   @override
