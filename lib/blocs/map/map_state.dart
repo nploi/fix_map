@@ -44,10 +44,12 @@ class MapErrorState extends MapState {
 
 class MapMarkerPressedState extends MapState {
   final String markerId;
-  const MapMarkerPressedState(this.markerId);
+  final int index;
+  const MapMarkerPressedState(this.markerId, this.index);
 
-  List<Object> get props => [markerId];
+  List<Object> get props => [markerId, index];
 
   @override
-  String toString() => "MapMarkerPressedState {markerId: $markerId}";
+  String toString() =>
+      "MapMarkerPressedState {markerId: $markerId, index: $index}";
 }

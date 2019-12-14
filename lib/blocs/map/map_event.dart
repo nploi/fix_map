@@ -19,10 +19,12 @@ class MapGetCurrentLocationEvent extends MapEvent {
 
 class MapMarkerPressedEvent extends MapEvent {
   final String markerId;
-  const MapMarkerPressedEvent(this.markerId);
+  final int index;
+  const MapMarkerPressedEvent(this.markerId, this.index);
 
-  List<Object> get props => [markerId];
+  List<Object> get props => [markerId, index];
 
   @override
-  String toString() => "MapMarkerPressedEvent {markerId: $markerId}";
+  String toString() =>
+      "MapMarkerPressedEvent {markerId: $markerId, index: $index}";
 }

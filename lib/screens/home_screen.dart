@@ -65,6 +65,12 @@ class _HomeScreenState extends State<HomeScreen> {
                             16)),
                   );
                 }
+
+                if (state is MapMarkerPressedState) {
+                  await _pageController.animateToPage(state.index,
+                      duration: Duration(milliseconds: 10),
+                      curve: Curves.easeInOut);
+                }
               },
             ),
             BlocListener<ShopsBloc, ShopsState>(
@@ -81,12 +87,9 @@ class _HomeScreenState extends State<HomeScreen> {
                 }
 
                 if (state is ShopsLoadedState) {
-                  if (state.shops.isNotEmpty && _pageController.hasClients) {
-                    await _pageController.animateToPage(0,
-                        duration: Duration(milliseconds: 200),
-                        curve: Curves.easeInOut);
+                  if (state.shops.isNotEmpty) {
                     BlocProvider.of<MapBloc>(context)
-                        .add(MapMarkerPressedEvent(state.shops[0].hash));
+                        .add(MapMarkerPressedEvent(state.shops[0].hash, 0));
                   }
                   if (state.shops.isEmpty) {
                     await Fluttertoast.showToast(
@@ -132,7 +135,17 @@ class _HomeScreenState extends State<HomeScreen> {
                     icon:
                         BitmapDescriptor.fromBytes(MarkerUtils.settingsCircle),
                     onTap: () {
-                      onShopChange(index, shops);
+                      final String currentMarkerId =
+                          BlocProvider.of<MapBloc>(context).currentMarkerId;
+                      if (_markers.containsKey(currentMarkerId)) {
+                        _markers[currentMarkerId] =
+                            _markers[currentMarkerId].copyWith(
+                          iconParam: BitmapDescriptor.fromBytes(
+                              MarkerUtils.settingsCircle),
+                        );
+                      }
+                      BlocProvider.of<MapBloc>(context)
+                          .add(MapMarkerPressedEvent(shops[index].hash, index));
                     },
                   );
                 }
@@ -356,7 +369,7 @@ class _HomeScreenState extends State<HomeScreen> {
       );
     }
     BlocProvider.of<MapBloc>(context)
-        .add(MapMarkerPressedEvent(shops[index].hash));
+        .add(MapMarkerPressedEvent(shops[index].hash, index));
     _controller.future.then((controller) => controller.animateCamera(
         CameraUpdate.newLatLng(
             LatLng(shops[index].latitude, shops[index].longitude))));

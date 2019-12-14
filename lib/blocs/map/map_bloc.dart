@@ -54,7 +54,7 @@ class MapBloc extends Bloc<MapEvent, MapState> {
   Stream<MapState> _handleMapMarkerPressedEvent(
       MapMarkerPressedEvent event) async* {
     _currentMarkerId = event.markerId;
-    yield MapMarkerPressedState(event.markerId);
+    yield MapMarkerPressedState(event.markerId, event.index);
   }
 
   @override
