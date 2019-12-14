@@ -135,4 +135,10 @@ class _ReviewScreenState extends State<ReviewScreen> {
       ),
     );
   }
+
+  @override
+  void dispose() {
+    super.dispose();
+    _bloc.close();
+  }
 }

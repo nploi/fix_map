@@ -3,6 +3,7 @@ import "package:fix_map/blocs/blocs.dart";
 import "package:fix_map/generated/i18n.dart";
 import "package:fix_map/models/models.dart";
 import "package:fix_map/screens/review_screen.dart";
+import 'package:fix_map/screens/screens.dart';
 import "package:fix_map/widgets/widgets.dart";
 import "package:flutter/cupertino.dart";
 import "package:flutter/material.dart";
@@ -22,16 +23,19 @@ class ShopDetailScreen extends StatefulWidget {
 }
 
 class _ShopDetailScreenState extends State<ShopDetailScreen> {
-  ShopDetailBloc bloc;
-  FeedbackBloc feedbackBloc;
+  ShopDetailBloc _bloc;
+  FeedbackBloc _feedbackBloc;
+  AuthenticationBloc _authenticationBloc;
+
   Shop shop = Shop();
 
   @override
   void initState() {
     super.initState();
-    bloc = ShopDetailBloc()..add(ShopDetailByHashEvent(widget.shop.hash));
-    feedbackBloc = FeedbackBloc()
+    _bloc = ShopDetailBloc()..add(ShopDetailByHashEvent(widget.shop.hash));
+    _feedbackBloc = FeedbackBloc()
       ..add(FeedbackGetListFeedbackEvent(widget.shop.hash));
+    _authenticationBloc = AuthenticationBloc();
     shop = widget.shop;
   }
 
@@ -39,13 +43,13 @@ class _ShopDetailScreenState extends State<ShopDetailScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
         body: BlocBuilder<ShopDetailBloc, ShopDetailState>(
-            bloc: bloc,
+            bloc: _bloc,
             builder: (context, state) {
               if (state is ShopDetailFoundState) {
                 shop = state.shop;
               }
               return BlocBuilder<FeedbackBloc, FeedbackState>(
-                bloc: feedbackBloc,
+                bloc: _feedbackBloc,
                 builder: (BuildContext context, FeedbackState state) {
                   final List<Widget> widgets = [];
                   if (state is FeedbackLoadedListFeedbackState) {
@@ -166,10 +170,18 @@ class _ShopDetailScreenState extends State<ShopDetailScreen> {
                                         color: Colors.amberAccent,
                                       )),
                                   onRatingUpdate: (double value) {
-                                    Navigator.of(context).pushNamed(
-                                      ReviewScreen.routeName,
-                                      arguments: [value, widget.shop],
-                                    );
+                                    _authenticationBloc.user.then((user) {
+                                      if (user.fullName != null) {
+                                        Navigator.of(context).pushNamed(
+                                          ReviewScreen.routeName,
+                                          arguments: [value, widget.shop],
+                                        );
+                                      } else {
+                                        Navigator.of(context).pushNamed(
+                                          SignInScreen.routeName,
+                                        );
+                                      }
+                                    });
                                   },
                                   itemCount: 5,
                                   allowHalfRating: true,
@@ -260,7 +272,8 @@ class _ShopDetailScreenState extends State<ShopDetailScreen> {
   @override
   void dispose() {
     super.dispose();
-    bloc.close();
-    feedbackBloc.close();
+    _bloc.close();
+    _feedbackBloc.close();
+    _authenticationBloc.close();
   }
 }
