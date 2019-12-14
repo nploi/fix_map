@@ -31,8 +31,8 @@ class _IntroThreePageState extends State<IntroThreePage> {
   ];
   final List<String> images = [
     "assets/onboarding/1.png",
-    "assets/onboarding/1.png",
-    "assets/onboarding/1.png",
+    "assets/onboarding/2.png",
+    "assets/onboarding/3.png",
   ];
 
   @override
