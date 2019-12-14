@@ -88,14 +88,13 @@ class _FixMapAppState extends State<FixMapApp> {
             }
             if (routeSettings.name == ReviewScreen.routeName) {
               final List<dynamic> arguments = routeSettings.arguments;
-              if (arguments.length >= 2) {
+              if (arguments.length >= 3) {
                 final rating = arguments[0];
                 final shop = arguments[1];
+                final bloc = arguments[2];
                 return MaterialPageRoute(
-                    builder: (context) => ReviewScreen(
-                          rating: rating,
-                          shop: shop,
-                        ));
+                    builder: (context) =>
+                        ReviewScreen(rating: rating, shop: shop, bloc: bloc));
               }
             }
           },

@@ -34,7 +34,7 @@ class _HomeScreenState extends State<HomeScreen> {
     zoom: 16,
   );
 
-  bool isFirst = false;
+  int isFirst = 0;
   LatLng center;
   double zoom = 16;
 
@@ -178,8 +178,8 @@ class _HomeScreenState extends State<HomeScreen> {
                         mapToolbarEnabled: false,
                         compassEnabled: true,
                         onCameraIdle: () {
-                          if (!isFirst) {
-                            isFirst = true;
+                          if (isFirst < 2) {
+                            isFirst++;
                             _refresh();
                           } else {
                             BlocProvider.of<ShopsBloc>(context)

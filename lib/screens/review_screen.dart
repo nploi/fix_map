@@ -10,14 +10,15 @@ class ReviewScreen extends StatefulWidget {
   static final String routeName = "/review";
   final double rating;
   final Shop shop;
+  final FeedbackBloc bloc;
 
-  const ReviewScreen({Key key, this.rating, this.shop}) : super(key: key);
+  const ReviewScreen({Key key, this.rating, this.shop, this.bloc})
+      : super(key: key);
   @override
   _ReviewScreenState createState() => _ReviewScreenState();
 }
 
 class _ReviewScreenState extends State<ReviewScreen> {
-  FeedbackBloc _bloc;
   final TextEditingController _controller = TextEditingController();
   double rating;
 
@@ -25,7 +26,6 @@ class _ReviewScreenState extends State<ReviewScreen> {
   void initState() {
     super.initState();
     rating = widget.rating;
-    _bloc = FeedbackBloc();
   }
 
   @override
@@ -35,7 +35,7 @@ class _ReviewScreenState extends State<ReviewScreen> {
         title: Text(widget.shop.name),
       ),
       body: BlocListener<FeedbackBloc, FeedbackState>(
-        bloc: _bloc,
+        bloc: widget.bloc,
         listener: (context, state) {
           if (state is FeedbackErrorState) {
             Fluttertoast.showToast(msg: state.message);
@@ -46,7 +46,7 @@ class _ReviewScreenState extends State<ReviewScreen> {
           }
         },
         child: BlocBuilder<FeedbackBloc, FeedbackState>(
-            bloc: _bloc,
+            bloc: widget.bloc,
             builder: (context, state) {
               return Stack(
                 children: <Widget>[
@@ -104,7 +104,7 @@ class _ReviewScreenState extends State<ReviewScreen> {
                       padding: const EdgeInsets.all(20),
                       child: RaisedButton(
                         onPressed: () {
-                          _bloc.add(FeedbackAddFeedbackEvent(
+                          widget.bloc.add(FeedbackAddFeedbackEvent(
                               widget.shop.hash, rating, _controller.text));
                         },
                         color: Theme.of(context).primaryColor,
@@ -143,6 +143,5 @@ class _ReviewScreenState extends State<ReviewScreen> {
   @override
   void dispose() {
     super.dispose();
-    _bloc.close();
   }
 }

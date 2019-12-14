@@ -42,209 +42,220 @@ class _ShopDetailScreenState extends State<ShopDetailScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        body: BlocBuilder<ShopDetailBloc, ShopDetailState>(
-            bloc: _bloc,
-            builder: (context, state) {
-              if (state is ShopDetailFoundState) {
-                shop = state.shop;
-              }
-              return BlocBuilder<FeedbackBloc, FeedbackState>(
-                bloc: _feedbackBloc,
-                builder: (BuildContext context, FeedbackState state) {
-                  final List<Widget> widgets = [];
-                  if (state is FeedbackLoadedListFeedbackState) {
-                    state.listFeedback
-                        .forEach((feedback) => widgets.add(Container(
-                              decoration: BoxDecoration(
-                                border: Border.all(
-                                  color: Theme.of(context)
-                                      .dividerColor, //                   <--- border color
-                                  width: 1.0,
-                                ),
+        body: BlocListener<FeedbackBloc, FeedbackState>(
+      bloc: _feedbackBloc,
+      listener: (context, state) {
+        if (state is FeedbackAddedFeedbackState) {
+          _bloc.add(ShopDetailByHashEvent(widget.shop.hash));
+          _feedbackBloc.add(FeedbackGetListFeedbackEvent(widget.shop.hash));
+        }
+      },
+      child: BlocBuilder<ShopDetailBloc, ShopDetailState>(
+          bloc: _bloc,
+          builder: (context, state) {
+            if (state is ShopDetailFoundState) {
+              shop = state.shop;
+            }
+            return BlocBuilder<FeedbackBloc, FeedbackState>(
+              bloc: _feedbackBloc,
+              builder: (BuildContext context, FeedbackState state) {
+                final List<Widget> widgets = [];
+                if (state is FeedbackLoadedListFeedbackState) {
+                  state.listFeedback
+                      .forEach((feedback) => widgets.add(Container(
+                            decoration: BoxDecoration(
+                              border: Border.all(
+                                color: Theme.of(context)
+                                    .dividerColor, //                   <--- border color
+                                width: 1.0,
                               ),
+                            ),
+                            child: ListTile(
+                              leading: Icon(Icons.account_circle),
+                              title: Text("Anonymous"),
+                              subtitle: Text(feedback.comment),
+                            ),
+                          )));
+                }
+                return CustomScrollView(
+                  slivers: <Widget>[
+                    SliverAppBar(
+                      expandedHeight: MediaQuery.of(context).size.height * 0.3,
+                      pinned: true,
+                      flexibleSpace: FlexibleSpaceBar(
+                        background: Hero(
+                          tag: widget.shop.name + "-" + widget.shop.address,
+                          child: Container(
+                            width: MediaQuery.of(context).size.width,
+                            child: CachedNetworkImage(
+                              imageUrl: widget.shop.imageBig,
+                              fit: BoxFit.cover,
+                            ),
+                          ),
+                        ),
+                        collapseMode: CollapseMode.pin,
+                        title: Text(widget.shop.name),
+                      ),
+                    ),
+                    SliverPersistentHeader(
+                      delegate: SliverAppBarDelegate(
+                        minHeight: 60.0,
+                        maxHeight: 60.0,
+                        child: ListTile(
+                          title: Text(widget.shop.address),
+                          trailing: SizedBox(
+                            height: MediaQuery.of(context).size.height * 0.06,
+                            child: FloatingActionButton(
+                              heroTag: null,
+                              child: Icon(Icons.directions),
+                              onPressed: () async {
+                                final url =
+                                    "https://www.google.com/maps/dir/Current+Location/${widget.shop.latitude},${widget.shop.longitude}";
+                                if (await canLaunch(url)) {
+                                  await launch(url);
+                                }
+                              },
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                    widget.shop.phoneNumber.isNotEmpty
+                        ? SliverPersistentHeader(
+                            delegate: SliverAppBarDelegate(
+                              minHeight: 60.0,
+                              maxHeight: 60.0,
                               child: ListTile(
-                                leading: Icon(Icons.account_circle),
-                                title: Text("Anonymous"),
-                                subtitle: Text(feedback.comment),
-                              ),
-                            )));
-                  }
-                  return CustomScrollView(
-                    slivers: <Widget>[
-                      SliverAppBar(
-                        expandedHeight:
-                            MediaQuery.of(context).size.height * 0.3,
-                        pinned: true,
-                        flexibleSpace: FlexibleSpaceBar(
-                          background: Hero(
-                            tag: widget.shop.name + "-" + widget.shop.address,
-                            child: Container(
-                              width: MediaQuery.of(context).size.width,
-                              child: CachedNetworkImage(
-                                imageUrl: widget.shop.imageBig,
-                                fit: BoxFit.cover,
-                              ),
-                            ),
-                          ),
-                          collapseMode: CollapseMode.pin,
-                          title: Text(widget.shop.name),
-                        ),
-                      ),
-                      SliverPersistentHeader(
-                        delegate: SliverAppBarDelegate(
-                          minHeight: 60.0,
-                          maxHeight: 60.0,
-                          child: ListTile(
-                            title: Text(widget.shop.address),
-                            trailing: SizedBox(
-                              height: MediaQuery.of(context).size.height * 0.06,
-                              child: FloatingActionButton(
-                                heroTag: null,
-                                child: Icon(Icons.directions),
-                                onPressed: () async {
-                                  final url =
-                                      "https://www.google.com/maps/dir/Current+Location/${widget.shop.latitude},${widget.shop.longitude}";
-                                  if (await canLaunch(url)) {
-                                    await launch(url);
-                                  }
-                                },
-                              ),
-                            ),
-                          ),
-                        ),
-                      ),
-                      widget.shop.phoneNumber.isNotEmpty
-                          ? SliverPersistentHeader(
-                              delegate: SliverAppBarDelegate(
-                                minHeight: 60.0,
-                                maxHeight: 60.0,
-                                child: ListTile(
-                                  title: Text(widget.shop.phoneNumber),
-                                  trailing: SizedBox(
-                                    height: MediaQuery.of(context).size.height *
-                                        0.06,
-                                    child: FloatingActionButton(
-                                      heroTag: null,
-                                      child: Icon(Icons.call),
-                                      onPressed: () async {
-                                        final items =
-                                            widget.shop.phoneNumber.split(";");
-                                        if (items.length > 1) {
-                                          _selectPhoneModalBottomSheet(
-                                              context, items);
-                                          return;
-                                        }
-                                        final url =
-                                            "tel:${widget.shop.phoneNumber}";
-                                        if (await canLaunch(url)) {
-                                          await launch(url);
-                                        }
-                                      },
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            )
-                          : SliverToBoxAdapter(),
-                      SliverPersistentHeader(
-                        delegate: SliverAppBarDelegate(
-                          minHeight: 60.0,
-                          maxHeight: 60.0,
-                          child: Center(
-                              child: Column(
-                            children: <Widget>[
-                              Text(S.of(context).rateAndReviewTitle),
-                              Hero(
-                                child: RatingBar(
-                                  ratingWidget: RatingWidget(
-                                      full: Icon(
-                                        Icons.star,
-                                        color: Colors.amberAccent,
-                                      ),
-                                      empty: Icon(
-                                        Icons.star_border,
-                                        color: Colors.amberAccent,
-                                      ),
-                                      half: Icon(
-                                        Icons.star_half,
-                                        color: Colors.amberAccent,
-                                      )),
-                                  onRatingUpdate: (double value) {
-                                    _authenticationBloc.user.then((user) {
-                                      if (user.fullName != null) {
-                                        Navigator.of(context).pushNamed(
-                                          ReviewScreen.routeName,
-                                          arguments: [value, widget.shop],
-                                        );
-                                      } else {
-                                        Navigator.of(context).pushNamed(
-                                          SignInScreen.routeName,
-                                        );
+                                title: Text(widget.shop.phoneNumber),
+                                trailing: SizedBox(
+                                  height:
+                                      MediaQuery.of(context).size.height * 0.06,
+                                  child: FloatingActionButton(
+                                    heroTag: null,
+                                    child: Icon(Icons.call),
+                                    onPressed: () async {
+                                      final items =
+                                          widget.shop.phoneNumber.split(";");
+                                      if (items.length > 1) {
+                                        _selectPhoneModalBottomSheet(
+                                            context, items);
+                                        return;
                                       }
-                                    });
-                                  },
-                                  itemCount: 5,
-                                  allowHalfRating: true,
-                                ),
-                                tag: "Rating",
-                              ),
-                            ],
-                          )),
-                        ),
-                      ),
-                      SliverToBoxAdapter(
-                        child: SizedBox(
-                          height: 20,
-                        ),
-                      ),
-                      SliverPersistentHeader(
-                        pinned: true,
-                        delegate: SliverAppBarDelegate(
-                          minHeight: 50.0,
-                          maxHeight: 50.0,
-                          child: Material(
-                            child: IntrinsicHeight(
-                              child: Row(
-                                children: <Widget>[
-                                  Expanded(
-                                    child: Row(
-                                      mainAxisSize: MainAxisSize.min,
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      children: <Widget>[
-                                        Text(shop.rating.toStringAsFixed(2)),
-                                        Icon(Icons.star),
-                                      ],
-                                    ),
+                                      final url =
+                                          "tel:${widget.shop.phoneNumber}";
+                                      if (await canLaunch(url)) {
+                                        await launch(url);
+                                      }
+                                    },
                                   ),
-                                  VerticalDivider(),
-                                  Expanded(
-                                      child: Center(
-                                          child: Text(
-                                              "${widgets.length} reviews"))),
-                                ],
+                                ),
                               ),
                             ),
-                            elevation: 1,
+                          )
+                        : SliverToBoxAdapter(),
+                    SliverPersistentHeader(
+                      delegate: SliverAppBarDelegate(
+                        minHeight: 60.0,
+                        maxHeight: 60.0,
+                        child: Center(
+                            child: Column(
+                          children: <Widget>[
+                            Text(S.of(context).rateAndReviewTitle),
+                            Hero(
+                              child: RatingBar(
+                                ratingWidget: RatingWidget(
+                                    full: Icon(
+                                      Icons.star,
+                                      color: Colors.amberAccent,
+                                    ),
+                                    empty: Icon(
+                                      Icons.star_border,
+                                      color: Colors.amberAccent,
+                                    ),
+                                    half: Icon(
+                                      Icons.star_half,
+                                      color: Colors.amberAccent,
+                                    )),
+                                onRatingUpdate: (double value) {
+                                  _authenticationBloc.user.then((user) {
+                                    if (user.fullName != null) {
+                                      Navigator.of(context).pushNamed(
+                                        ReviewScreen.routeName,
+                                        arguments: [
+                                          value,
+                                          widget.shop,
+                                          _feedbackBloc
+                                        ],
+                                      );
+                                    } else {
+                                      Navigator.of(context).pushNamed(
+                                        SignInScreen.routeName,
+                                      );
+                                    }
+                                  });
+                                },
+                                itemCount: 5,
+                                allowHalfRating: true,
+                              ),
+                              tag: "Rating",
+                            ),
+                          ],
+                        )),
+                      ),
+                    ),
+                    SliverToBoxAdapter(
+                      child: SizedBox(
+                        height: 20,
+                      ),
+                    ),
+                    SliverPersistentHeader(
+                      pinned: true,
+                      delegate: SliverAppBarDelegate(
+                        minHeight: 50.0,
+                        maxHeight: 50.0,
+                        child: Material(
+                          child: IntrinsicHeight(
+                            child: Row(
+                              children: <Widget>[
+                                Expanded(
+                                  child: Row(
+                                    mainAxisSize: MainAxisSize.min,
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: <Widget>[
+                                      Text(shop.rating.toStringAsFixed(2)),
+                                      Icon(Icons.star),
+                                    ],
+                                  ),
+                                ),
+                                VerticalDivider(),
+                                Expanded(
+                                    child: Center(
+                                        child:
+                                            Text("${widgets.length} reviews"))),
+                              ],
+                            ),
                           ),
+                          elevation: 1,
                         ),
                       ),
-                      SliverFixedExtentList(
-                        itemExtent: 60.0,
-                        delegate: SliverChildListDelegate(
-                          widgets,
-                        ),
+                    ),
+                    SliverFixedExtentList(
+                      itemExtent: 60.0,
+                      delegate: SliverChildListDelegate(
+                        widgets,
                       ),
-                      SliverToBoxAdapter(
-                        child: SizedBox(
-                          height: MediaQuery.of(context).size.height,
-                        ),
+                    ),
+                    SliverToBoxAdapter(
+                      child: SizedBox(
+                        height: MediaQuery.of(context).size.height,
                       ),
-                    ],
-                  );
-                },
-              );
-            }));
+                    ),
+                  ],
+                );
+              },
+            );
+          }),
+    ));
   }
 
   void _selectPhoneModalBottomSheet(context, List<String> phones) {
