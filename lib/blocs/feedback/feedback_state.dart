@@ -7,6 +7,8 @@ abstract class FeedbackState extends Equatable {
   const FeedbackState();
   @override
   List<Object> get props => [];
+
+  get message => null;
 }
 
 class InitialFeedbackState extends FeedbackState {}

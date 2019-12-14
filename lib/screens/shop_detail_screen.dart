@@ -8,6 +8,8 @@ import "package:flutter/cupertino.dart";
 import "package:flutter/material.dart";
 import "package:flutter_bloc/flutter_bloc.dart";
 import "package:flutter_rating_bar/flutter_rating_bar.dart";
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class ShopDetailScreen extends StatefulWidget {
   static final String routeName = "/shop_detail";
@@ -49,18 +51,19 @@ class _ShopDetailScreenState extends State<ShopDetailScreen> {
                   if (state is FeedbackLoadedListFeedbackState) {
                     state.listFeedback
                         .forEach((feedback) => widgets.add(Container(
-                          decoration: BoxDecoration(
-                            border: Border.all(
-                              color: Theme.of(context).dividerColor, //                   <--- border color
-                              width: 1.0,
-                            ),
-                          ),
-                          child: ListTile(
+                              decoration: BoxDecoration(
+                                border: Border.all(
+                                  color: Theme.of(context)
+                                      .dividerColor, //                   <--- border color
+                                  width: 1.0,
+                                ),
+                              ),
+                              child: ListTile(
                                 leading: Icon(Icons.account_circle),
                                 title: Text("Anonymous"),
                                 subtitle: Text(feedback.comment),
                               ),
-                        )));
+                            )));
                   }
                   return CustomScrollView(
                     slivers: <Widget>[
@@ -94,7 +97,13 @@ class _ShopDetailScreenState extends State<ShopDetailScreen> {
                               child: FloatingActionButton(
                                 heroTag: null,
                                 child: Icon(Icons.directions),
-                                onPressed: () {},
+                                onPressed: () async {
+                                  final url =
+                                      "https://www.google.com/maps/dir/Current+Location/${widget.shop.latitude},${widget.shop.longitude}";
+                                  if (await canLaunch(url)) {
+                                    await launch(url);
+                                  }
+                                },
                               ),
                             ),
                           ),
@@ -113,7 +122,13 @@ class _ShopDetailScreenState extends State<ShopDetailScreen> {
                                     child: FloatingActionButton(
                                       heroTag: null,
                                       child: Icon(Icons.call),
-                                      onPressed: () {},
+                                      onPressed: () async {
+                                        final url =
+                                            "tel:${widget.shop.phoneNumber}";
+                                        if (await canLaunch(url)) {
+                                          await launch(url);
+                                        }
+                                      },
                                     ),
                                   ),
                                 ),

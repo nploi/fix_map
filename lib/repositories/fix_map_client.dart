@@ -4,7 +4,7 @@ import "package:dio/dio.dart";
 import "package:fix_map/models/models.dart";
 
 class FixMapClient {
-  static const baseUrl = "http://45.77.245.125:8001";
+  static const baseUrl = "45.77.245.125:8001";
 
   static Future<FixMapResponse> getAllShop() async {
     final Response response = await Dio().get(baseUrl + "/shop/list-all");
