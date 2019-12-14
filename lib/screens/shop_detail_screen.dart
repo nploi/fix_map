@@ -77,7 +77,7 @@ class _ShopDetailScreenState extends State<ShopDetailScreen> {
                         pinned: true,
                         flexibleSpace: FlexibleSpaceBar(
                           background: Hero(
-                            tag: widget.shop.name,
+                            tag: widget.shop.name + "-" + widget.shop.address,
                             child: Container(
                               width: MediaQuery.of(context).size.width,
                               child: CachedNetworkImage(

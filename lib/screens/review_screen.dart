@@ -40,6 +40,10 @@ class _ReviewScreenState extends State<ReviewScreen> {
           if (state is FeedbackErrorState) {
             Fluttertoast.showToast(msg: state.message);
           }
+          if (state is FeedbackAddedFeedbackState) {
+            Fluttertoast.showToast(msg: S.of(context).successMessage);
+            Navigator.of(context).pop();
+          }
         },
         child: BlocBuilder<FeedbackBloc, FeedbackState>(
             bloc: _bloc,

@@ -65,5 +65,5 @@ class FeedbackAddedFeedbackState extends FeedbackState {
 
   @override
   String toString() =>
-      "FeedbackAddFeedbackState {hash: $hash, rating: $rating, comment: $comment}";
+      "FeedbackAddedFeedbackState {hash: $hash, rating: $rating, comment: $comment}";
 }

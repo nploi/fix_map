@@ -34,7 +34,7 @@ class ShopCard extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: <Widget>[
                     Hero(
-                      tag: shop.name,
+                      tag: shop.name + "-" + shop.address,
                       child: CachedNetworkImage(
                         imageUrl: shop.image,
                         fit: BoxFit.contain,
