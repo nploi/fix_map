@@ -45,5 +45,36 @@ class FixMapClient {
     return AuthenticateResponse.fromJson(jsonDecode(response.toString()));
   }
 
+  static Future<Map<String, dynamic>> rateShop(
+      {String hash, double rating, int userId}) async {
+    final Response response = await Dio().post(
+      baseUrl + "/shop/rating",
+      data: {
+        "user_id": userId,
+        "rating": rating,
+        "hash": hash,
+      },
+    );
+    return jsonDecode(response.toString());
+  }
 
+  static Future<Map<String, dynamic>> addFeedback(
+      {String hash, String comment, int userId}) async {
+    final Response response = await Dio().post(
+      baseUrl + "/feedback/add",
+      data: {
+        "user_id": userId,
+        "comment": comment,
+        "hash": hash,
+      },
+    );
+    return jsonDecode(response.toString());
+  }
+
+  static Future<ListFeedbackResponse> getListFeedback({String hash}) async {
+    final Response response = await Dio().get(
+      baseUrl + "/feedback/list-by-hash?hash=$hash",
+    );
+    return ListFeedbackResponse.fromJson(jsonDecode(response.toString()));
+  }
 }

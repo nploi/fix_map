@@ -1,9 +1,10 @@
 import "package:fix_map/dao/dao.dart";
 import "package:fix_map/models/models.dart";
 import "package:fix_map/repositories/fix_map_client.dart";
+import "package:fix_map/repositories/repostiories.dart";
 import "package:google_maps_flutter/google_maps_flutter.dart";
 
-class ShopRepository {
+class ShopRepository extends SharedPreferencesRepository {
   final shopDao = ShopDao();
 
   Future<List<Shop>> getShops(LatLngBounds bounds) async {

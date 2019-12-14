@@ -4,3 +4,6 @@ export "fix_map_response.dart";
 export "user.dart";
 export "authenticate_response.dart";
 export "shop_response.dart";
+export "feedback.dart";
+export "add_feedback_response.dart";
+export "list_feedback_response.dart";

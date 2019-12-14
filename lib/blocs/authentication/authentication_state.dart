@@ -58,5 +58,5 @@ class AuthenticationErrorState extends AuthenticationState {
   List<Object> get props => [message];
 
   @override
-  String toString() => "AuthenticationErrorState {message: $message";
+  String toString() => "AuthenticationErrorState {message: $message}";
 }
