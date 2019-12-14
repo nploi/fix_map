@@ -64,10 +64,11 @@ class _ShopDetailScreenState extends State<ShopDetailScreen> {
                   state.listFeedback
                       .forEach((feedback) => widgets.add(Container(
                             decoration: BoxDecoration(
-                              border: Border.all(
-                                color: Theme.of(context)
-                                    .dividerColor, //                   <--- border color
-                                width: 1.0,
+                              border: Border(
+                                bottom: BorderSide(
+                                  color: Theme.of(context).dividerColor,
+                                  width: 1.0,
+                                ),
                               ),
                             ),
                             child: ListTile(
