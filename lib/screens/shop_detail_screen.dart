@@ -3,13 +3,12 @@ import "package:fix_map/blocs/blocs.dart";
 import "package:fix_map/generated/i18n.dart";
 import "package:fix_map/models/models.dart";
 import "package:fix_map/screens/review_screen.dart";
-import 'package:fix_map/screens/screens.dart';
+import "package:fix_map/screens/screens.dart";
 import "package:fix_map/widgets/widgets.dart";
 import "package:flutter/cupertino.dart";
 import "package:flutter/material.dart";
 import "package:flutter_bloc/flutter_bloc.dart";
 import "package:flutter_rating_bar/flutter_rating_bar.dart";
-import "package:fluttertoast/fluttertoast.dart";
 import "package:url_launcher/url_launcher.dart";
 
 class ShopDetailScreen extends StatefulWidget {
