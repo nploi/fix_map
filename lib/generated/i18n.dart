@@ -51,6 +51,7 @@ class S implements WidgetsLocalizations {
   String get rateAndReviewTitle => "Rate and review";
   String get requestPermissionDialogContent => "Your current location will be displayed on the map and used\nfor directions, nearby search results, and estimated travel times.";
   String get requestPermissionDialogTitle => "Allow \"Maps\" to access your location while you are using the app?";
+  String get reviewsTitle => "reviews";
   String get searchHintText => "Searching ...";
   String get settingsTitle => "Settings";
   String get shopDetailTitle => "Shop Detail";
@@ -85,6 +86,8 @@ class $vi extends S {
   String get backAgainToLeaveMessage => "Bấm lần nữa để thoát";
   @override
   String get signOutTitle => "Đăng xuất";
+  @override
+  String get reviewsTitle => "đánh gía";
   @override
   String get forgotPassword => "QUÊN MẬT KHẨU ?";
   @override

@@ -231,8 +231,8 @@ class _ShopDetailScreenState extends State<ShopDetailScreen> {
                                 VerticalDivider(),
                                 Expanded(
                                     child: Center(
-                                        child:
-                                            Text("${widgets.length} reviews"))),
+                                        child: Text(
+                                            "${widgets.length} ${S.of(context).reviewsTitle}"))),
                               ],
                             ),
                           ),

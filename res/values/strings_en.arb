@@ -28,6 +28,7 @@
     "q": "",
     "requestPermissionDialogTitle": "Allow \"Maps\" to access your location while you are using the app?",
     "requestPermissionDialogContent": "Your current location will be displayed on the map and used\nfor directions, nearby search results, and estimated travel times.",
+    "reviewsTitle": "reviews",
     "rateAndReviewTitle": "Rate and review",
     "settingsTitle": "Settings",
     "searchHintText": "Searching ...",
