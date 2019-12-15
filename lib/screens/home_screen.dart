@@ -67,9 +67,11 @@ class _HomeScreenState extends State<HomeScreen> {
                 }
 
                 if (state is MapMarkerPressedState) {
-                  await _pageController.animateToPage(state.index,
-                      duration: Duration(milliseconds: 10),
-                      curve: Curves.easeInOut);
+                  if (_pageController.hasClients) {
+                    await _pageController.animateToPage(state.index,
+                        duration: Duration(milliseconds: 10),
+                        curve: Curves.easeInOut);
+                  }
                 }
               },
             ),
