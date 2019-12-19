@@ -27,10 +27,9 @@ class _HomeScreenState extends State<HomeScreen> {
   PageController _pageController;
   final Completer<GoogleMapController> _controller = Completer();
   final Map<String, Marker> _markers = {};
-  final ShopsSearchDelegate _delegate = ShopsSearchDelegate();
 
   static final CameraPosition _cameraPosition = CameraPosition(
-    target: LatLng(10.755639, 106.134703),
+    target: LatLng(10.7622028,106.6786009),
     zoom: 16,
   );
 
@@ -339,9 +338,10 @@ class _HomeScreenState extends State<HomeScreen> {
     return Builder(builder: (context) {
       return IconButton(
         icon: const Icon(Icons.search),
-        onPressed: () async {
-          await showSearch<Shop>(
-              context: context, delegate: _delegate, query: "Sửa xe");
+        onPressed: () {
+          Navigator.of(context).pushNamed(SearchScreen.routeName);
+//          await showSearch<Shop>(
+//              context: context, delegate: _delegate, query: "Sửa xe");
         },
       );
     });

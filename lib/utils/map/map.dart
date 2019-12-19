@@ -3,7 +3,7 @@ import "package:google_maps_flutter/google_maps_flutter.dart";
 import "package:vector_math/vector_math.dart";
 
 class MapUtils {
-  static const RADIUS = 300.0;
+  static const RADIUS = 500.0;
   static LatLngBounds toBounds(LatLng center, double radiusInMeters) {
     final double distanceFromCenterToCorner = radiusInMeters * sqrt(2.0);
     final LatLng southwestCorner =

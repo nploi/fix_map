@@ -13,14 +13,28 @@ class InitialShopsSearchState extends ShopsSearchState {}
 
 class ShopsSearchLoadingState extends ShopsSearchState {}
 
+class ShopsSearchSuggestionsLoadingState extends ShopsSearchState {}
+
+class ShopsSearchSuggestionsLoadedState extends ShopsSearchState {
+  final List<String> suggestions;
+  const ShopsSearchSuggestionsLoadedState(this.suggestions);
+
+  List<Object> get props => [suggestions];
+
+  @override
+  String toString() =>
+      "ShopsSearchSuggestionsLoadedState {suggestions: $suggestions}";
+}
+
 class ShopsSearchLoadedState extends ShopsSearchState {
   final List<Shop> shops;
   final int size;
-  const ShopsSearchLoadedState(this.shops, this.size);
+  final String query;
 
-  List<Object> get props => [shops, size];
+  const ShopsSearchLoadedState(this.shops, this.size, this.query);
+
+  List<Object> get props => [shops, size, query];
 
   @override
-  String toString() => "ShopsSearchLoadedState {shops: $shops, size: $size}";
+  String toString() => "ShopsSearchLoadedState {shops: $shops, size: $size, query: $query}";
 }
-

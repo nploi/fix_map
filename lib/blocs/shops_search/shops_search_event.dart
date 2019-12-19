@@ -18,6 +18,16 @@ class ShopsSearchByQueryEvent extends ShopsSearchEvent {
   String toString() => "ShopsSearchByQueryEvent {query: $query}";
 }
 
+class ShopsSearchSuggestionLoadEvent extends ShopsSearchEvent {
+  final String query;
+  const ShopsSearchSuggestionLoadEvent(this.query);
+
+  List<Object> get props => [query];
+
+  @override
+  String toString() => "ShopsSearchSuggestionLoadEvent {query: $query}";
+}
+
 class ShopsSearchNextOffsetEvent extends ShopsSearchEvent {
   final String query;
   const ShopsSearchNextOffsetEvent(this.query);

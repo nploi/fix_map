@@ -52,7 +52,7 @@ class S implements WidgetsLocalizations {
   String get requestPermissionDialogContent => "Your current location will be displayed on the map and used\nfor directions, nearby search results, and estimated travel times.";
   String get requestPermissionDialogTitle => "Allow \"Maps\" to access your location while you are using the app?";
   String get reviewsTitle => "reviews";
-  String get searchHintText => "Searching ...";
+  String get searchHintText => "Search";
   String get settingsTitle => "Settings";
   String get shopDetailTitle => "Shop Detail";
   String get signInTitle => "Sign in";
@@ -125,7 +125,7 @@ class $vi extends S {
   @override
   String get k => "";
   @override
-  String get searchHintText => "Tìm địa điểm ...";
+  String get searchHintText => "Tìm kiếm";
   @override
   String get doNotAllowLabelButton => "Không cho phép";
   @override

@@ -76,6 +76,7 @@ class _FixMapAppState extends State<FixMapApp> {
             SettingsScreen.routeName: (context) => SettingsScreen(
                   settingsBloc: widget.settingsBloc,
                 ),
+            SearchScreen.routeName: (context) => SearchScreen(),
           },
           // ignore: missing_return
           onGenerateRoute: (routeSettings) {

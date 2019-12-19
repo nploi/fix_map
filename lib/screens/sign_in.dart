@@ -46,6 +46,7 @@ class _SignInScreenState extends State<SignInScreen> {
             return Stack(
               children: <Widget>[
                 ListView(
+                  padding: EdgeInsets.zero,
                   children: <Widget>[
                     Stack(
                       children: <Widget>[

@@ -28,6 +28,11 @@ class ShopsSearchBloc extends Bloc<ShopsSearchEvent, ShopsSearchState> {
         yield* _handleShopsSearchNextOffsetEvent(event);
         return;
       }
+
+      if (event is ShopsSearchNextOffsetEvent) {
+        yield* _handleShopsSearchNextOffsetEvent(event);
+        return;
+      }
     } catch (_, stackTrace) {
       developer.log("$_",
           name: "ShopsSearchBloc", error: _, stackTrace: stackTrace);
@@ -42,7 +47,7 @@ class ShopsSearchBloc extends Bloc<ShopsSearchEvent, ShopsSearchState> {
     _offset = 0;
     _shops = await _shopRepository.getAllShops(
         query: event.query, limit: _limit, offset: _offset);
-    yield ShopsSearchLoadedState(_shops, _shops.length);
+    yield ShopsSearchLoadedState(_shops, _shops.length, event.query);
   }
 
   Stream<ShopsSearchState> _handleShopsSearchNextOffsetEvent(
@@ -51,6 +56,6 @@ class ShopsSearchBloc extends Bloc<ShopsSearchEvent, ShopsSearchState> {
     final shops = await _shopRepository.getAllShops(
         query: event.query, limit: _limit, offset: _offset);
     _shops.addAll(shops);
-    yield ShopsSearchLoadedState(_shops, _shops.length);
+    yield ShopsSearchLoadedState(_shops, _shops.length, event.query);
   }
 }
