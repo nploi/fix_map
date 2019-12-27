@@ -45,7 +45,7 @@ class FeedbackErrorState extends FeedbackState {
 }
 
 class FeedbackLoadedListFeedbackState extends FeedbackState {
-  final List<Feedback> listFeedback;
+  final List<FeedbackEntity> listFeedback;
   const FeedbackLoadedListFeedbackState(this.listFeedback);
 
   List<Object> get props => [listFeedback];

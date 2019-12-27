@@ -79,7 +79,6 @@ class _ReviewScreenState extends State<ReviewScreen> {
                                 rating = value;
                               },
                               itemCount: 5,
-                              allowHalfRating: true,
                               initialRating: widget.rating,
                             ),
                           ),

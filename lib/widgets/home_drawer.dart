@@ -1,5 +1,6 @@
 import "package:fix_map/blocs/authentication/authentication_state.dart";
 import "package:fix_map/blocs/blocs.dart";
+import 'package:fix_map/dialogs/dialogs.dart';
 import "package:fix_map/generated/i18n.dart";
 import "package:fix_map/models/models.dart";
 import "package:fix_map/screens/screens.dart";
@@ -78,6 +79,13 @@ class HomeDrawer extends StatelessWidget {
                                   },
                                 )
                               : Container(),
+                          ListTile(
+                            leading: Icon(Icons.info_outline),
+                            title: Text(S.of(context).aboutTitle),
+                            onTap: () {
+                              showAppAboutDialog(context);
+                            },
+                          ),
                         ],
                       ),
                     ),

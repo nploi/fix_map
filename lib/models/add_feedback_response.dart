@@ -2,13 +2,13 @@ import "feedback.dart";
 
 class AddFeedbackResponse {
   String responseText;
-  Feedback feedback;
+  FeedbackEntity feedback;
 
   AddFeedbackResponse({this.responseText, this.feedback});
 
   AddFeedbackResponse.fromJson(Map<String, dynamic> json) {
     responseText = json["responseText"];
-    feedback = json["data"] != null ? Feedback.fromJson(json["data"]) : null;
+    feedback = json["data"] != null ? FeedbackEntity.fromJson(json["data"]) : null;
   }
 
   Map<String, dynamic> toJson() {

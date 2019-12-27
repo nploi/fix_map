@@ -79,8 +79,13 @@ void showRequestPermissionDialog(BuildContext context) {
 
 void showAppAboutDialog(BuildContext context) {
   showAboutDialog(
-      context: context,
-      applicationIcon: Image.asset("assets/map/circle.png"),
-      applicationName: "Fix Map",
-      applicationVersion: "0.0.1");
+    context: context,
+    applicationIcon: Container(
+      height: 48,
+      width: 48,
+      child: Image.asset("assets/map/circle.png"),
+    ),
+    applicationName: "Fix Map",
+    applicationVersion: "0.0.1",
+  );
 }

@@ -21,6 +21,7 @@ class S implements WidgetsLocalizations {
   @override
   TextDirection get textDirection => TextDirection.ltr;
 
+  String get aboutTitle => "About";
   String get allowLabelButton => "Allow";
   String get appName => "Fix Map";
   String get availableStatusTitle => "Available";
@@ -130,6 +131,8 @@ class $vi extends S {
   String get doNotAllowLabelButton => "Không cho phép";
   @override
   String get successMessage => "Thành công";
+  @override
+  String get aboutTitle => "About";
   @override
   String get moreButtonLabel => "Nhiều hơn";
   @override

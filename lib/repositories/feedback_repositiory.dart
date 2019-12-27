@@ -23,7 +23,7 @@ class FeedbackRepository extends SharedPreferencesRepository {
     return response["responseText"];
   }
 
-  Future<List<Feedback>> getListFeedback(String hash) async {
+  Future<List<FeedbackEntity>> getListFeedback(String hash) async {
     final response = await FixMapClient.getListFeedback(hash: hash);
     if (response.responseText != "Successfully") {
       throw Exception("Opps, has error!");

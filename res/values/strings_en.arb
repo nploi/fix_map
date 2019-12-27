@@ -1,5 +1,6 @@
 {
     "appName": "Fix Map",
+    "aboutTitle": "About",
     "allowLabelButton": "Allow",
     "availableStatusTitle": "Available",
     "backAgainToLeaveMessage": "Tap back again to leave",
@@ -31,7 +32,6 @@
     "reviewsTitle": "reviews",
     "rateAndReviewTitle": "Rate and review",
     "settingsTitle": "Settings",
-    "searchHintText": "Searching ...",
     "shopDetailTitle": "Shop Detail",
     "signInTitle": "Sign in",
     "signUpTitle": "Sign up",

@@ -57,10 +57,13 @@ class _ShopDetailScreenState extends State<ShopDetailScreen> {
             return BlocBuilder<FeedbackBloc, FeedbackState>(
               bloc: _feedbackBloc,
               builder: (BuildContext context, FeedbackState state) {
-                final List<Widget> widgets = [];
+                final List<Widget> feedbackWidgets = [];
+                List<FeedbackEntity> listFeedback = [];
+
                 if (state is FeedbackLoadedListFeedbackState) {
+                  listFeedback = state.listFeedback;
                   state.listFeedback
-                      .forEach((feedback) => widgets.add(Container(
+                      .forEach((feedback) => feedbackWidgets.add(Container(
                             decoration: BoxDecoration(
                               border: Border(
                                 bottom: BorderSide(
@@ -71,8 +74,35 @@ class _ShopDetailScreenState extends State<ShopDetailScreen> {
                             ),
                             child: ListTile(
                               leading: Icon(Icons.account_circle),
-                              title: Text("Anonymous"),
-                              subtitle: Text(feedback.comment),
+                              title: Text(feedback.userFullName),
+                              subtitle: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: <Widget>[
+                                  RatingBar(
+                                    itemSize: 15,
+                                    initialRating: feedback.rating,
+                                    ratingWidget: RatingWidget(
+                                        full: Icon(
+                                          Icons.star,
+                                          color: Colors.amberAccent,
+                                        ),
+                                        empty: Icon(
+                                          Icons.star_border,
+                                          color: Colors.amberAccent,
+                                        ),
+                                        half: Icon(
+                                          Icons.star_half,
+                                          color: Colors.amberAccent,
+                                        )),
+                                    itemCount: 5,
+                                    onRatingUpdate: null,
+                                  ),
+                                  SizedBox(
+                                    height: 5,
+                                  ),
+                                  Text(feedback.comment)
+                                ],
+                              ),
                             ),
                           )));
                 }
@@ -158,55 +188,8 @@ class _ShopDetailScreenState extends State<ShopDetailScreen> {
                               ),
                             )
                           : SliverToBoxAdapter(),
-                      SliverPersistentHeader(
-                        delegate: SliverAppBarDelegate(
-                          minHeight: 60.0,
-                          maxHeight: 60.0,
-                          child: Center(
-                              child: Column(
-                            children: <Widget>[
-                              Text(S.of(context).rateAndReviewTitle),
-                              Hero(
-                                child: RatingBar(
-                                  ratingWidget: RatingWidget(
-                                      full: Icon(
-                                        Icons.star,
-                                        color: Colors.amberAccent,
-                                      ),
-                                      empty: Icon(
-                                        Icons.star_border,
-                                        color: Colors.amberAccent,
-                                      ),
-                                      half: Icon(
-                                        Icons.star_half,
-                                        color: Colors.amberAccent,
-                                      )),
-                                  onRatingUpdate: (double value) {
-                                    _authenticationBloc.user.then((user) {
-                                      if (user.fullName != null) {
-                                        Navigator.of(context).pushNamed(
-                                          ReviewScreen.routeName,
-                                          arguments: [
-                                            value,
-                                            widget.shop,
-                                            _feedbackBloc
-                                          ],
-                                        );
-                                      } else {
-                                        Navigator.of(context).pushNamed(
-                                          SignInScreen.routeName,
-                                        );
-                                      }
-                                    });
-                                  },
-                                  itemCount: 5,
-                                  allowHalfRating: true,
-                                ),
-                                tag: "Rating",
-                              ),
-                            ],
-                          )),
-                        ),
+                      SliverToBoxAdapter(
+                        child: buildRating(listFeedback),
                       ),
                       SliverToBoxAdapter(
                         child: SizedBox(
@@ -237,7 +220,7 @@ class _ShopDetailScreenState extends State<ShopDetailScreen> {
                                   Expanded(
                                       child: Center(
                                           child: Text(
-                                              "${widgets.length} ${S.of(context).reviewsTitle}"))),
+                                              "${feedbackWidgets.length} ${S.of(context).reviewsTitle}"))),
                                 ],
                               ),
                             ),
@@ -245,11 +228,8 @@ class _ShopDetailScreenState extends State<ShopDetailScreen> {
                           ),
                         ),
                       ),
-                      SliverFixedExtentList(
-                        itemExtent: 60.0,
-                        delegate: SliverChildListDelegate(
-                          widgets,
-                        ),
+                      SliverList(
+                        delegate: SliverChildListDelegate(feedbackWidgets),
                       ),
                       SliverToBoxAdapter(
                         child: SizedBox(
@@ -284,6 +264,70 @@ class _ShopDetailScreenState extends State<ShopDetailScreen> {
                   .toList(),
             ),
           );
+        });
+  }
+
+  Widget buildRating(List<FeedbackEntity> listFeedback) {
+    return FutureBuilder<User>(
+        future: _authenticationBloc.user,
+        builder: (context, snapshot) {
+          FeedbackEntity feedback;
+
+          if (snapshot.hasData &&
+              snapshot.data.fullName.isNotEmpty &&
+              listFeedback.isNotEmpty) {
+            feedback = listFeedback
+                .where((value) => value.userId == snapshot.data.id)
+                .first;
+          }
+
+          return Center(
+              child: !snapshot.hasData
+                  ? CircularProgressIndicator()
+                  : feedback != null
+                      ? Container()
+                      : Column(
+                          children: <Widget>[
+                            Text(S.of(context).rateAndReviewTitle),
+                            Hero(
+                              child: RatingBar(
+                                ratingWidget: RatingWidget(
+                                    full: Icon(
+                                      Icons.star,
+                                      color: Colors.amberAccent,
+                                    ),
+                                    empty: Icon(
+                                      Icons.star_border,
+                                      color: Colors.amberAccent,
+                                    ),
+                                    half: Icon(
+                                      Icons.star_half,
+                                      color: Colors.amberAccent,
+                                    )),
+                                onRatingUpdate: (double value) {
+                                  _authenticationBloc.user.then((user) {
+                                    if (user.fullName != null) {
+                                      Navigator.of(context).pushNamed(
+                                        ReviewScreen.routeName,
+                                        arguments: [
+                                          value,
+                                          widget.shop,
+                                          _feedbackBloc
+                                        ],
+                                      );
+                                    } else {
+                                      Navigator.of(context).pushNamed(
+                                        SignInScreen.routeName,
+                                      );
+                                    }
+                                  });
+                                },
+                                itemCount: 5,
+                              ),
+                              tag: "Rating",
+                            ),
+                          ],
+                        ));
         });
   }
 

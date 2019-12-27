@@ -2,16 +2,16 @@ import "feedback.dart";
 
 class ListFeedbackResponse {
   String responseText;
-  List<Feedback> listFeedback;
+  List<FeedbackEntity> listFeedback;
 
   ListFeedbackResponse({this.responseText, this.listFeedback});
 
   ListFeedbackResponse.fromJson(Map<String, dynamic> json) {
     responseText = json["responseText"];
     if (json["data"] != null) {
-      listFeedback = List<Feedback>();
+      listFeedback = List<FeedbackEntity>();
       json["data"].forEach((v) {
-        listFeedback.add(Feedback.fromJson(v));
+        listFeedback.add(FeedbackEntity.fromJson(v));
       });
     }
   }

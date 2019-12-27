@@ -1,22 +1,28 @@
-class Feedback {
+class FeedbackEntity {
   int id;
   int userId;
+  String userFullName;
   String shopHash;
   String comment;
+  double rating;
   String updatedAt;
   String createdAt;
 
-  Feedback(
+  FeedbackEntity(
       {this.id,
       this.userId,
+      this.userFullName,
+      this.rating,
       this.shopHash,
       this.comment,
       this.updatedAt,
       this.createdAt});
 
-  Feedback.fromJson(Map<String, dynamic> json) {
+  FeedbackEntity.fromJson(Map<String, dynamic> json) {
     id = json["id"];
     userId = json["user_id"];
+    userFullName = json["user_fullname"];
+    rating = (json["rating"] as int).toDouble();
     shopHash = json["shop_hash"];
     comment = json["comment"];
     updatedAt = json["updatedAt"];
@@ -27,6 +33,8 @@ class Feedback {
     final Map<String, dynamic> data = Map<String, dynamic>();
     data["id"] = this.id;
     data["user_id"] = this.userId;
+    data["user_fullname"] = this.userFullName;
+    data["rating"] = this.rating;
     data["shop_hash"] = this.shopHash;
     data["comment"] = this.comment;
     data["updatedAt"] = this.updatedAt;
