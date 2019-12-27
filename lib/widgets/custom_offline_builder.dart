@@ -1,5 +1,5 @@
-import 'package:flutter/material.dart';
-import 'package:flutter_offline/flutter_offline.dart';
+import "package:flutter/material.dart";
+import "package:flutter_offline/flutter_offline.dart";
 
 class CustomOfflineBuilder extends StatelessWidget {
   final Widget child;
@@ -25,7 +25,7 @@ class CustomOfflineBuilder extends StatelessWidget {
               child: Container(
                 color: connected ? Color(0xFF00EE44) : Color(0xFFEE4400),
                 child: Center(
-                  child: Text("${connected ? 'ONLINE' : 'OFFLINE'}"),
+                  child: Text("${connected ? "ONLINE" : "OFFLINE"}"),
                 ),
               ),
               duration: Duration(seconds: 1),

@@ -7,14 +7,12 @@ import "shared_preferences_repository.dart";
 
 class AuthenticationRepository extends SharedPreferencesRepository {
   Future<User> getUser() async {
-    try {
-      await this.boot();
-      final userJson = this.get(SharedPreferencesRepository.USER);
-      if (userJson != null) {
-        return User.fromJson(jsonDecode(userJson));
-      }
-      return User();
-    } catch (exception) {}
+    await this.boot();
+    final userJson = this.get(SharedPreferencesRepository.USER);
+    if (userJson != null) {
+      return User.fromJson(jsonDecode(userJson));
+    }
+    return User();
   }
 
   Future setUser(User user) async {
