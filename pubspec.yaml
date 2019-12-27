@@ -33,6 +33,7 @@ dependencies:
   bloc_test: ^3.0.0
   flutter_rating_bar: ^3.0.0+1
   url_launcher: ^5.4.1
+  flutter_offline: ^0.3.0
 
 dev_dependencies:
   flutter_test:

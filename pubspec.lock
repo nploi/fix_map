@@ -78,6 +78,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.14.11"
+  connectivity:
+    dependency: transitive
+    description:
+      name: connectivity
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.4.6+1"
   convert:
     dependency: transitive
     description:
@@ -165,6 +172,13 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
+  flutter_offline:
+    dependency: "direct main"
+    description:
+      name: flutter_offline
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.3.0"
   flutter_page_indicator:
     dependency: transitive
     description:

@@ -48,200 +48,204 @@ class _ShopDetailScreenState extends State<ShopDetailScreen> {
           _refresh();
         }
       },
-      child: BlocBuilder<ShopDetailBloc, ShopDetailState>(
-          bloc: _bloc,
-          builder: (context, state) {
-            if (state is ShopDetailFoundState) {
-              shop = state.shop;
-            }
-            return BlocBuilder<FeedbackBloc, FeedbackState>(
-              bloc: _feedbackBloc,
-              builder: (BuildContext context, FeedbackState state) {
-                final List<Widget> feedbackWidgets = [];
-                List<FeedbackEntity> listFeedback = [];
+      child: CustomOfflineBuilder(
+        child: BlocBuilder<ShopDetailBloc, ShopDetailState>(
+            bloc: _bloc,
+            builder: (context, state) {
+              if (state is ShopDetailFoundState) {
+                shop = state.shop;
+              }
+              return BlocBuilder<FeedbackBloc, FeedbackState>(
+                bloc: _feedbackBloc,
+                builder: (BuildContext context, FeedbackState state) {
+                  final List<Widget> feedbackWidgets = [];
+                  List<FeedbackEntity> listFeedback = [];
 
-                if (state is FeedbackLoadedListFeedbackState) {
-                  listFeedback = state.listFeedback;
-                  state.listFeedback
-                      .forEach((feedback) => feedbackWidgets.add(Container(
-                            decoration: BoxDecoration(
-                              border: Border(
-                                bottom: BorderSide(
-                                  color: Theme.of(context).dividerColor,
-                                  width: 1.0,
+                  if (state is FeedbackLoadedListFeedbackState) {
+                    listFeedback = state.listFeedback;
+                    state.listFeedback
+                        .forEach((feedback) => feedbackWidgets.add(Container(
+                              decoration: BoxDecoration(
+                                border: Border(
+                                  bottom: BorderSide(
+                                    color: Theme.of(context).dividerColor,
+                                    width: 1.0,
+                                  ),
+                                ),
+                              ),
+                              child: ListTile(
+                                leading: Icon(Icons.account_circle),
+                                title: Text(feedback.userFullName),
+                                subtitle: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: <Widget>[
+                                    RatingBar(
+                                      itemSize: 15,
+                                      initialRating: feedback.rating,
+                                      ratingWidget: RatingWidget(
+                                          full: Icon(
+                                            Icons.star,
+                                            color: Colors.amberAccent,
+                                          ),
+                                          empty: Icon(
+                                            Icons.star_border,
+                                            color: Colors.amberAccent,
+                                          ),
+                                          half: Icon(
+                                            Icons.star_half,
+                                            color: Colors.amberAccent,
+                                          )),
+                                      itemCount: 5,
+                                      onRatingUpdate: null,
+                                    ),
+                                    SizedBox(
+                                      height: 5,
+                                    ),
+                                    Text(feedback.comment)
+                                  ],
+                                ),
+                              ),
+                            )));
+                  }
+                  return RefreshIndicator(
+                    onRefresh: () async {
+                      _refresh();
+                      await Future.delayed(Duration(milliseconds: 400));
+                    },
+                    child: CustomScrollView(
+                      slivers: <Widget>[
+                        SliverAppBar(
+                          expandedHeight:
+                              MediaQuery.of(context).size.height * 0.3,
+                          pinned: true,
+                          flexibleSpace: FlexibleSpaceBar(
+                            background: Hero(
+                              tag: widget.shop.name + "-" + widget.shop.address,
+                              child: Container(
+                                width: MediaQuery.of(context).size.width,
+                                child: CachedNetworkImage(
+                                  imageUrl: widget.shop.imageBig,
+                                  fit: BoxFit.cover,
                                 ),
                               ),
                             ),
+                            collapseMode: CollapseMode.pin,
+                            title: Text(widget.shop.name),
+                          ),
+                        ),
+                        SliverPersistentHeader(
+                          delegate: SliverAppBarDelegate(
+                            minHeight: 60.0,
+                            maxHeight: 60.0,
                             child: ListTile(
-                              leading: Icon(Icons.account_circle),
-                              title: Text(feedback.userFullName),
-                              subtitle: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: <Widget>[
-                                  RatingBar(
-                                    itemSize: 15,
-                                    initialRating: feedback.rating,
-                                    ratingWidget: RatingWidget(
-                                        full: Icon(
-                                          Icons.star,
-                                          color: Colors.amberAccent,
-                                        ),
-                                        empty: Icon(
-                                          Icons.star_border,
-                                          color: Colors.amberAccent,
-                                        ),
-                                        half: Icon(
-                                          Icons.star_half,
-                                          color: Colors.amberAccent,
-                                        )),
-                                    itemCount: 5,
-                                    onRatingUpdate: null,
-                                  ),
-                                  SizedBox(
-                                    height: 5,
-                                  ),
-                                  Text(feedback.comment)
-                                ],
-                              ),
-                            ),
-                          )));
-                }
-                return RefreshIndicator(
-                  onRefresh: () async {
-                    _refresh();
-                    await Future.delayed(Duration(milliseconds: 400));
-                  },
-                  child: CustomScrollView(
-                    slivers: <Widget>[
-                      SliverAppBar(
-                        expandedHeight:
-                            MediaQuery.of(context).size.height * 0.3,
-                        pinned: true,
-                        flexibleSpace: FlexibleSpaceBar(
-                          background: Hero(
-                            tag: widget.shop.name + "-" + widget.shop.address,
-                            child: Container(
-                              width: MediaQuery.of(context).size.width,
-                              child: CachedNetworkImage(
-                                imageUrl: widget.shop.imageBig,
-                                fit: BoxFit.cover,
-                              ),
-                            ),
-                          ),
-                          collapseMode: CollapseMode.pin,
-                          title: Text(widget.shop.name),
-                        ),
-                      ),
-                      SliverPersistentHeader(
-                        delegate: SliverAppBarDelegate(
-                          minHeight: 60.0,
-                          maxHeight: 60.0,
-                          child: ListTile(
-                            title: Text(widget.shop.address),
-                            trailing: SizedBox(
-                              height: MediaQuery.of(context).size.height * 0.06,
-                              child: FloatingActionButton(
-                                heroTag: null,
-                                child: Icon(Icons.directions),
-                                onPressed: () async {
-                                  final url =
-                                      "https://www.google.com/maps/dir/Current+Location/${widget.shop.latitude},${widget.shop.longitude}";
-                                  if (await canLaunch(url)) {
-                                    await launch(url);
-                                  }
-                                },
+                              title: Text(widget.shop.address),
+                              trailing: SizedBox(
+                                height:
+                                    MediaQuery.of(context).size.height * 0.06,
+                                child: FloatingActionButton(
+                                  heroTag: null,
+                                  child: Icon(Icons.directions),
+                                  onPressed: () async {
+                                    final url =
+                                        "https://www.google.com/maps/dir/Current+Location/${widget.shop.latitude},${widget.shop.longitude}";
+                                    if (await canLaunch(url)) {
+                                      await launch(url);
+                                    }
+                                  },
+                                ),
                               ),
                             ),
                           ),
                         ),
-                      ),
-                      widget.shop.phoneNumber.isNotEmpty
-                          ? SliverPersistentHeader(
-                              delegate: SliverAppBarDelegate(
-                                minHeight: 60.0,
-                                maxHeight: 60.0,
-                                child: ListTile(
-                                  title: Text(widget.shop.phoneNumber),
-                                  trailing: SizedBox(
-                                    height: MediaQuery.of(context).size.height *
-                                        0.06,
-                                    child: FloatingActionButton(
-                                      heroTag: null,
-                                      child: Icon(Icons.call),
-                                      onPressed: () async {
-                                        final items =
-                                            widget.shop.phoneNumber.split(";");
-                                        if (items.length > 1) {
-                                          _selectPhoneModalBottomSheet(
-                                              context, items);
-                                          return;
-                                        }
-                                        final url =
-                                            "tel:${widget.shop.phoneNumber}";
-                                        if (await canLaunch(url)) {
-                                          await launch(url);
-                                        }
-                                      },
+                        widget.shop.phoneNumber.isNotEmpty
+                            ? SliverPersistentHeader(
+                                delegate: SliverAppBarDelegate(
+                                  minHeight: 60.0,
+                                  maxHeight: 60.0,
+                                  child: ListTile(
+                                    title: Text(widget.shop.phoneNumber),
+                                    trailing: SizedBox(
+                                      height:
+                                          MediaQuery.of(context).size.height *
+                                              0.06,
+                                      child: FloatingActionButton(
+                                        heroTag: null,
+                                        child: Icon(Icons.call),
+                                        onPressed: () async {
+                                          final items = widget.shop.phoneNumber
+                                              .split(";");
+                                          if (items.length > 1) {
+                                            _selectPhoneModalBottomSheet(
+                                                context, items);
+                                            return;
+                                          }
+                                          final url =
+                                              "tel:${widget.shop.phoneNumber}";
+                                          if (await canLaunch(url)) {
+                                            await launch(url);
+                                          }
+                                        },
+                                      ),
                                     ),
                                   ),
                                 ),
-                              ),
-                            )
-                          : SliverToBoxAdapter(),
-                      SliverToBoxAdapter(
-                        child: buildRating(listFeedback),
-                      ),
-                      SliverToBoxAdapter(
-                        child: SizedBox(
-                          height: 20,
+                              )
+                            : SliverToBoxAdapter(),
+                        SliverToBoxAdapter(
+                          child: buildRating(listFeedback),
                         ),
-                      ),
-                      SliverPersistentHeader(
-                        pinned: true,
-                        delegate: SliverAppBarDelegate(
-                          minHeight: 50.0,
-                          maxHeight: 50.0,
-                          child: Material(
-                            child: IntrinsicHeight(
-                              child: Row(
-                                children: <Widget>[
-                                  Expanded(
-                                    child: Row(
-                                      mainAxisSize: MainAxisSize.min,
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      children: <Widget>[
-                                        Text(shop.rating.toStringAsFixed(2)),
-                                        Icon(Icons.star),
-                                      ],
-                                    ),
-                                  ),
-                                  VerticalDivider(),
-                                  Expanded(
-                                      child: Center(
-                                          child: Text(
-                                              "${feedbackWidgets.length} ${S.of(context).reviewsTitle}"))),
-                                ],
-                              ),
-                            ),
-                            elevation: 1,
+                        SliverToBoxAdapter(
+                          child: SizedBox(
+                            height: 20,
                           ),
                         ),
-                      ),
-                      SliverList(
-                        delegate: SliverChildListDelegate(feedbackWidgets),
-                      ),
-                      SliverToBoxAdapter(
-                        child: SizedBox(
-                          height: MediaQuery.of(context).size.height,
+                        SliverPersistentHeader(
+                          pinned: true,
+                          delegate: SliverAppBarDelegate(
+                            minHeight: 50.0,
+                            maxHeight: 50.0,
+                            child: Material(
+                              child: IntrinsicHeight(
+                                child: Row(
+                                  children: <Widget>[
+                                    Expanded(
+                                      child: Row(
+                                        mainAxisSize: MainAxisSize.min,
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: <Widget>[
+                                          Text(shop.rating.toStringAsFixed(2)),
+                                          Icon(Icons.star),
+                                        ],
+                                      ),
+                                    ),
+                                    VerticalDivider(),
+                                    Expanded(
+                                        child: Center(
+                                            child: Text(
+                                                "${feedbackWidgets.length} ${S.of(context).reviewsTitle}"))),
+                                  ],
+                                ),
+                              ),
+                              elevation: 1,
+                            ),
+                          ),
                         ),
-                      ),
-                    ],
-                  ),
-                );
-              },
-            );
-          }),
+                        SliverList(
+                          delegate: SliverChildListDelegate(feedbackWidgets),
+                        ),
+                        SliverToBoxAdapter(
+                          child: SizedBox(
+                            height: MediaQuery.of(context).size.height,
+                          ),
+                        ),
+                      ],
+                    ),
+                  );
+                },
+              );
+            }),
+      ),
     ));
   }
 

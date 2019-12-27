@@ -51,253 +51,256 @@ class _HomeScreenState extends State<HomeScreen> {
       child: Scaffold(
         resizeToAvoidBottomInset: false,
         drawer: HomeDrawer(),
-        body: MultiBlocListener(
-          listeners: [
-            BlocListener<MapBloc, MapState>(
-              listener: (context, state) async {
-                if (state is MapCurrentLocationUpdatedState) {
-                  await _controller.future.then(
-                    (controller) => controller.animateCamera(
-                        CameraUpdate.newLatLngZoom(
-                            LatLng(state.position.latitude,
-                                state.position.longitude),
-                            16)),
-                  );
-                }
-
-                if (state is MapMarkerPressedState) {
-                  if (_pageController.hasClients) {
-                    await _pageController.animateToPage(state.index,
-                        duration: Duration(milliseconds: 10),
-                        curve: Curves.easeInOut);
-                  }
-                }
-              },
-            ),
-            BlocListener<ShopsBloc, ShopsState>(
-              listener: (context, state) async {
-                if (state is ShopsDataNotFoundState) {
-                  BlocProvider.of<ShopsBloc>(context).add(ShopsDownLoadEvent());
-                  showDownloadDialog(
-                      this.context, BlocProvider.of<ShopsBloc>(context));
-                }
-
-                if (state is ShopsDownloadedState) {
-                  BlocProvider.of<SettingsBloc>(context)
-                      .add(SettingsRequestPermissionEvent());
-                }
-
-                if (state is ShopsLoadedState) {
-                  if (state.shops.isNotEmpty) {
-                    BlocProvider.of<MapBloc>(context)
-                        .add(MapMarkerPressedEvent(state.shops[0].hash, 0));
-                  }
-                  if (state.shops.isEmpty) {
-                    await Fluttertoast.showToast(
-                        msg: S.of(context).noSupportThisRegionMessage);
-                  }
-                }
-              },
-            ),
-            BlocListener<SettingsBloc, SettingsState>(
-              listener: (context, state) async {
-                if (state is SettingsUpdatedSettingsState) {
-                  var mapStyle = mapStyleLight;
-
-                  if (state.settings.darkMode) {
-                    mapStyle = mapStyleDark;
+        body: CustomOfflineBuilder(
+          child: MultiBlocListener(
+            listeners: [
+              BlocListener<MapBloc, MapState>(
+                listener: (context, state) async {
+                  if (state is MapCurrentLocationUpdatedState) {
+                    await _controller.future.then(
+                      (controller) => controller.animateCamera(
+                          CameraUpdate.newLatLngZoom(
+                              LatLng(state.position.latitude,
+                                  state.position.longitude),
+                              16)),
+                    );
                   }
 
-                  await _controller.future
-                      .then((controller) => controller.setMapStyle(mapStyle));
-                }
-
-                if (state is SettingsNotGrantedPermissionState) {
-                  showRequestPermissionDialog(this.context);
-                }
-              },
-            ),
-          ],
-          child: BlocBuilder<ShopsBloc, ShopsState>(
-            builder: (context, state) {
-              bool isLoading = false;
-              if (state is ShopsLoadingState) {
-                isLoading = true;
-              }
-              final List<Shop> shops =
-                  BlocProvider.of<ShopsBloc>(context).shops;
-              if (state is ShopsLoadedState) {
-                _markers.clear();
-                for (int index = 0; index < shops.length; index++) {
-                  final shop = shops[index];
-                  _markers[shop.hash] = Marker(
-                    markerId: MarkerId(shop.hash),
-                    position: LatLng(shop.latitude, shop.longitude),
-                    icon:
-                        BitmapDescriptor.fromBytes(MarkerUtils.settingsCircle),
-                    infoWindow: InfoWindow(
-                        title: shop.name,
-                        snippet: shop.address,
-                        onTap: () {
-                          Navigator.pushNamed(
-                              this.context, ShopDetailScreen.routeName,
-                              arguments: shops[index]);
-                        }),
-                    onTap: () {
-                      final String currentMarkerId =
-                          BlocProvider.of<MapBloc>(context).currentMarkerId;
-                      if (_markers.containsKey(currentMarkerId)) {
-                        _markers[currentMarkerId] =
-                            _markers[currentMarkerId].copyWith(
-                          iconParam: BitmapDescriptor.fromBytes(
-                              MarkerUtils.settingsCircle),
-                        );
-                      }
-                      BlocProvider.of<MapBloc>(context)
-                          .add(MapMarkerPressedEvent(shops[index].hash, index));
-                    },
-                  );
-                }
-              }
-
-              double mapPaddingBottom = 0.0;
-
-              if (shops.isNotEmpty) {
-                mapPaddingBottom = MediaQuery.of(context).size.height * 0.3;
-              }
-
-              return BlocBuilder<MapBloc, MapState>(
-                builder: (context, mapState) {
-                  if (mapState is MapMarkerPressedState) {
-                    if (_markers.containsKey(mapState.markerId)) {
-                      _markers[mapState.markerId] =
-                          _markers[mapState.markerId].copyWith(
-                        iconParam: BitmapDescriptor.fromBytes(
-                            MarkerUtils.settingsLocation),
-                      );
+                  if (state is MapMarkerPressedState) {
+                    if (_pageController.hasClients) {
+                      await _pageController.animateToPage(state.index,
+                          duration: Duration(milliseconds: 10),
+                          curve: Curves.easeInOut);
                     }
                   }
-                  return Stack(
-                    children: <Widget>[
-                      GoogleMap(
-                        initialCameraPosition: _cameraPosition,
-                        markers: Set<Marker>.from(_markers.values),
-                        myLocationEnabled: true,
-                        myLocationButtonEnabled: false,
-                        mapToolbarEnabled: false,
-                        compassEnabled: true,
-                        onCameraIdle: () {
-                          if (isFirst < 2) {
-                            isFirst++;
-                            _refresh();
-                          } else {
-                            BlocProvider.of<ShopsBloc>(context)
-                                .add(ShopsCanRefreshEvent());
-                          }
-                        },
-                        onCameraMove: (CameraPosition camera) {
-                          zoom = camera.zoom;
-                          if (camera.zoom < 16) {
-                            center = camera.target;
-                          } else {
-                            center = null;
-                          }
-                        },
-                        padding: EdgeInsets.only(
-                          top: MediaQuery.of(context).size.height * 0.1,
-                          bottom: mapPaddingBottom,
-                        ),
-                        onMapCreated: _onMapCreated,
-                      ),
-                      shops.isNotEmpty
-                          ? Align(
-                              alignment: Alignment.bottomCenter,
-                              child: Container(
-                                height: mapPaddingBottom,
-                                child: PageView.builder(
-                                  scrollDirection: Axis.horizontal,
-                                  controller: _pageController,
-                                  itemCount: shops.length,
-                                  onPageChanged: (index) {
-                                    onShopChange(index, shops);
-                                  },
-                                  itemBuilder: (context, index) {
-                                    if (shops[index].name.isEmpty) {
-                                      return Container();
-                                    }
-                                    return ShopCard(
-                                      shop: shops[index],
-                                      onPressed: () {
-                                        Navigator.pushNamed(this.context,
-                                            ShopDetailScreen.routeName,
-                                            arguments: shops[index]);
-                                      },
-                                    );
-                                  },
-                                ),
-                              ),
-                            )
-                          : SizedBox(),
-                      Positioned(
-                        top: MediaQuery.of(context).padding.top + 5,
-                        left: 5,
-                        child: _buildMenuButton(),
-                      ),
-                      Positioned(
-                        top: MediaQuery.of(context).padding.top + 5,
-                        right: 5,
-                        child: _buildAction(),
-                      ),
-                      isLoading
-                          ? Align(
-                              alignment: Alignment.topCenter,
-                              child: Container(
-                                height: 3,
-                                margin: EdgeInsets.only(
-                                    top: MediaQuery.of(context).padding.top),
-                                child: LinearProgressIndicator(),
-                              ),
-                            )
-                          : SizedBox(),
-                      AnimatedPositioned(
-                        bottom: mapPaddingBottom +
-                            ((state is ShopsCanRefreshState) ? 45 : 5),
-                        right: 10,
-                        child: _buildRefreshButton(),
-                        duration: Duration(milliseconds: 200),
-                      ),
-                      Positioned(
-                        bottom: mapPaddingBottom + 5,
-                        right: 10,
-                        child: _buildMyLocation(),
-                      ),
-                      AnimatedPositioned(
-                        top: ((shops.isEmpty) ? 45 : -50),
-                        right: MediaQuery.of(context).size.width / 2 - 75,
-                        child: Container(
-                          width: 150,
-                          child: FloatingActionButton.extended(
-                            onPressed: () {
-                              _controller.future
-                                  .then((controller) => controller
-                                      .animateCamera(CameraUpdate.newLatLng(
-                                          LatLng(10.8023321, 106.6964673))))
-                                  .whenComplete(() {
-                                _refresh(
-                                    latLng: LatLng(10.8023321, 106.6964673));
-                              });
-                            },
-                            heroTag: null,
-                            label: Text(S.of(context).moveToHCMButton),
-                          ),
-                        ),
-                        duration: Duration(milliseconds: 200),
-                      ),
-                    ],
-                  );
                 },
-              );
-            },
+              ),
+              BlocListener<ShopsBloc, ShopsState>(
+                listener: (context, state) async {
+                  if (state is ShopsDataNotFoundState) {
+                    BlocProvider.of<ShopsBloc>(context)
+                        .add(ShopsDownLoadEvent());
+                    showDownloadDialog(
+                        this.context, BlocProvider.of<ShopsBloc>(context));
+                  }
+
+                  if (state is ShopsDownloadedState) {
+                    BlocProvider.of<SettingsBloc>(context)
+                        .add(SettingsRequestPermissionEvent());
+                  }
+
+                  if (state is ShopsLoadedState) {
+                    if (state.shops.isNotEmpty) {
+                      BlocProvider.of<MapBloc>(context)
+                          .add(MapMarkerPressedEvent(state.shops[0].hash, 0));
+                    }
+                    if (state.shops.isEmpty) {
+                      await Fluttertoast.showToast(
+                          msg: S.of(context).noSupportThisRegionMessage);
+                    }
+                  }
+                },
+              ),
+              BlocListener<SettingsBloc, SettingsState>(
+                listener: (context, state) async {
+                  if (state is SettingsUpdatedSettingsState) {
+                    var mapStyle = mapStyleLight;
+
+                    if (state.settings.darkMode) {
+                      mapStyle = mapStyleDark;
+                    }
+
+                    await _controller.future
+                        .then((controller) => controller.setMapStyle(mapStyle));
+                  }
+
+                  if (state is SettingsNotGrantedPermissionState) {
+                    showRequestPermissionDialog(this.context);
+                  }
+                },
+              ),
+            ],
+            child: BlocBuilder<ShopsBloc, ShopsState>(
+              builder: (context, state) {
+                bool isLoading = false;
+                if (state is ShopsLoadingState) {
+                  isLoading = true;
+                }
+                final List<Shop> shops =
+                    BlocProvider.of<ShopsBloc>(context).shops;
+                if (state is ShopsLoadedState) {
+                  _markers.clear();
+                  for (int index = 0; index < shops.length; index++) {
+                    final shop = shops[index];
+                    _markers[shop.hash] = Marker(
+                      markerId: MarkerId(shop.hash),
+                      position: LatLng(shop.latitude, shop.longitude),
+                      icon: BitmapDescriptor.fromBytes(
+                          MarkerUtils.settingsCircle),
+                      infoWindow: InfoWindow(
+                          title: shop.name,
+                          snippet: shop.address,
+                          onTap: () {
+                            Navigator.pushNamed(
+                                this.context, ShopDetailScreen.routeName,
+                                arguments: shops[index]);
+                          }),
+                      onTap: () {
+                        final String currentMarkerId =
+                            BlocProvider.of<MapBloc>(context).currentMarkerId;
+                        if (_markers.containsKey(currentMarkerId)) {
+                          _markers[currentMarkerId] =
+                              _markers[currentMarkerId].copyWith(
+                            iconParam: BitmapDescriptor.fromBytes(
+                                MarkerUtils.settingsCircle),
+                          );
+                        }
+                        BlocProvider.of<MapBloc>(context).add(
+                            MapMarkerPressedEvent(shops[index].hash, index));
+                      },
+                    );
+                  }
+                }
+
+                double mapPaddingBottom = 0.0;
+
+                if (shops.isNotEmpty) {
+                  mapPaddingBottom = MediaQuery.of(context).size.height * 0.3;
+                }
+
+                return BlocBuilder<MapBloc, MapState>(
+                  builder: (context, mapState) {
+                    if (mapState is MapMarkerPressedState) {
+                      if (_markers.containsKey(mapState.markerId)) {
+                        _markers[mapState.markerId] =
+                            _markers[mapState.markerId].copyWith(
+                          iconParam: BitmapDescriptor.fromBytes(
+                              MarkerUtils.settingsLocation),
+                        );
+                      }
+                    }
+                    return Stack(
+                      children: <Widget>[
+                        GoogleMap(
+                          initialCameraPosition: _cameraPosition,
+                          markers: Set<Marker>.from(_markers.values),
+                          myLocationEnabled: true,
+                          myLocationButtonEnabled: false,
+                          mapToolbarEnabled: false,
+                          compassEnabled: true,
+                          onCameraIdle: () {
+                            if (isFirst < 2) {
+                              isFirst++;
+                              _refresh();
+                            } else {
+                              BlocProvider.of<ShopsBloc>(context)
+                                  .add(ShopsCanRefreshEvent());
+                            }
+                          },
+                          onCameraMove: (CameraPosition camera) {
+                            zoom = camera.zoom;
+                            if (camera.zoom < 16) {
+                              center = camera.target;
+                            } else {
+                              center = null;
+                            }
+                          },
+                          padding: EdgeInsets.only(
+                            top: MediaQuery.of(context).size.height * 0.1,
+                            bottom: mapPaddingBottom,
+                          ),
+                          onMapCreated: _onMapCreated,
+                        ),
+                        shops.isNotEmpty
+                            ? Align(
+                                alignment: Alignment.bottomCenter,
+                                child: Container(
+                                  height: mapPaddingBottom,
+                                  child: PageView.builder(
+                                    scrollDirection: Axis.horizontal,
+                                    controller: _pageController,
+                                    itemCount: shops.length,
+                                    onPageChanged: (index) {
+                                      onShopChange(index, shops);
+                                    },
+                                    itemBuilder: (context, index) {
+                                      if (shops[index].name.isEmpty) {
+                                        return Container();
+                                      }
+                                      return ShopCard(
+                                        shop: shops[index],
+                                        onPressed: () {
+                                          Navigator.pushNamed(this.context,
+                                              ShopDetailScreen.routeName,
+                                              arguments: shops[index]);
+                                        },
+                                      );
+                                    },
+                                  ),
+                                ),
+                              )
+                            : SizedBox(),
+                        Positioned(
+                          top: MediaQuery.of(context).padding.top + 5,
+                          left: 5,
+                          child: _buildMenuButton(),
+                        ),
+                        Positioned(
+                          top: MediaQuery.of(context).padding.top + 5,
+                          right: 5,
+                          child: _buildAction(),
+                        ),
+                        isLoading
+                            ? Align(
+                                alignment: Alignment.topCenter,
+                                child: Container(
+                                  height: 3,
+                                  margin: EdgeInsets.only(
+                                      top: MediaQuery.of(context).padding.top),
+                                  child: LinearProgressIndicator(),
+                                ),
+                              )
+                            : SizedBox(),
+                        AnimatedPositioned(
+                          bottom: mapPaddingBottom +
+                              ((state is ShopsCanRefreshState) ? 45 : 5),
+                          right: 10,
+                          child: _buildRefreshButton(),
+                          duration: Duration(milliseconds: 200),
+                        ),
+                        Positioned(
+                          bottom: mapPaddingBottom + 5,
+                          right: 10,
+                          child: _buildMyLocation(),
+                        ),
+                        AnimatedPositioned(
+                          top: ((shops.isEmpty) ? 45 : -50),
+                          right: MediaQuery.of(context).size.width / 2 - 75,
+                          child: Container(
+                            width: 150,
+                            child: FloatingActionButton.extended(
+                              onPressed: () {
+                                _controller.future
+                                    .then((controller) => controller
+                                        .animateCamera(CameraUpdate.newLatLng(
+                                            LatLng(10.8023321, 106.6964673))))
+                                    .whenComplete(() {
+                                  _refresh(
+                                      latLng: LatLng(10.8023321, 106.6964673));
+                                });
+                              },
+                              heroTag: null,
+                              label: Text(S.of(context).moveToHCMButton),
+                            ),
+                          ),
+                          duration: Duration(milliseconds: 200),
+                        ),
+                      ],
+                    );
+                  },
+                );
+              },
+            ),
           ),
         ),
       ),
