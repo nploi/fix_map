@@ -29,7 +29,7 @@ class _HomeScreenState extends State<HomeScreen> {
   final Map<String, Marker> _markers = {};
 
   static final CameraPosition _cameraPosition = CameraPosition(
-    target: LatLng(10.7622028,106.6786009),
+    target: LatLng(10.7622028, 106.6786009),
     zoom: 16,
   );
 
@@ -135,6 +135,14 @@ class _HomeScreenState extends State<HomeScreen> {
                     position: LatLng(shop.latitude, shop.longitude),
                     icon:
                         BitmapDescriptor.fromBytes(MarkerUtils.settingsCircle),
+                    infoWindow: InfoWindow(
+                        title: shop.name,
+                        snippet: shop.address,
+                        onTap: () {
+                          Navigator.pushNamed(
+                              this.context, ShopDetailScreen.routeName,
+                              arguments: shops[index]);
+                        }),
                     onTap: () {
                       final String currentMarkerId =
                           BlocProvider.of<MapBloc>(context).currentMarkerId;

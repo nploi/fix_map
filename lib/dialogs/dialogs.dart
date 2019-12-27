@@ -6,7 +6,7 @@ import "package:flutter/material.dart";
 import "package:flutter_bloc/flutter_bloc.dart";
 import "package:percent_indicator/percent_indicator.dart";
 
-showDownloadDialog(BuildContext context, ShopsBloc bloc) {
+void showDownloadDialog(BuildContext context, ShopsBloc bloc) {
   showCupertinoDialog(
       context: context,
       builder: (context) => WillPopScope(
@@ -75,4 +75,12 @@ void showRequestPermissionDialog(BuildContext context) {
       ],
     ),
   );
+}
+
+void showAppAboutDialog(BuildContext context) {
+  showAboutDialog(
+      context: context,
+      applicationIcon: Image.asset("assets/map/circle.png"),
+      applicationName: "Fix Map",
+      applicationVersion: "0.0.1");
 }
