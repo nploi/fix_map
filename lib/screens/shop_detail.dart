@@ -276,9 +276,11 @@ class _ShopDetailScreenState extends State<ShopDetailScreen> {
           if (snapshot.hasData &&
               snapshot.data.fullName.isNotEmpty &&
               listFeedback.isNotEmpty) {
-            feedback = listFeedback
-                .where((value) => value.userId == snapshot.data.id)
-                .first;
+            final value =
+                listFeedback.where((value) => value.userId == snapshot.data.id);
+            if (value.isNotEmpty) {
+              feedback = value.first;
+            }
           }
 
           return Center(
