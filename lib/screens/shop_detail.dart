@@ -277,9 +277,7 @@ class _ShopDetailScreenState extends State<ShopDetailScreen> {
         builder: (context, snapshot) {
           FeedbackEntity feedback;
 
-          if (snapshot.hasData &&
-              snapshot.data.fullName.isNotEmpty &&
-              listFeedback.isNotEmpty) {
+          if (snapshot.hasData && listFeedback.isNotEmpty) {
             final value =
                 listFeedback.where((value) => value.userId == snapshot.data.id);
             if (value.isNotEmpty) {
