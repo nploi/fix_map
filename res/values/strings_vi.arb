@@ -1,6 +1,6 @@
 {
     "appName": "Fix Map",
-    "aboutTitle": "About",
+    "aboutTitle": "Thông tin",
     "allowLabelButton": "Cho phép",
     "backAgainToLeaveMessage": "Bấm lần nữa để thoát",
     "confirmPassword": "Xác thực mật khẩu",
@@ -14,6 +14,7 @@
     "enterKeywordTitle": "Nhập từ khóa",
     "forgotPassword": "QUÊN MẬT KHẨU ?",
     "fullName": "Họ và tên",
+    "feedbackTitle": "Góp ý",
     "g": "",
     "h": "",
     "initializingDataDialogTitle": "Đang khởi tạo dữ liệu",

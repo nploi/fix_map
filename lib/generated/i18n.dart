@@ -35,6 +35,7 @@ class S implements WidgetsLocalizations {
   String get downloadingDataDialogTitle => "Downloading data";
   String get email => "Email";
   String get enterKeywordTitle => "Enter keyword";
+  String get feedbackTitle => "Feedback";
   String get forgotPassword => "FORGOT PASSWORD ?";
   String get fullName => "Full name";
   String get g => "";
@@ -132,7 +133,7 @@ class $vi extends S {
   @override
   String get successMessage => "Thành công";
   @override
-  String get aboutTitle => "About";
+  String get aboutTitle => "Thông tin";
   @override
   String get moreButtonLabel => "Nhiều hơn";
   @override
@@ -155,6 +156,8 @@ class $vi extends S {
   String get w => "";
   @override
   String get x => "";
+  @override
+  String get feedbackTitle => "Góp ý";
   @override
   String get y => "";
   @override
