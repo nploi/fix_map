@@ -16,6 +16,7 @@ analyzer:
     missing_required_param: warning
   exclude:
     - '**.g.dart'
+    - lib/generated/**
 
 linter:
   rules:
