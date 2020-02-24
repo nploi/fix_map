@@ -1,5 +1,6 @@
 # FixMap
 [![Build Status](https://travis-ci.org/nploi/fix_map.svg?branch=master)](https://travis-ci.org/nploi/fix_map)
+[![Codemagic build status](https://api.codemagic.io/apps/5e542614b08451834298e732/5e542614b08451834298e731/status_badge.svg)](https://codemagic.io/apps/5e542614b08451834298e732/5e542614b08451834298e731/latest_build)
 
 Ngôn ngữ: [Tiếng Việt](https://github.com/nploi/fix_map/blob/master/README.md) |  [English](https://github.com/nploi/fix_map/blob/master/README-en.md) 
 
