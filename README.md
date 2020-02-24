@@ -1,18 +1,28 @@
-# fix_map
+# FixMap
 [![Build Status](https://travis-ci.org/nploi/fix_map.svg?branch=master)](https://travis-ci.org/nploi/fix_map)
 
+Ngôn ngữ: [Tiếng Việt](https://github.com/nploi/fix_map/blob/master/README.md) |  [English](https://github.com/nploi/fix_map/blob/master/README-en.md) 
 
-A new Flutter project.
+FixMap là ứng dụng giúp bạn tìm chỗ sửa xe gần bạn nhất
 
-## Getting Started
+## Các chức năng
+- Ứng dụng sử dụng Flutter với mô hình Bloc
+- Tìm chỗ  sửa xe quanh đây
+- Đánh giá chỗ sửa xe
+- Đăng nhập, Đăng xuất
+- Giao diện sáng, tối
+- Online, offile
+- Ngôn ngữ hỗ trợ
 
-This project is a starting point for a Flutter application.
+    |Ngôn ngữ|Mã||
+    |---|---|---|
+    |Tiếng việt (Vietnamese)|vi| :heavy_check_mark:|
+    |Tiếng Anh (English)|en|:heavy_check_mark:  |
 
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://flutter.dev/docs/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://flutter.dev/docs/cookbook)
-
-For help getting started with Flutter, view our
-[online documentation](https://flutter.dev/docs), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+## Ảnh chụp
+------
+| Giao diện sáng  |  Giao diện tối |
+|---|---|
+| ![image1](images/1.png)  | ![image1dark](images/1_dark.png)  |
+| ![image2](images/2.png)  | ![image1dark](images/2_dark.png)  |
+|   |   |
